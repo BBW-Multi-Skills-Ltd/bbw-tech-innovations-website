@@ -953,6 +953,7 @@ button, a, input, textarea { font: inherit; }
 }
 
 .admin-auth-card input:focus { border-color: var(--bbw-accent); box-shadow: 0 0 0 3px rgba(45, 124, 255, 0.16); }
+.auth-code-input { font-family: 'JetBrains Mono', monospace !important; font-size: 21px !important; font-weight: 700; letter-spacing: 0.34em !important; text-align: center; }
 .admin-auth-message { margin: 16px 0 0; color: #ffbd66; font-size: 13px; line-height: 1.5; }
 
 .admin-auth-submit {
@@ -1001,6 +1002,34 @@ button, a, input, textarea { font: inherit; }
   font-size: 14px;
   line-height: 1.65;
 }
+
+.admin-import-button { margin-top: 18px; }
+
+.admin-team-invite {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.admin-team-invite .btn-primary { grid-column: 1 / -1; justify-self: start; }
+.admin-team-list { display: grid; gap: 10px; margin-top: 22px; }
+
+.admin-team-member {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--bbw-border);
+  border-radius: 7px;
+  background: var(--bbw-surface);
+}
+
+.admin-team-member div { display: grid; gap: 4px; }
+.admin-team-member strong { font-size: 14px; }
+.admin-team-member span { color: var(--bbw-muted); font-size: 12px; }
+.admin-team-member select { min-width: 110px; }
 
 .admin-tabs {
   display: flex;

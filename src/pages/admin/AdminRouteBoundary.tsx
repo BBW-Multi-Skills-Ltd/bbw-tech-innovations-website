@@ -4,14 +4,18 @@ import AdminSignIn from '../../features/auth/AdminSignIn'
 import useAdminAuth from '../../features/auth/useAdminAuth'
 import { supabase } from '../../lib/supabase'
 import AdminPanel from '../AdminPanel'
+import AccountSettings from '../../features/auth/AccountSettings'
+import { useLocation } from 'react-router-dom'
 
 export default function AdminRouteBoundary() {
   const { state } = useAdminAuth()
+  const location = useLocation()
 
   if (state.status === 'configuration-required') return <AdminSetupRequired />
   if (state.status === 'loading') return <div className="route-loader">Loading secure admin…</div>
   if (state.status === 'signed-out') return <AdminSignIn />
   if (state.status === 'unauthorized') return <AdminAccessDenied email={state.email} />
+  if (state.status === 'authorized' && location.pathname === '/admin/account') return <AccountSettings identity={state.identity} />
   if (state.status === 'authorized') return <AdminPanel identity={state.identity} onSignOut={() => void supabase?.auth.signOut()} />
   return null
 }

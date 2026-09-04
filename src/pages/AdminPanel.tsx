@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import AdminContent from './admin/AdminContent'
 import AdminHeader from './admin/AdminHeader'
 import AdminTabs from './admin/AdminTabs'
@@ -14,6 +14,7 @@ interface Props {
 export default function AdminPanel({ identity, onSignOut }: Props) {
   const [activeTab, setActiveTab] = useState<AdminTab>('apps')
   const [savedMessage, setSavedMessage] = useState('')
+  const [isImporting, setIsImporting] = useState(false)
   const toastTimer = useRef<number | null>(null)
   const data = useAdminData()
 
@@ -21,10 +22,16 @@ export default function AdminPanel({ identity, onSignOut }: Props) {
     if (toastTimer.current) window.clearTimeout(toastTimer.current)
   }, [])
 
-  const showSaved = (message: string) => {
+  const showSaved = useCallback((message: string) => {
     if (toastTimer.current) window.clearTimeout(toastTimer.current)
     setSavedMessage(message)
     toastTimer.current = window.setTimeout(() => setSavedMessage(''), 2500)
+  }, [])
+  const importCurrentContent = async () => {
+    setIsImporting(true)
+    try { await data.importCurrentContent(); showSaved('Current website content is now in Supabase.') }
+    catch { showSaved('Could not import content. Please try again.') }
+    finally { setIsImporting(false) }
   }
 
   return (
@@ -35,8 +42,9 @@ export default function AdminPanel({ identity, onSignOut }: Props) {
           <p className="eyebrow">Content Manager</p>
           <h1>Website content</h1>
           <p>Manage products, client work, reviews, company information, the scrolling strip, and ambient music.</p>
+          {data.needsInitialImport && <button type="button" className="btn-primary admin-import-button" onClick={() => void importCurrentContent()} disabled={isImporting}>{isImporting ? 'Importing…' : 'Finish import to Supabase'}</button>}
         </header>
-        <AdminTabs active={activeTab} onChange={setActiveTab} />
+        <AdminTabs active={activeTab} onChange={setActiveTab} isOwner={identity.role === 'owner'} />
         <div className="admin-tab-panel"><AdminContent tab={activeTab} data={data} onSaved={showSaved} /></div>
         <span className="admin-saved-toast" role="status" aria-live="polite">{savedMessage}</span>
       </div>

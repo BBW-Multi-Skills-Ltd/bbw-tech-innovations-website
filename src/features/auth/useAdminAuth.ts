@@ -3,6 +3,7 @@ import { isSupabaseConfigured, supabase } from '../../lib/supabase'
 import { cmsRoles, type AdminAuthState, type CmsRole } from './types'
 
 const isCmsRole = (role: string): role is CmsRole => cmsRoles.includes(role as CmsRole)
+type CmsIdentityResult = { role: string; full_name: string; job_title: string }
 
 export default function useAdminAuth() {
   const [state, setState] = useState<AdminAuthState>(
@@ -15,12 +16,12 @@ export default function useAdminAuth() {
     const { data: userData, error: userError } = await supabase.auth.getUser()
     const user = userData.user
     if (userError || !user) return setState({ status: 'signed-out' })
-    const [profileResult, roleResult] = await Promise.all([
-      supabase.from('profiles').select('full_name, job_title').eq('user_id', user.id).maybeSingle(),
-      supabase.from('cms_user_roles').select('role').eq('user_id', user.id).maybeSingle(),
-    ])
-    const role = roleResult.data?.role
-    if (profileResult.error || !role || !isCmsRole(role)) {
+    const { data: identityResult, error: identityError } = await supabase
+      .rpc('get_current_cms_identity')
+      .maybeSingle()
+    const identity = identityResult as CmsIdentityResult | null
+    const role = identity?.role
+    if (identityError || !role || !isCmsRole(role)) {
       setState({ status: 'unauthorized', email: user.email ?? '' })
       return
     }
@@ -29,8 +30,8 @@ export default function useAdminAuth() {
       identity: {
         user,
         role,
-        fullName: profileResult.data?.full_name || user.user_metadata.full_name || user.email || 'Team member',
-        jobTitle: profileResult.data?.job_title || user.user_metadata.job_title || '',
+        fullName: identity?.full_name || user.user_metadata.full_name || user.email || 'Team member',
+        jobTitle: identity?.job_title || user.user_metadata.job_title || '',
       },
     })
   }, [])

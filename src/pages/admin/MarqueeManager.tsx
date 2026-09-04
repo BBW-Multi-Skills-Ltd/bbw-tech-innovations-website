@@ -1,7 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react'
-import { saveMarqueeItems } from '../../data/store'
 
-export default function MarqueeManager({ items, setItems, onSaved }: { items: string[]; setItems: Dispatch<SetStateAction<string[]>>; onSaved: (message: string) => void }) {
+export default function MarqueeManager({ items, setItems, onSave, onSaved }: { items: string[]; setItems: Dispatch<SetStateAction<string[]>>; onSave: (items: string[]) => Promise<void>; onSaved: (message: string) => void }) {
   const move = (index: number, direction: -1 | 1) => {
     const target = index + direction
     if (target < 0 || target >= items.length) return
@@ -11,9 +10,10 @@ export default function MarqueeManager({ items, setItems, onSaved }: { items: st
       return next
     })
   }
-  const save = () => {
+  const save = async () => {
     const cleaned = items.map(item => item.trim()).filter(Boolean)
-    saveMarqueeItems(cleaned); setItems(cleaned); onSaved('Scrolling strip saved.')
+    try { await onSave(cleaned); setItems(cleaned); onSaved('Scrolling strip saved to Supabase.') }
+    catch { onSaved('Could not save scrolling strip. Please try again.') }
   }
   return (
     <section>

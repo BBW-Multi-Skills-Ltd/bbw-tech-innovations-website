@@ -13,6 +13,7 @@ export default function AdminHeader({ identity, onSignOut }: Props) {
       <div className="admin-cms-actions">
         <span className="admin-local-badge">{identity.role}</span>
         <span className="admin-user-name">{identity.fullName}</span>
+        <Link to="/admin/account">Account</Link>
         <Link to="/">Return to site</Link>
         <button type="button" className="admin-signout-button" onClick={onSignOut}>Sign out</button>
       </div>

@@ -1,17 +1,17 @@
 import type { Dispatch, FormEvent, SetStateAction } from 'react'
 import type { BusinessArm, BusinessArmStatus } from '../../data/company'
 import { BUSINESS_ARM_STATUS_COLORS, BUSINESS_ARM_STATUS_LABELS } from '../../data/company'
-import { saveBusinessArms } from '../../data/store'
 import { externalUrl } from '../../utils/urls'
 
 const statuses: BusinessArmStatus[] = ['active', 'in-development', 'coming-soon']
 
-export default function BusinessArmsManager({ arms, setArms, onSaved }: { arms: BusinessArm[]; setArms: Dispatch<SetStateAction<BusinessArm[]>>; onSaved: (message: string) => void }) {
+export default function BusinessArmsManager({ arms, setArms, onSave, onSaved }: { arms: BusinessArm[]; setArms: Dispatch<SetStateAction<BusinessArm[]>>; onSave: (arms: BusinessArm[]) => Promise<void>; onSaved: (message: string) => void }) {
   const update = <K extends keyof BusinessArm>(id: string, field: K, value: BusinessArm[K]) => setArms(current => current.map(arm => arm.id === id ? { ...arm, [field]: value } : arm))
-  const submit = (event: FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault()
     const cleaned = arms.map(arm => ({ ...arm, name: arm.name.trim(), role: arm.role.trim(), websiteUrl: arm.websiteUrl?.trim() || undefined }))
-    saveBusinessArms(cleaned); setArms(cleaned); onSaved('Business arms saved.')
+    try { await onSave(cleaned); setArms(cleaned); onSaved('Business arms saved to Supabase.') }
+    catch { onSaved('Could not save business arms. Please try again.') }
   }
   return (
     <form onSubmit={submit}>
