@@ -15,7 +15,13 @@ export default function DemoVideoUpload({ value, onChange }: { value: string; on
     setIsUploading(true); setError('')
     try {
       const { data, error: signatureError } = await supabase.functions.invoke('cloudinary-upload-signature')
-      if (signatureError || !data) throw new Error('Could not prepare secure upload.')
+      if (signatureError) {
+        const response = signatureError.context
+        const detail = response instanceof Response ? await response.json().catch(() => null) : null
+        if (detail && typeof detail === 'object' && 'error' in detail && typeof detail.error === 'string') throw new Error(detail.error)
+        throw new Error('Could not prepare secure upload.')
+      }
+      if (!data) throw new Error('Could not prepare secure upload.')
       const credentials = data as Signature
       const form = new FormData()
       form.append('file', file); form.append('api_key', credentials.apiKey); form.append('timestamp', String(credentials.timestamp))

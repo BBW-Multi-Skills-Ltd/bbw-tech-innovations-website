@@ -10,7 +10,6 @@ export default function ProjectDetails({ project, onClose }: { project: Project;
         <p style={{ color: project.accentColor, fontWeight: 600, fontSize: 15 }}>{project.tagline}</p>
       </header>
       <ModalSection title="About the Project"><p style={{ color: MUTED, fontSize: 15, lineHeight: 1.8 }}>{project.about}</p></ModalSection>
-      {project.demoVideoUrl && <ModalSection title="Product Demo"><video controls preload="metadata" style={{ width: '100%', display: 'block', borderRadius: 8, border: `1px solid ${BORDER}`, background: '#000' }} src={project.demoVideoUrl}>Your browser does not support video playback.</video></ModalSection>}
       {project.review?.quote && (
         <ModalSection title="Client Review">
           <figure style={{ padding: '22px 24px', border: `1px solid ${project.accentColor}35`, borderRadius: 7, background: `${project.accentColor}0D` }}>
