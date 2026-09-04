@@ -4,6 +4,12 @@
 # working directory name when running `supabase init`.
 project_id = "bbw-tech-innovations-website"
 
+[functions.submit-enquiry]
+verify_jwt = false
+
+[functions.finalize-video-enquiry]
+verify_jwt = false
+
 [api]
 enabled = true
 # Port to use for the API URL.

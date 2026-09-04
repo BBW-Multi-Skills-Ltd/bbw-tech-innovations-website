@@ -44,7 +44,7 @@ export default function AdminPanel({ identity, onSignOut }: Props) {
           <p>Manage products, client work, reviews, company information, the scrolling strip, and ambient music.</p>
           {data.needsInitialImport && <button type="button" className="btn-primary admin-import-button" onClick={() => void importCurrentContent()} disabled={isImporting}>{isImporting ? 'Importing…' : 'Finish import to Supabase'}</button>}
         </header>
-        <AdminTabs active={activeTab} onChange={setActiveTab} isOwner={identity.role === 'owner'} />
+        <AdminTabs active={activeTab} onChange={setActiveTab} isOwner={identity.role === 'owner'} canManageEnquiries={identity.role !== 'viewer'} />
         <div className="admin-tab-panel"><AdminContent tab={activeTab} data={data} onSaved={showSaved} /></div>
         <span className="admin-saved-toast" role="status" aria-live="polite">{savedMessage}</span>
       </div>

@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-export const MAX_RECORDING_SECONDS = 30 * 60
+export const MAX_RECORDING_SECONDS = 10 * 60
 
 export default function useVideoRecorder() {
   const [recording, setRecording] = useState(false)
   const [elapsed, setElapsed] = useState(0)
   const [videoUrl, setVideoUrl] = useState<string | null>(null)
+  const [videoBlob, setVideoBlob] = useState<Blob | null>(null)
   const [cameraError, setCameraError] = useState('')
   const videoRef = useRef<HTMLVideoElement>(null)
   const recorderRef = useRef<MediaRecorder | null>(null)
@@ -38,6 +39,7 @@ export default function useVideoRecorder() {
 
   const prepareCamera = useCallback(async () => {
     setVideoUrl(current => { if (current) URL.revokeObjectURL(current); return null })
+    setVideoBlob(null)
     setElapsed(0)
     setRecording(false)
     await startCamera()
@@ -50,11 +52,16 @@ export default function useVideoRecorder() {
     const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm'
     const recorder = new MediaRecorder(stream, { mimeType })
     recorder.ondataavailable = event => { if (event.data.size > 0) chunksRef.current.push(event.data) }
-    recorder.onstop = () => setVideoUrl(URL.createObjectURL(new Blob(chunksRef.current, { type: 'video/webm' })))
+    recorder.onstop = () => {
+      const blob = new Blob(chunksRef.current, { type: 'video/webm' })
+      setVideoBlob(blob)
+      setVideoUrl(URL.createObjectURL(blob))
+    }
     recorder.start(1000)
     recorderRef.current = recorder
     setRecording(true)
     setElapsed(0)
+    setVideoBlob(null)
     let seconds = 0
     timerRef.current = window.setInterval(() => {
       seconds += 1
@@ -84,5 +91,5 @@ export default function useVideoRecorder() {
     if (videoUrl) URL.revokeObjectURL(videoUrl)
   }, [videoUrl])
 
-  return { videoRef, recording, elapsed, videoUrl, cameraError, prepareCamera, startRecording, stopRecording, reset }
+  return { videoRef, recording, elapsed, videoUrl, videoBlob, cameraError, prepareCamera, startRecording, stopRecording, reset }
 }
