@@ -25,7 +25,7 @@ function fromRow(row: ProjectRow): Project {
     accentColor: text(row.accent_color), mockBg: text(row.mock_bg), screens: list<Project['screens'][number]>(row.screens),
     roles: list<Project['roles'][number]>(row.roles), features: list<Project['features'][number]>(row.features),
     tech: list<string>(row.tech), isOwn: row.is_own === true, year: text(row.year),
-    badge: text(row.badge) as Project['badge'], demoVideoUrl: text(row.demo_video_url) || undefined,
+    badge: text(row.badge) as Project['badge'], demoVideoUrl: text(row.demo_video_url) || undefined, qrUrl: text(row.qr_url) || undefined,
     review: review ? { quote: review.quote, clientName: review.client_name, clientRole: review.client_role || undefined, source: review.source || 'other' } : undefined,
   }
 }
@@ -36,7 +36,7 @@ const toRow = (project: Project, sortOrder: number) => ({
   android_availability: project.androidAvailability || null, ios_availability: project.iosAvailability || null,
   site_url: project.siteUrl || null, accent_color: project.accentColor, mock_bg: project.mockBg, screens: project.screens,
   roles: project.roles, features: project.features, tech: project.tech, is_own: project.isOwn, year: project.year,
-  badge: project.badge || null, demo_video_url: project.demoVideoUrl || null, is_published: true, sort_order: sortOrder,
+  badge: project.badge || null, demo_video_url: project.demoVideoUrl || null, qr_url: project.qrUrl || null, is_published: true, sort_order: sortOrder,
 })
 
 export async function fetchProjects(publishedOnly = true) {

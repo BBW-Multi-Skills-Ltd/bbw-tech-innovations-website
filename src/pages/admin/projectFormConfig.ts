@@ -37,6 +37,6 @@ export function createEmptyProject(type: ProjectType, isWork: boolean): Project 
     ],
     features: [{ name: 'Core Feature', desc: 'Primary functionality of the product.' }],
     tech: ['React', 'TypeScript', 'Node.js'],
-    year: new Date().getFullYear().toString(), demoVideoUrl: '', badge: isWork ? 'website' : undefined,
+    year: new Date().getFullYear().toString(), demoVideoUrl: '', qrUrl: '', badge: isWork ? 'website' : undefined,
   }
 }

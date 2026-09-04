@@ -13,7 +13,7 @@ export default function ProjectPreviewPanel({ project }: { project: Project }) {
       <div style={{ width: '100%', height: 1, background: BORDER }} />
       {project.type === 'app' ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, width: '100%' }}>
-          <QrCode accentColor={project.accentColor} />
+          {project.qrUrl && <QrCode url={project.qrUrl} />}
           {platformLabel && <span style={{ ...mono, fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: MUTED, border: `1px solid ${BORDER}`, borderRadius: 100, padding: '3px 10px' }}>{platformLabel}</span>}
         </div>
       ) : (

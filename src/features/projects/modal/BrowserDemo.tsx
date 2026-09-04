@@ -4,9 +4,9 @@ import BrowserScreen from './BrowserScreen'
 import useDemoCarousel from './useDemoCarousel'
 
 export default function BrowserDemo({ project }: { project: Project }) {
-  const { active, setActive, setPaused } = useDemoCarousel(project.screens.length)
-  const screen = project.screens[active]
-  if (!screen) return null
+  const hasDemoVideo = Boolean(project.demoVideoUrl)
+  const { active, setActive, setPaused } = useDemoCarousel(Math.max(project.screens.length, 1))
+  const screen = project.screens[active] ?? { label: 'Demo', colorA: project.accentColor, colorB: project.mockBg, colorC: project.accentColor }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, width: '100%' }} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
@@ -20,10 +20,10 @@ export default function BrowserDemo({ project }: { project: Project }) {
           {[50, 40, 35, 45].map(width => <div key={width} style={{ height: 3, width, background: 'rgba(255,255,255,0.2)', borderRadius: 2 }} />)}
           <div style={{ flex: 1 }} /><div style={{ height: 18, width: 60, background: screen.colorA, borderRadius: 3 }} />
         </div>
-        <div style={{ height: 220, padding: 14, background: `linear-gradient(155deg, ${screen.colorB}88, ${screen.colorA}18)` }}><BrowserScreen screen={screen} index={active} /></div>
+        <div style={{ height: 220, padding: hasDemoVideo ? 0 : 14, background: `linear-gradient(155deg, ${screen.colorB}88, ${screen.colorA}18)` }}>{hasDemoVideo ? <video src={project.demoVideoUrl} autoPlay muted loop playsInline controls aria-label={`${project.name} product demo`} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} /> : <BrowserScreen screen={screen} index={active} />}</div>
         <div style={{ height: 20, background: '#0E0E10', padding: '8px 12px' }}><div style={{ height: 2.5, width: 80, background: 'rgba(255,255,255,0.08)', borderRadius: 2 }} /></div>
       </div>
-      <CarouselDots screens={project.screens} active={active} accentColor={project.accentColor} onSelect={setActive} />
+      {!hasDemoVideo && <CarouselDots screens={project.screens} active={active} accentColor={project.accentColor} onSelect={setActive} />}
     </div>
   )
 }

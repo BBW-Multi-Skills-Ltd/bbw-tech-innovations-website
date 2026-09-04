@@ -71,6 +71,7 @@ export interface Project {
   year: string
   badge?: WorkBadge  // for client works
   demoVideoUrl?: string
+  qrUrl?: string
   review?: ClientReview
 }
 
