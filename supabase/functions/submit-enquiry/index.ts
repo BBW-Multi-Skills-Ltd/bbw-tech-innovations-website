@@ -10,14 +10,20 @@ Deno.serve(async request => {
   if (body?.kind === 'message') {
     if (!message) return reply({ error: 'Message is required.' }, 400)
     const { error } = await db.from('enquiries').insert({ kind: 'message', name, email, phone, message })
-    if (error) return reply({ error: 'Could not save enquiry.' }, 500)
+    if (error) {
+      console.error('Message enquiry insert failed', { code: error.code, message: error.message, details: error.details })
+      return reply({ error: 'Could not save enquiry.' }, 500)
+    }
     try { await notifyEnquiry({ name, email, phone, message, video: false }) } catch { /* Enquiry remains safely stored for the CMS. */ }
     return reply({ ok: true })
   }
   if (body?.kind !== 'video' || !Number.isFinite(body?.videoSize) || body.videoSize <= 0 || body.videoSize > 104857600) return reply({ error: 'Video must be under 100 MB.' }, 400)
   const id = crypto.randomUUID(), path = `${new Date().toISOString().slice(0, 10)}/${id}.webm`
   const { error } = await db.from('enquiries').insert({ id, kind: 'video', name, email, phone, video_path: path })
-  if (error) return reply({ error: 'Could not prepare video upload.' }, 500)
+  if (error) {
+    console.error('Video enquiry insert failed', { code: error.code, message: error.message, details: error.details })
+    return reply({ error: 'Could not prepare video upload.' }, 500)
+  }
   const { data, error: uploadError } = await db.storage.from('enquiry-videos').createSignedUploadUrl(path)
   if (uploadError || !data) return reply({ error: 'Could not prepare secure upload.' }, 500)
   return reply({ id, path, token: data.token })
