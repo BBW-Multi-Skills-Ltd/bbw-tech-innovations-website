@@ -878,6 +878,108 @@ button, a, input, textarea { font: inherit; }
   color: #6ea5ff;
 }
 
+.admin-user-name {
+  max-width: 150px;
+  overflow: hidden;
+  color: var(--bbw-muted);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-signout-button {
+  padding: 6px 11px;
+  border: 1px solid var(--bbw-border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--bbw-muted);
+  cursor: pointer;
+  font: 10px 'JetBrains Mono', monospace;
+}
+
+.admin-signout-button:hover,
+.admin-signout-button:focus-visible { border-color: var(--bbw-accent); color: var(--bbw-fg); }
+
+.admin-auth-page {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(circle at 50% 0%, rgba(45, 124, 255, 0.15), transparent 38%), var(--bbw-bg);
+  color: var(--bbw-fg);
+}
+
+.admin-auth-card {
+  width: min(100%, 430px);
+  padding: clamp(28px, 5vw, 44px);
+  border: 1px solid var(--bbw-border-hi);
+  border-radius: 14px;
+  background: rgba(16, 16, 19, 0.94);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+}
+
+.admin-auth-logo { width: 58px; height: 40px; margin-bottom: 22px; object-fit: contain; }
+
+.admin-auth-card h1 {
+  margin: 8px 0 12px;
+  font: 700 clamp(31px, 7vw, 42px)/1.04 'Fraunces', Georgia, serif;
+  letter-spacing: -0.035em;
+}
+
+.admin-auth-copy { margin-bottom: 26px; color: var(--bbw-muted); font-size: 14px; line-height: 1.65; }
+
+.admin-auth-card label {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+  color: var(--bbw-fg);
+  font: 10px 'JetBrains Mono', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-auth-card input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 13px;
+  border: 1px solid var(--bbw-border-hi);
+  border-radius: 5px;
+  outline: none;
+  background: var(--bbw-surface);
+  color: var(--bbw-fg);
+  font: 14px inherit;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.admin-auth-card input:focus { border-color: var(--bbw-accent); box-shadow: 0 0 0 3px rgba(45, 124, 255, 0.16); }
+.admin-auth-message { margin: 16px 0 0; color: #ffbd66; font-size: 13px; line-height: 1.5; }
+
+.admin-auth-submit {
+  width: 100%;
+  min-height: 47px;
+  margin-top: 24px;
+  border: 0;
+  border-radius: 5px;
+  background: var(--bbw-accent);
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.admin-auth-submit:disabled, .admin-auth-link:disabled { cursor: wait; opacity: 0.62; }
+
+.admin-auth-link {
+  display: inline-block;
+  margin-top: 17px;
+  border: 0;
+  background: none;
+  color: var(--bbw-accent);
+  cursor: pointer;
+  font: 12px 'JetBrains Mono', monospace;
+  text-decoration: none;
+}
+
 .admin-cms-body {
   width: min(100%, 1180px);
   margin: 0 auto;

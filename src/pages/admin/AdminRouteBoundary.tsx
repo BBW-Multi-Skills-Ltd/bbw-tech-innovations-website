@@ -1,9 +1,17 @@
+import AdminAccessDenied from '../../features/auth/AdminAccessDenied'
+import AdminSetupRequired from '../../features/auth/AdminSetupRequired'
+import AdminSignIn from '../../features/auth/AdminSignIn'
+import useAdminAuth from '../../features/auth/useAdminAuth'
+import { supabase } from '../../lib/supabase'
 import AdminPanel from '../AdminPanel'
 
-/**
- * Authentication will be enforced here when Supabase Auth is connected.
- * Keeping the boundary explicit avoids coupling CMS rendering to an auth SDK.
- */
 export default function AdminRouteBoundary() {
-  return <AdminPanel />
+  const { state } = useAdminAuth()
+
+  if (state.status === 'configuration-required') return <AdminSetupRequired />
+  if (state.status === 'loading') return <div className="route-loader">Loading secure admin…</div>
+  if (state.status === 'signed-out') return <AdminSignIn />
+  if (state.status === 'unauthorized') return <AdminAccessDenied email={state.email} />
+  if (state.status === 'authorized') return <AdminPanel identity={state.identity} onSignOut={() => void supabase?.auth.signOut()} />
+  return null
 }
