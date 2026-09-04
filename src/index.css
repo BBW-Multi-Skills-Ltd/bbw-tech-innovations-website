@@ -1170,6 +1170,10 @@ button.is-danger { border-color: rgba(239, 68, 68, 0.3); color: #EF4444; }
 .admin-marquee-row input:focus { border-color: var(--bbw-accent); }
 
 .admin-color-input { display: grid; grid-template-columns: 44px 1fr; gap: 8px; }
+.admin-demo-video-upload { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 9px; }
+.admin-demo-video-upload a { color: var(--bbw-accent); font-size: 12px; text-decoration: none; }
+.admin-demo-video-upload a:hover { text-decoration: underline; }
+.admin-demo-video-upload span { color: #ef4444; font-size: 11px; }
 .admin-color-input input[type='color'] { height: 39px; padding: 2px; }
 
 .admin-project-review-fields {

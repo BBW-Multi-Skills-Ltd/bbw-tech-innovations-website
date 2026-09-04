@@ -10,6 +10,9 @@ verify_jwt = false
 [functions.finalize-video-enquiry]
 verify_jwt = false
 
+[functions.cloudinary-upload-signature]
+verify_jwt = true
+
 [api]
 enabled = true
 # Port to use for the API URL.
