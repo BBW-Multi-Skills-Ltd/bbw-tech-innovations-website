@@ -1226,6 +1226,7 @@ button, a, input, textarea { font: inherit; }
 .admin-account-card { display: grid; align-content: start; gap: 14px; padding: 22px; border: 1px solid var(--bbw-border); border-radius: 8px; background: var(--bbw-surface); }
 .admin-account-card h3 { color: var(--bbw-fg); font-size: 18px; }
 .admin-account-card > p { margin-top: -7px; color: var(--bbw-muted); font-size: 12px; line-height: 1.6; }
+.admin-account-card form { display: grid; gap: 15px; }
 .admin-account-card label { display: grid; gap: 7px; color: var(--bbw-muted); font: 9px 'JetBrains Mono', monospace; letter-spacing: .1em; text-transform: uppercase; }
 .admin-account-card input { width: 100%; min-height: 40px; padding: 0 11px; border: 1px solid var(--bbw-border-hi); border-radius: 5px; background: var(--bbw-surface2); color: var(--bbw-fg); font: 13px 'Outfit', sans-serif; letter-spacing: normal; text-transform: none; }
 .admin-account-card .btn-primary { justify-self: start; }

@@ -148,25 +148,11 @@ export async function fetchSocialLinks(enabledOnly = true) {
 
 export async function replaceSocialLinks(links: SocialLink[]) {
   const db = client()
-  const isDatabaseId = (id: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
-  const { data, error } = await db.from('social_links').select('id')
-  if (error) throw error
-  const existingIds = (data as { id: string }[]).map(link => link.id)
-  const nextIds = links.map(link => link.id).filter(isDatabaseId)
-  const removedIds = existingIds.filter(id => !nextIds.includes(id))
-  if (removedIds.length) {
-    const { error: removeError } = await db.from('social_links').delete().in('id', removedIds)
-    if (removeError) throw removeError
-  }
-  const rows = links.map((link, sort_order) => ({
-    ...(isDatabaseId(link.id) ? { id: link.id } : {}),
+  const rows = links.map(link => ({
     platform: link.platform.trim().toLowerCase(),
     url: link.url.trim(),
     is_enabled: link.isEnabled,
-    sort_order,
   }))
-  if (rows.length) {
-    const { error: saveError } = await db.from('social_links').upsert(rows, { onConflict: 'platform' })
-    if (saveError) throw saveError
-  }
+  const { error } = await db.rpc('replace_social_links', { next_links: rows.map(row => ({ platform: row.platform, url: row.url, isEnabled: row.is_enabled })) })
+  if (error) throw new Error(error.message)
 }

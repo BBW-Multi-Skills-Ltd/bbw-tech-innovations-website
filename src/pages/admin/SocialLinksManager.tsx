@@ -13,6 +13,8 @@ export default function SocialLinksManager({ links, setLinks, onSave, onSaved }:
   const add = () => setLinks([...links, { id: `social-${Date.now()}`, platform: 'instagram', url: '', isEnabled: true }])
   const save = () => {
     const valid = links.filter(link => link.platform.trim() && link.url.trim())
+    const duplicate = valid.map(link => link.platform.trim().toLowerCase()).find((platform, index, platforms) => platforms.indexOf(platform) !== index)
+    if (duplicate) { onSaved(`You added ${duplicate} more than once. Keep one row per platform.`); return }
     void onSave(valid).then(() => onSaved('Social links saved to Supabase.')).catch(error => onSaved(error instanceof Error ? error.message : 'Could not save social links.'))
   }
 
