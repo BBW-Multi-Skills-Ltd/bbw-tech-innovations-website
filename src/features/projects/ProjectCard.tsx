@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { Project } from '../../data/projects'
 import { getProjectPlatformLabel } from '../../data/projects'
-import { ACCENT, BORDER, BORDER_HI, FG, MUTED, SURFACE, mono } from '../../styles/theme'
+import { BORDER, BORDER_HI, FG, MUTED, SURFACE, mono } from '../../styles/theme'
 import StatusBadge from '../../components/ui/StatusBadge'
 import { BrowserPreview, PhonePreview } from './ProjectPreview'
 
@@ -20,16 +20,19 @@ export default function ProjectCard({ project, variant, onOpen }: { project: Pro
   const [hovered, setHovered] = useState(false)
   const isPhone = variant === 'app' || project.badge === 'mobile-app'
   const meta = variant === 'app' ? getProjectPlatformLabel(project) : project.category
-  const badgeLabel = project.badge === 'mobile-app' ? 'Mobile App' : 'Website'
 
   return (
-    <article onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} style={{ border: `1px solid ${hovered ? BORDER_HI : BORDER}`, borderRadius: 10, overflow: 'hidden', background: SURFACE, transition: 'border-color 0.2s, transform 0.25s', transform: hovered ? 'translateY(-4px)' : 'none', display: 'flex', flexDirection: 'column' }}>
+    <article
+      className={`project-card project-card--${isPhone ? 'app' : 'website'}`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{ border: `1px solid ${hovered ? BORDER_HI : BORDER}`, borderRadius: 10, overflow: 'hidden', background: SURFACE, transition: 'border-color 0.2s, transform 0.25s', transform: hovered ? 'translateY(-4px)' : 'none', display: 'flex', flexDirection: 'column' }}
+    >
       {isPhone ? <PhonePreview {...project} /> : <BrowserPreview {...project} />}
       <div style={{ padding: '20px 20px 24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6, gap: 8 }}>
-          <h3 style={{ fontSize: 17, fontWeight: 600, letterSpacing: '-0.02em', color: FG }}>{project.name}</h3>
+          <h3 style={{ minWidth: 0, fontSize: 17, fontWeight: 600, letterSpacing: '-0.02em', color: FG }}>{project.name}</h3>
           <div style={{ display: 'flex', gap: 6, flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-            {variant === 'work' && <span style={{ ...mono, fontSize: 9, color: ACCENT, border: `1px solid ${ACCENT}38`, padding: '2px 7px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{badgeLabel}</span>}
             <StatusBadge status={project.status} />
           </div>
         </div>

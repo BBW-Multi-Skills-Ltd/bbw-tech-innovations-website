@@ -21,7 +21,7 @@ import { BG, FG } from '../styles/theme'
 
 export default function HomePage() {
   const { dark, toggleTheme } = useTheme()
-  const { apps, websites, works, businessArms, marqueeItems } = useSiteContent()
+  const { apps, websites, works, businessArms, marqueeItems, musicUrl } = useSiteContent()
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [contactOpen, setContactOpen] = useState(false)
   const openProject = useCallback((project: Project) => setSelectedProject(project), [])
@@ -46,7 +46,7 @@ export default function HomePage() {
       <Footer products={[...apps, ...websites]} onStartProject={openContact} />
       <ProjectModal project={selectedProject} onClose={closeProject} />
       <ContactForm open={contactOpen} onClose={() => setContactOpen(false)} />
-      <MusicPlayer />
+      <MusicPlayer url={musicUrl} />
     </div>
   )
 }

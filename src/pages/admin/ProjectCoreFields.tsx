@@ -1,7 +1,7 @@
 import type { PlatformAvailability, Project, ProjectStatus, ProjectType, WorkBadge } from '../../data/projects'
 import { STATUS_LABELS } from '../../data/projects'
 import ProjectField from './ProjectField'
-import DemoVideoUpload from './DemoVideoUpload'
+import CloudinaryMediaUpload from './CloudinaryMediaUpload'
 import { PLATFORM_OPTIONS, PROJECT_STATUSES } from './projectFormConfig'
 import type { ProjectUpdater } from './projectFormConfig'
 
@@ -37,7 +37,8 @@ export default function ProjectCoreFields({ project, type, isWork, isNew, techIn
       {isWork && <ProjectField label="Project Badge"><select value={project.badge ?? 'website'} onChange={event => update('badge', event.target.value as WorkBadge)}><option value="website">Website</option><option value="mobile-app">Mobile App</option></select></ProjectField>}
       <ProjectField label="Accent Color"><div className="admin-color-input"><input type="color" value={project.accentColor} onChange={event => update('accentColor', event.target.value)} /><input value={project.accentColor} onChange={event => update('accentColor', event.target.value)} /></div></ProjectField>
       <ProjectField label="Year"><input value={project.year} onChange={event => update('year', event.target.value)} /></ProjectField>
-      <ProjectField label="Demo Video URL"><input inputMode="url" value={project.demoVideoUrl ?? ''} onChange={event => update('demoVideoUrl', event.target.value)} /><DemoVideoUpload value={project.demoVideoUrl ?? ''} onChange={url => update('demoVideoUrl', url)} /></ProjectField>
+      <ProjectField label="Card Preview Image"><input inputMode="url" value={project.cardImageUrl ?? ''} onChange={event => update('cardImageUrl', event.target.value)} /><CloudinaryMediaUpload assetType="image" value={project.cardImageUrl ?? ''} onChange={url => update('cardImageUrl', url)} /></ProjectField>
+      <ProjectField label="Demo Video URL"><input inputMode="url" value={project.demoVideoUrl ?? ''} onChange={event => update('demoVideoUrl', event.target.value)} /><CloudinaryMediaUpload assetType="video" value={project.demoVideoUrl ?? ''} onChange={url => update('demoVideoUrl', url)} /></ProjectField>
       <ProjectField label="Tech Stack — Comma Separated"><input value={techInput} onChange={event => onTechChange(event.target.value)} /></ProjectField>
     </div>
   )

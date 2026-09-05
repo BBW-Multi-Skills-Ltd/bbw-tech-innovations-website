@@ -22,7 +22,7 @@ function fromRow(row: ProjectRow): Project {
     status: text(row.status) as Project['status'], platform: text(row.platform) || undefined,
     androidAvailability: text(row.android_availability) as Project['androidAvailability'],
     iosAvailability: text(row.ios_availability) as Project['iosAvailability'], siteUrl: text(row.site_url) || undefined,
-    accentColor: text(row.accent_color), mockBg: text(row.mock_bg), screens: list<Project['screens'][number]>(row.screens),
+    accentColor: text(row.accent_color), mockBg: text(row.mock_bg), cardImageUrl: text(row.card_image_url) || undefined, screens: list<Project['screens'][number]>(row.screens),
     roles: list<Project['roles'][number]>(row.roles), features: list<Project['features'][number]>(row.features),
     tech: list<string>(row.tech), isOwn: row.is_own === true, year: text(row.year),
     badge: text(row.badge) as Project['badge'], demoVideoUrl: text(row.demo_video_url) || undefined, qrUrl: text(row.qr_url) || undefined,
@@ -34,7 +34,7 @@ const toRow = (project: Project, sortOrder: number) => ({
   id: project.id, kind: project.type, name: project.name, tagline: project.tagline, short_description: project.shortDesc,
   about: project.about, category: project.category, status: project.status, platform: project.platform || null,
   android_availability: project.androidAvailability || null, ios_availability: project.iosAvailability || null,
-  site_url: project.siteUrl || null, accent_color: project.accentColor, mock_bg: project.mockBg, screens: project.screens,
+  site_url: project.siteUrl || null, accent_color: project.accentColor, mock_bg: project.mockBg, card_image_url: project.cardImageUrl || null, screens: project.screens,
   roles: project.roles, features: project.features, tech: project.tech, is_own: project.isOwn, year: project.year,
   badge: project.badge || null, demo_video_url: project.demoVideoUrl || null, qr_url: project.qrUrl || null, is_published: true, sort_order: sortOrder,
 })

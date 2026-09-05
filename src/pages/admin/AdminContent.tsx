@@ -8,7 +8,7 @@ import ProjectManager from './ProjectManager'
 import TeamManager from './TeamManager'
 
 const report = (task: Promise<void>, success: string, onSaved: (message: string) => void) => {
-  void task.then(() => onSaved(success)).catch(() => onSaved('Could not save. Check your connection and try again.'))
+  void task.then(() => onSaved(success)).catch(error => onSaved(error instanceof Error ? error.message : 'Could not save. Check your connection and try again.'))
 }
 
 export default function AdminContent({ tab, data, onSaved }: { tab: AdminTab; data: ReturnTypeOfUseAdminData; onSaved: (message: string) => void }) {

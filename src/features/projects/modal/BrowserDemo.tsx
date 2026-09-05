@@ -15,12 +15,12 @@ export default function BrowserDemo({ project }: { project: Project }) {
           {['#EF4444', '#F59E0B', '#22C55E'].map(color => <div key={color} style={{ width: 9, height: 9, borderRadius: '50%', background: color, opacity: 0.7 }} />)}
           <div style={{ flex: 1, height: 20, background: 'rgba(255,255,255,0.06)', borderRadius: 4, marginLeft: 8, display: 'flex', alignItems: 'center', padding: '0 8px', gap: 5 }}><div style={{ width: 8, height: 8, borderRadius: '50%', background: `${screen.colorA}88` }} /><div style={{ height: 3, width: '55%', background: 'rgba(255,255,255,0.15)', borderRadius: 2 }} /></div>
         </div>
-        <div style={{ height: 32, background: `${screen.colorB}cc`, display: 'flex', alignItems: 'center', padding: '0 14px', gap: 20, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        {!hasDemoVideo && <div style={{ height: 32, background: `${screen.colorB}cc`, display: 'flex', alignItems: 'center', padding: '0 14px', gap: 20, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ height: 4, width: 40, background: 'rgba(255,255,255,0.5)', borderRadius: 2 }} />
           {[50, 40, 35, 45].map(width => <div key={width} style={{ height: 3, width, background: 'rgba(255,255,255,0.2)', borderRadius: 2 }} />)}
           <div style={{ flex: 1 }} /><div style={{ height: 18, width: 60, background: screen.colorA, borderRadius: 3 }} />
-        </div>
-        <div style={{ height: 220, padding: hasDemoVideo ? 0 : 14, background: `linear-gradient(155deg, ${screen.colorB}88, ${screen.colorA}18)` }}>{hasDemoVideo ? <video src={project.demoVideoUrl} autoPlay muted loop playsInline controls aria-label={`${project.name} product demo`} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} /> : <BrowserScreen screen={screen} index={active} />}</div>
+        </div>}
+        <div style={{ height: hasDemoVideo ? 252 : 220, padding: hasDemoVideo ? 0 : 14, background: `linear-gradient(155deg, ${screen.colorB}88, ${screen.colorA}18)` }}>{hasDemoVideo ? <video src={project.demoVideoUrl} autoPlay muted loop playsInline controls aria-label={`${project.name} product demo`} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} /> : <BrowserScreen screen={screen} index={active} />}</div>
         <div style={{ height: 20, background: '#0E0E10', padding: '8px 12px' }}><div style={{ height: 2.5, width: 80, background: 'rgba(255,255,255,0.08)', borderRadius: 2 }} /></div>
       </div>
       {!hasDemoVideo && <CarouselDots screens={project.screens} active={active} accentColor={project.accentColor} onSelect={setActive} />}

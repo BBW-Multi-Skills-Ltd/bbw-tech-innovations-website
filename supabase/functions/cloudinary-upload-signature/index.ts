@@ -24,8 +24,12 @@ Deno.serve(async request => {
   const [{ data: user }, { data: identity }] = await Promise.all([caller.auth.getUser(), caller.rpc('get_current_cms_identity').maybeSingle()])
   if (!user.user || !allowedRoles.includes(identity?.role)) return Response.json({ error: 'You do not have permission to upload demo videos.' }, { status: 403, headers: corsHeaders })
 
+  const body = await request.json().catch(() => ({}))
+  const assetType = body?.assetType === 'image' || body?.assetType === 'video' || body?.assetType === 'audio' ? body.assetType : null
+  if (!assetType) return Response.json({ error: 'Invalid upload type.' }, { status: 400, headers: corsHeaders })
   const timestamp = Math.floor(Date.now() / 1000)
-  const folder = 'bbw-tech/demos'
+  const folder = assetType === 'image' ? 'bbw-tech/card-images' : assetType === 'audio' ? 'bbw-tech/ambient-audio' : 'bbw-tech/demos'
   const signature = await sha1(`folder=${folder}&timestamp=${timestamp}${apiSecret}`)
-  return Response.json({ cloudName, apiKey, timestamp, folder, signature }, { headers: corsHeaders })
+  const resourceType = assetType === 'image' ? 'image' : 'video'
+  return Response.json({ cloudName, apiKey, timestamp, folder, signature, assetType, resourceType }, { headers: corsHeaders })
 })

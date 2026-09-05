@@ -21,18 +21,18 @@ export default function ProductsSection({ apps, websites, onOpen }: { apps: Proj
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ marginBottom: 64 }}>
           <Eyebrow>Our Products</Eyebrow>
-          <SectionHeading maxWidth={700}>We don't just build for businesses.<br /><em style={{ color: ACCENT }}>We build businesses through technology.</em></SectionHeading>
-          <p style={{ color: MUTED, fontSize: 15, marginTop: 18, lineHeight: 1.7 }}>We've built across <span style={{ color: FG }}>mobile apps</span> and <span style={{ color: FG }}>websites</span> — shipping real products that solve real problems.</p>
+          <SectionHeading maxWidth={760}>We don&apos;t just build for businesses.<br /><em style={{ color: ACCENT }}>We build innovative in-house products that bring solutions across Africa.</em></SectionHeading>
+          <p style={{ color: MUTED, fontSize: 15, marginTop: 18, lineHeight: 1.7 }}>Alongside client work, we create and grow our own <span style={{ color: FG }}>mobile apps</span> and <span style={{ color: FG }}>web platforms</span> to solve real business challenges.</p>
         </div>
         <div style={{ marginBottom: 80 }}>
           <ShowcaseHeading label="App Showcase" title="Mobile apps we've shipped." description="Built mobile-first, designed for real users, engineered to scale." />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 20 }}>
+          <div className="product-app-grid">
             {apps.map(project => <ProjectCard key={project.id} project={project} variant="app" onOpen={onOpen} />)}
           </div>
         </div>
         <div style={{ borderTop: `1px solid ${BORDER}`, marginBottom: 80 }} />
-        <ShowcaseHeading label="Website Showcase" title="Websites and web platforms." description="From simple business sites to real-time platforms — each project solves a real problem." />
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
+        <ShowcaseHeading label="Website Showcase" title="Websites and web platforms." description="From simple business sites to real-time platforms - each project solves a real problem." />
+        <div className="product-website-grid">
           {websites.map(project => <ProjectCard key={project.id} project={project} variant="website" onOpen={onOpen} />)}
         </div>
       </div>
