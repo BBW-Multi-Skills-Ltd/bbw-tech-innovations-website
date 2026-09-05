@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
 import type { Project } from '../../data/projects'
+import type { SocialLink } from '../../data/socialLinks'
 import { ACCENT, BORDER, FG, MUTED, mono } from '../../styles/theme'
 import BrandLogo from '../ui/BrandLogo'
+import SocialIcon from '../ui/SocialIcon'
 
 function footerHref(heading: string, label: string) {
   if (heading === 'Solutions') return '#solutions'
@@ -12,7 +14,7 @@ function footerHref(heading: string, label: string) {
   return '#contact'
 }
 
-export default function Footer({ onStartProject, products }: { onStartProject: () => void; products: Project[] }) {
+export default function Footer({ onStartProject, products, socialLinks }: { onStartProject: () => void; products: Project[]; socialLinks: SocialLink[] }) {
   const columns = [
     { heading: 'Solutions', links: ['Software Development', 'UI/UX Design', 'Mobile Apps', 'SaaS Products', 'Business Systems', 'AI & Automation'] },
     { heading: 'Products', links: Array.from(new Set(products.map(product => product.name))) },
@@ -31,6 +33,9 @@ export default function Footer({ onStartProject, products }: { onStartProject: (
             <p style={{ color: MUTED, fontSize: 13, lineHeight: 1.65, maxWidth: 200 }}>Built by Will.<br />Powered by Skills.</p>
             <p style={{ ...mono, color: MUTED, fontSize: 11, marginTop: 14, letterSpacing: '0.08em' }}>A BBW Multi-Skills Ltd Company</p>
             <button type="button" onClick={onStartProject} style={{ marginTop: 20, padding: '9px 18px', background: ACCENT, border: 'none', borderRadius: 4, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Start a Project →</button>
+            <div className="footer-social-links" aria-label="BBW Tech social media">
+              {socialLinks.filter(link => link.isEnabled && link.url).map(link => <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer" aria-label={`Follow BBW Tech on ${link.platform}`} title={link.platform}><SocialIcon platform={link.platform} /></a>)}
+            </div>
           </div>
           {columns.map(({ heading, links }) => (
             <div key={heading}>
@@ -45,6 +50,7 @@ export default function Footer({ onStartProject, products }: { onStartProject: (
           <p style={{ ...mono, color: MUTED, fontSize: 11 }}>© 2026 BBW Tech Innovations. All rights reserved.</p>
           <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
             <p style={{ ...mono, color: MUTED, fontSize: 11 }}>Lagos, Nigeria</p>
+            <Link to="/privacy" style={{ ...mono, fontSize: 10, color: 'rgba(107,107,104,0.62)', textDecoration: 'none', letterSpacing: '0.08em' }}>Privacy</Link>
             <Link to="/admin" style={{ ...mono, fontSize: 10, color: 'rgba(107,107,104,0.45)', textDecoration: 'none', letterSpacing: '0.1em' }}>Admin</Link>
           </div>
         </div>

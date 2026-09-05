@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { BusinessArm } from '../../data/company'
-import { getBusinessArms, getClientWorks, getMarqueeItems, getMusicUrl, getProductApps, getProductWebsites } from '../../data/store'
+import { getBusinessArms, getClientWorks, getMarqueeItems, getMusicUrl, getProductApps, getProductWebsites, getSocialLinks } from '../../data/store'
 import type { Project } from '../../data/projects'
-import { fetchBusinessArms, fetchMarqueeItems, fetchMusicUrl, fetchProjects, removeProject, replaceMarqueeItems, saveBusinessArms, saveMusicUrl, saveProject } from '../../features/cms/contentRepository'
+import type { SocialLink } from '../../data/socialLinks'
+import { fetchBusinessArms, fetchMarqueeItems, fetchMusicUrl, fetchProjects, fetchSocialLinks, removeProject, replaceMarqueeItems, replaceSocialLinks, saveBusinessArms, saveMusicUrl, saveProject } from '../../features/cms/contentRepository'
 
 export default function useAdminData() {
   const [apps, setApps] = useState(getProductApps)
@@ -11,10 +12,11 @@ export default function useAdminData() {
   const [businessArms, setBusinessArms] = useState(getBusinessArms)
   const [marqueeItems, setMarqueeItems] = useState(getMarqueeItems)
   const [musicUrl, setMusicUrl] = useState(getMusicUrl)
+  const [socialLinks, setSocialLinks] = useState(getSocialLinks)
   const [needsInitialImport, setNeedsInitialImport] = useState(false)
 
   const refresh = useCallback(async () => {
-    const [projects, arms, marquee, music] = await Promise.all([fetchProjects(false), fetchBusinessArms(), fetchMarqueeItems(), fetchMusicUrl()])
+    const [projects, arms, marquee, music, social] = await Promise.all([fetchProjects(false), fetchBusinessArms(), fetchMarqueeItems(), fetchMusicUrl(), fetchSocialLinks(false)])
     setNeedsInitialImport(projects.length === 0 || arms.length === 0 || marquee.length === 0)
     if (projects.length) {
       setApps(projects.filter(project => project.isOwn && project.type === 'app'))
@@ -24,6 +26,7 @@ export default function useAdminData() {
     if (arms.length) setBusinessArms(arms)
     if (marquee.length) setMarqueeItems(marquee)
     setMusicUrl(music)
+    if (social.length) setSocialLinks(social)
   }, [])
 
   useEffect(() => {
@@ -40,6 +43,7 @@ export default function useAdminData() {
   const persistArms = async (arms: BusinessArm[]) => { await saveBusinessArms(arms); await refresh() }
   const persistMarquee = async (items: string[]) => { await replaceMarqueeItems(items); await refresh() }
   const persistMusic = async (url: string) => { await saveMusicUrl(url); await refresh() }
+  const persistSocialLinks = async (links: SocialLink[]) => { await replaceSocialLinks(links); await refresh() }
   const importCurrentContent = async () => {
     await Promise.all([...apps, ...websites, ...works].map((project, index) => saveProject(project, index)))
     await saveBusinessArms(businessArms)
@@ -48,5 +52,5 @@ export default function useAdminData() {
     await refresh()
   }
 
-  return { apps, setApps, websites, setWebsites, works, setWorks, businessArms, setBusinessArms, marqueeItems, setMarqueeItems, musicUrl, needsInitialImport, persistProject, deleteProject, persistArms, persistMarquee, persistMusic, importCurrentContent }
+  return { apps, setApps, websites, setWebsites, works, setWorks, businessArms, setBusinessArms, marqueeItems, setMarqueeItems, musicUrl, socialLinks, setSocialLinks, needsInitialImport, persistProject, deleteProject, persistArms, persistMarquee, persistMusic, persistSocialLinks, importCurrentContent }
 }

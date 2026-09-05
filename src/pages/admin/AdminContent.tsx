@@ -5,6 +5,7 @@ import EnquiriesManager from './EnquiriesManager'
 import MarqueeManager from './MarqueeManager'
 import MusicManager from './MusicManager'
 import ProjectManager from './ProjectManager'
+import SocialLinksManager from './SocialLinksManager'
 import TeamManager from './TeamManager'
 
 const report = (task: Promise<void>, success: string, onSaved: (message: string) => void) => {
@@ -19,5 +20,6 @@ export default function AdminContent({ tab, data, onSaved }: { tab: AdminTab; da
   if (tab === 'works') return <ProjectManager items={data.works} type="website" isWork onUpsert={project => report(data.persistProject(project), 'Client work saved to Supabase.', onSaved)} onDelete={id => report(data.deleteProject(id), 'Client work deleted.', onSaved)} />
   if (tab === 'business-arms') return <BusinessArmsManager arms={data.businessArms} setArms={data.setBusinessArms} onSave={data.persistArms} onSaved={onSaved} />
   if (tab === 'marquee') return <MarqueeManager items={data.marqueeItems} setItems={data.setMarqueeItems} onSave={data.persistMarquee} onSaved={onSaved} />
+  if (tab === 'social') return <SocialLinksManager links={data.socialLinks} setLinks={data.setSocialLinks} onSave={data.persistSocialLinks} onSaved={onSaved} />
   return <MusicManager value={data.musicUrl} onSave={data.persistMusic} onSaved={onSaved} />
 }

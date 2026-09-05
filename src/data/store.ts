@@ -2,6 +2,8 @@ import { productApps, productWebsites, clientWorks } from './projects'
 import type { Project } from './projects'
 import { defaultBusinessArms } from './company'
 import type { BusinessArm } from './company'
+import { defaultSocialLinks } from './socialLinks'
+import type { SocialLink } from './socialLinks'
 
 const KEYS = {
   productApps:    'bbw_product_apps',
@@ -11,6 +13,7 @@ const KEYS = {
   musicEnabled:   'bbw_music_enabled',
   businessArms:   'bbw_business_arms',
   marqueeItems:   'bbw_marquee_items',
+  socialLinks:    'bbw_social_links',
 }
 
 const DEFAULT_MARQUEE_ITEMS = [
@@ -69,6 +72,13 @@ export function getMarqueeItems(): string[] {
   } catch { return DEFAULT_MARQUEE_ITEMS }
 }
 
+export function getSocialLinks(): SocialLink[] {
+  try {
+    const stored = localStorage.getItem(KEYS.socialLinks)
+    return stored ? JSON.parse(stored) : defaultSocialLinks
+  } catch { return defaultSocialLinks }
+}
+
 // ─── Writers ──────────────────────────────────────────────────────────────────
 export function saveProductApps(data: Project[]) {
   localStorage.setItem(KEYS.productApps, JSON.stringify(data))
@@ -102,6 +112,11 @@ export function saveBusinessArms(data: BusinessArm[]) {
 
 export function saveMarqueeItems(data: string[]) {
   localStorage.setItem(KEYS.marqueeItems, JSON.stringify(data))
+  broadcast()
+}
+
+export function saveSocialLinks(data: SocialLink[]) {
+  localStorage.setItem(KEYS.socialLinks, JSON.stringify(data))
   broadcast()
 }
 

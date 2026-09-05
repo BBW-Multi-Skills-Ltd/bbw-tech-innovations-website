@@ -6,6 +6,7 @@ const AdminRouteBoundary = lazy(() => import('./pages/admin/AdminRouteBoundary')
 const PasswordResetPage = lazy(() => import('./features/auth/PasswordResetPage'))
 const AcceptInvitationPage = lazy(() => import('./features/auth/AcceptInvitationPage'))
 const ConfirmEmailPage = lazy(() => import('./features/auth/ConfirmEmailPage'))
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'))
 const loading = <div className="route-loader">Loading…</div>
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
       <Route path="/admin/reset-password" element={<Suspense fallback={loading}><PasswordResetPage /></Suspense>} />
       <Route path="/admin/accept-invite" element={<Suspense fallback={loading}><AcceptInvitationPage /></Suspense>} />
       <Route path="/admin/confirm-email" element={<Suspense fallback={loading}><ConfirmEmailPage /></Suspense>} />
+      <Route path="/privacy" element={<Suspense fallback={loading}><PrivacyPolicyPage /></Suspense>} />
       <Route path="/cms" element={<Navigate to="/admin" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

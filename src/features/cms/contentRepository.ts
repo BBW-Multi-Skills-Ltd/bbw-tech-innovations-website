@@ -1,5 +1,6 @@
 import type { BusinessArm } from '../../data/company'
 import type { ClientReview, Project } from '../../data/projects'
+import type { SocialLink } from '../../data/socialLinks'
 import { supabase } from '../../lib/supabase'
 
 type ProjectRow = Record<string, unknown> & { id: string; project_reviews?: ReviewRow[] }
@@ -113,4 +114,36 @@ export async function fetchMusicUrl() {
 export async function saveMusicUrl(url: string) {
   const { error } = await client().from('site_settings').upsert({ setting_key: 'music_url', value: { url } })
   if (error) throw error
+}
+
+export async function fetchSocialLinks(enabledOnly = true) {
+  let query = client().from('social_links').select('id,platform,url,is_enabled').order('sort_order')
+  if (enabledOnly) query = query.eq('is_enabled', true)
+  const { data, error } = await query
+  if (error) throw error
+  return (data as { id: string; platform: string; url: string; is_enabled: boolean }[]).map(link => ({ id: link.id, platform: link.platform, url: link.url, isEnabled: link.is_enabled }))
+}
+
+export async function replaceSocialLinks(links: SocialLink[]) {
+  const db = client()
+  const { data, error } = await db.from('social_links').select('id')
+  if (error) throw error
+  const existingIds = (data as { id: string }[]).map(link => link.id)
+  const nextIds = links.map(link => link.id).filter(id => !id.startsWith('social-'))
+  const removedIds = existingIds.filter(id => !nextIds.includes(id))
+  if (removedIds.length) {
+    const { error: removeError } = await db.from('social_links').delete().in('id', removedIds)
+    if (removeError) throw removeError
+  }
+  const rows = links.map((link, sort_order) => ({
+    ...(link.id.startsWith('social-') ? {} : { id: link.id }),
+    platform: link.platform.trim().toLowerCase(),
+    url: link.url.trim(),
+    is_enabled: link.isEnabled,
+    sort_order,
+  }))
+  if (rows.length) {
+    const { error: saveError } = await db.from('social_links').upsert(rows, { onConflict: 'platform' })
+    if (saveError) throw saveError
+  }
 }
