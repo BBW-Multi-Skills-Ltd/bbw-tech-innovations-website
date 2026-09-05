@@ -6,10 +6,6 @@ import type { PrivacyPolicyContent } from '../data/siteContent'
 export default function PrivacyPolicyPage() {
   const [policy, setPolicy] = useState<PrivacyPolicyContent>(defaultPrivacyPolicy)
   useEffect(() => {
-    document.title = 'Privacy Policy | BBW Tech Innovations'
-    return () => { document.title = 'BBW Tech Innovations' }
-  }, [])
-  useEffect(() => {
     void import('../features/cms/contentRepository').then(({ fetchPrivacyPolicy }) => fetchPrivacyPolicy(defaultPrivacyPolicy)).then(setPolicy).catch(() => undefined)
   }, [])
 

@@ -3,7 +3,7 @@ export const NAV_LINKS = ['Solutions', 'Products', 'Work', 'About']
 export const SERVICES = [
   { icon: '⊞', title: 'Software Development', desc: 'Business websites, web applications, progressive web apps, and custom platforms built around your workflow — not ours.' },
   { icon: '◉', title: 'UI/UX Design', desc: 'Product research, user flows, wireframes, interface design, responsive systems, and prototypes that test before they ship.' },
-  { icon: '⬡', title: 'Mobile Applications', desc: 'Android and iOS apps for businesses and startups, built with React Native so one codebase serves every platform.' },
+  { icon: '⬡', title: 'Mobile Applications', desc: 'Android and iOS apps for businesses and startups, built with the right cross-platform technology for each product, so one codebase can serve both platforms.' },
   { icon: '◆', title: 'SaaS Products', desc: 'Scalable software platforms engineered for recurring growth — designed from day one to expand without a full rebuild.' },
   { icon: '⊟', title: 'Business Systems', desc: 'Digitize the manual processes your business currently runs on paper, spreadsheets, or WhatsApp group chats.' },
   { icon: '⌬', title: 'AI & Automation', desc: 'AI integrations, workflow automation, and intelligent systems that cut repetitive work and sharpen how your business operates.' },

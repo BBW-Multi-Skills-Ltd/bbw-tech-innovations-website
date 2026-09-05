@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /cms
+Disallow: /admin/reset-password
+Disallow: /admin/accept-invite
+Disallow: /admin/confirm-email
+
+Sitemap: https://bbwtechinnovation.com/sitemap.xml
