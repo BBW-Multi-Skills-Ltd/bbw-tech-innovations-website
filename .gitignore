@@ -17,6 +17,7 @@ dist-ssr
 
 # Local database exports may contain private customer and enquiry data.
 backups/
+/.npm-cache/
 
 # Editor directories and files
 .vscode/*

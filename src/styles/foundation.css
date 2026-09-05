@@ -145,6 +145,24 @@ body {
   text-transform: uppercase;
 }
 
+.sentry-error-boundary {
+  align-content: center;
+  gap: 1.25rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.sentry-error-boundary p { margin: 0; }
+
+.sentry-error-boundary button {
+  justify-self: center;
+  border: 1px solid var(--bbw-accent);
+  background: var(--bbw-accent);
+  color: #fff;
+  padding: 0.75rem 1.1rem;
+  cursor: pointer;
+}
+
 button, a, input, textarea { font: inherit; }
 
 :focus-visible {
