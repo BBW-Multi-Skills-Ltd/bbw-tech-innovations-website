@@ -7,6 +7,11 @@ export const isSupabaseConfigured = Boolean(projectUrl && publishableKey)
 
 export const supabase = isSupabaseConfigured
   ? createClient(projectUrl, publishableKey, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+      experimental: { passkey: true },
+    },
   })
   : null

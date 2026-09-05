@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import type { AdminIdentity } from './types'
 import { supabase } from '../../lib/supabase'
 import VerificationCodeInput from './VerificationCodeInput'
+import PasskeySettings from './PasskeySettings'
 
 export default function AccountSettings({ identity }: { identity: AdminIdentity }) {
   const navigate = useNavigate()
@@ -33,5 +34,6 @@ export default function AccountSettings({ identity }: { identity: AdminIdentity 
   return <main className="admin-auth-page"><section className="admin-auth-card"><p className="eyebrow">Account settings</p><h1>Security and email</h1><p className="admin-auth-copy">Signed in as {identity.user.email}.</p>
     {!awaitingCode ? <form onSubmit={requestChange}><label>New email<input type="email" value={newEmail} onChange={event => setNewEmail(event.target.value)} required /></label><label>Current password<input type="password" value={password} onChange={event => setPassword(event.target.value)} autoComplete="current-password" required /></label><button type="submit" className="admin-auth-submit">Send verification code</button></form> : <form onSubmit={verifyChange}><VerificationCodeInput value={code} onChange={setCode} label="Code sent to new email" /><button type="submit" className="admin-auth-submit">Confirm new email</button></form>}
     {message && <p className="admin-auth-message" role="status">{message}</p>}<Link className="admin-auth-link" to="/admin/reset-password">Change password with a code</Link><Link className="admin-auth-link" to="/admin">Back to admin</Link>
+    <PasskeySettings />
   </section></main>
 }
