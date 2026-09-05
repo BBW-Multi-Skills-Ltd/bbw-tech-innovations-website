@@ -11,6 +11,7 @@ function footerHref(heading: string, label: string) {
   if (label === 'About') return '#about'
   if (label === 'Our Work') return '#work'
   if (label === 'Process') return '#process'
+  if (label === 'Privacy Policy') return '/privacy'
   return '#contact'
 }
 
@@ -18,7 +19,7 @@ export default function Footer({ onStartProject, products, socialLinks }: { onSt
   const columns = [
     { heading: 'Solutions', links: ['Software Development', 'UI/UX Design', 'Mobile Apps', 'SaaS Products', 'Business Systems', 'AI & Automation'] },
     { heading: 'Products', links: Array.from(new Set(products.map(product => product.name))) },
-    { heading: 'Company', links: ['About', 'Our Work', 'Process', 'Contact'] },
+    { heading: 'Company', links: ['About', 'Our Work', 'Process', 'Contact', 'Privacy Policy'] },
   ]
 
   return (
@@ -41,7 +42,7 @@ export default function Footer({ onStartProject, products, socialLinks }: { onSt
             <div key={heading}>
               <p style={{ ...mono, fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: MUTED, marginBottom: 18 }}>{heading}</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {links.map(label => <a key={label} href={footerHref(heading, label)} className="footer-link">{label}</a>)}
+                {links.map(label => label === 'Privacy Policy' ? <Link key={label} to="/privacy" className="footer-link">{label}</Link> : <a key={label} href={footerHref(heading, label)} className="footer-link">{label}</a>)}
               </div>
             </div>
           ))}
@@ -50,7 +51,6 @@ export default function Footer({ onStartProject, products, socialLinks }: { onSt
           <p style={{ ...mono, color: MUTED, fontSize: 11 }}>© 2026 BBW Tech Innovations. All rights reserved.</p>
           <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
             <p style={{ ...mono, color: MUTED, fontSize: 11 }}>Lagos, Nigeria</p>
-            <Link to="/privacy" style={{ ...mono, fontSize: 10, color: 'rgba(107,107,104,0.62)', textDecoration: 'none', letterSpacing: '0.08em' }}>Privacy</Link>
             <Link to="/admin" style={{ ...mono, fontSize: 10, color: 'rgba(107,107,104,0.45)', textDecoration: 'none', letterSpacing: '0.1em' }}>Admin</Link>
           </div>
         </div>
