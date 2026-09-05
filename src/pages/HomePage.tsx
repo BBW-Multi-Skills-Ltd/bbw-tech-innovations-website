@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { lazy, Suspense, useCallback, useState } from 'react'
 import type { Project } from '../data/projects'
 import useSiteContent from '../hooks/useSiteContent'
 import useTheme from '../hooks/useTheme'
@@ -6,8 +6,6 @@ import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
 import ScrollingStrip from '../components/ui/ScrollingStrip'
 import MusicPlayer from '../components/MusicPlayer'
-import ContactForm from '../components/ContactForm'
-import ProjectModal from '../components/ProjectModal'
 import HeroSection from '../features/hero/HeroSection'
 import ProblemSection from '../sections/ProblemSection'
 import SolutionsSection from '../sections/SolutionsSection'
@@ -18,6 +16,9 @@ import TechnologySection from '../sections/TechnologySection'
 import AboutSection from '../sections/AboutSection'
 import CallToActionSection from '../sections/CallToActionSection'
 import { BG, FG } from '../styles/theme'
+
+const ContactForm = lazy(() => import('../components/ContactForm'))
+const ProjectModal = lazy(() => import('../components/ProjectModal'))
 
 export default function HomePage() {
   const { dark, toggleTheme } = useTheme()
@@ -44,8 +45,8 @@ export default function HomePage() {
         <CallToActionSection onStartProject={openContact} />
       </main>
       <Footer products={[...apps, ...websites]} onStartProject={openContact} />
-      <ProjectModal project={selectedProject} onClose={closeProject} />
-      <ContactForm open={contactOpen} onClose={() => setContactOpen(false)} />
+      {selectedProject && <Suspense fallback={null}><ProjectModal project={selectedProject} onClose={closeProject} /></Suspense>}
+      {contactOpen && <Suspense fallback={null}><ContactForm open={contactOpen} onClose={() => setContactOpen(false)} /></Suspense>}
       <MusicPlayer url={musicUrl} />
     </div>
   )
