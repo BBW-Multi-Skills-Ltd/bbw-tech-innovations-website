@@ -16,6 +16,7 @@ export default function AdminPanel({ identity, onSignOut }: Props) {
   const [activeTab, setActiveTab] = useState<AdminTab>(() => location.pathname === '/admin/account' ? 'account' : 'home')
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [savedMessage, setSavedMessage] = useState('')
+  const [savedMessageIsError, setSavedMessageIsError] = useState(false)
   const [isImporting, setIsImporting] = useState(false)
   const toastTimer = useRef<number | null>(null)
   const data = useAdminData()
@@ -25,6 +26,7 @@ export default function AdminPanel({ identity, onSignOut }: Props) {
 
   const showSaved = useCallback((message: string) => {
     if (toastTimer.current) window.clearTimeout(toastTimer.current)
+    setSavedMessageIsError(/\b(could not|failed|error|invalid|requires|only be added)\b/i.test(message))
     setSavedMessage(message)
     toastTimer.current = window.setTimeout(() => setSavedMessage(''), 2500)
   }, [])
@@ -44,7 +46,7 @@ export default function AdminPanel({ identity, onSignOut }: Props) {
         {data.needsInitialImport && <header className="admin-cms-heading"><p className="eyebrow">Migration required</p><h1>Finish moving content to Supabase.</h1><p>Your previous local content is ready to be imported into the CMS.</p><button type="button" className="btn-primary admin-import-button" onClick={() => void importCurrentContent()} disabled={isImporting}>{isImporting ? 'Importing...' : 'Finish import to Supabase'}</button></header>}
         <div className="admin-tab-panel"><AdminContent tab={activeTab} data={data} onSaved={showSaved} identity={identity} onNavigate={setActiveTab} /></div>
       </div>
-      <span className="admin-saved-toast" role="status" aria-live="polite">{savedMessage}</span>
+      <span className={`admin-saved-toast${savedMessageIsError ? ' is-error' : ''}`} role="status" aria-live="polite">{savedMessage}</span>
     </div>
     <MusicPlayer url={data.musicUrl} />
   </main>

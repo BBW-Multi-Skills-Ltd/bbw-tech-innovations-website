@@ -1492,14 +1492,20 @@ button.is-danger { border-color: rgba(239, 68, 68, 0.3); color: #EF4444; }
 
 .admin-saved-toast {
   position: fixed;
-  right: 20px;
+  right: 104px;
   bottom: 20px;
-  z-index: 120;
+  z-index: 320;
+  max-width: min(520px, calc(100vw - 140px));
+  padding: 10px 13px;
+  border: 1px solid color-mix(in srgb, #22C55E 40%, transparent);
+  border-radius: 6px;
+  background: var(--bbw-surface);
   min-height: 18px;
   color: #22C55E;
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
 }
+.admin-saved-toast.is-error { border-color: color-mix(in srgb, #ef4444 48%, transparent); color: #ef4444; }
 
 .legal-page { min-height: 100vh; padding: clamp(40px, 8vw, 100px) 20px; background: var(--bbw-bg); color: var(--bbw-fg); }
 .legal-content { width: min(100%, 760px); margin: 0 auto; }
