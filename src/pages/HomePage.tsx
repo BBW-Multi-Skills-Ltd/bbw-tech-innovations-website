@@ -16,6 +16,7 @@ import TechnologySection from '../sections/TechnologySection'
 import AboutSection from '../sections/AboutSection'
 import CallToActionSection from '../sections/CallToActionSection'
 import { BG, FG } from '../styles/theme'
+import CookieConsent from '../features/privacy/CookieConsentBanner'
 
 const ContactForm = lazy(() => import('../components/ContactForm'))
 const ProjectModal = lazy(() => import('../components/ProjectModal'))
@@ -48,6 +49,7 @@ export default function HomePage() {
       {selectedProject && <Suspense fallback={null}><ProjectModal project={selectedProject} onClose={closeProject} /></Suspense>}
       {contactOpen && <Suspense fallback={null}><ContactForm open={contactOpen} onClose={() => setContactOpen(false)} /></Suspense>}
       <MusicPlayer url={musicUrl} />
+      <CookieConsent />
     </div>
   )
 }

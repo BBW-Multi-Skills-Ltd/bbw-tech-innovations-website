@@ -18,6 +18,7 @@ export const defaultPrivacyPolicy: PrivacyPolicyContent = {
     { heading: 'Service providers', body: 'We use trusted service providers to operate the website and enquiries, including Vercel, Supabase, and Resend. They process data only as needed to provide their services.' },
     { heading: 'Sharing and retention', body: 'We do not sell personal information. We retain enquiry information only for as long as reasonably necessary for communication, record-keeping, legal obligations, and business operations.' },
     { heading: 'Your choices', body: 'You may ask us to access, correct, or delete personal information we hold about you, subject to applicable law and legitimate business requirements.' },
+    { heading: 'Cookies', body: 'We use essential cookies for website security and sign-in. Optional preference and analytics cookies are used only when you choose to allow them. You can change your cookie preferences at any time from the website footer.' },
     { heading: 'Contact', body: 'For privacy questions or requests, email bbwmultiskillsltd@gmail.com.' },
   ],
 }
