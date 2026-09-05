@@ -1,0 +1,140 @@
+/* â”€â”€â”€ Theme tokens â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+:root {
+  --bbw-bg:          #09090B;
+  --bbw-surface:     #111113;
+  --bbw-surface2:    #18181B;
+  --bbw-fg:          #F0F0EE;
+  --bbw-muted:       #6B6B68;
+  --bbw-accent:      #2979FF;
+  --bbw-accent-dim:  rgba(41,121,255,0.10);
+  --bbw-border:      rgba(240,240,238,0.07);
+  --bbw-border-hi:   rgba(240,240,238,0.15);
+  --bbw-grid:        rgba(240,240,238,0.055);
+}
+
+[data-theme="light"] {
+  --bbw-bg:          #F7F6F3;
+  --bbw-surface:     #FFFFFF;
+  --bbw-surface2:    #EFEFED;
+  --bbw-fg:          #0A0A0B;
+  --bbw-muted:       #8A8A87;
+  --bbw-accent:      #2979FF;
+  --bbw-accent-dim:  rgba(41,121,255,0.08);
+  --bbw-border:      rgba(10,10,11,0.09);
+  --bbw-border-hi:   rgba(10,10,11,0.18);
+  --bbw-grid:        rgba(10,10,11,0.055);
+}
+
+/* â”€â”€â”€ Smooth theme transition â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease,
+    fill 0.4s ease,
+    stroke 0.4s ease !important;
+}
+
+/* â”€â”€â”€ Keyframes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes lamp-swing {
+  0%   { transform: rotate(0deg); }
+  15%  { transform: rotate(-22deg); }
+  35%  { transform: rotate(16deg); }
+  52%  { transform: rotate(-11deg); }
+  66%  { transform: rotate(7deg); }
+  78%  { transform: rotate(-4deg); }
+  88%  { transform: rotate(2deg); }
+  95%  { transform: rotate(-1deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+@keyframes modal-overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.96) translateY(16px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* â”€â”€ Modal two-column responsive â”€â”€ */
+@media (max-width: 840px) {
+  /* Stack demo above info on smaller screens */
+  .modal-body {
+    grid-template-columns: 1fr !important;
+  }
+
+  .modal-preview {
+    position: static !important;
+    top: auto !important;
+    align-self: stretch !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid var(--bbw-border);
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-preview {
+    padding: 24px 16px !important;
+  }
+}
+
+/* â”€â”€â”€ Base â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+html { color-scheme: dark; }
+[data-theme="light"] { color-scheme: light; }
+
+body {
+  background-color: var(--bbw-bg);
+  color: var(--bbw-fg);
+  font-family: 'Outfit', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.route-loader {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: var(--bbw-bg);
+  color: var(--bbw-muted);
+  font: 500 11px 'JetBrains Mono', monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+button, a, input, textarea { font: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--bbw-accent);
+  outline-offset: 3px;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.2); border-radius: 2px; }
+

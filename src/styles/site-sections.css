@@ -1,0 +1,279 @@
+/* ─── Services ─────────────────────────────────────────────────────────────── */
+.service-card {
+  padding: 32px 28px;
+  background: var(--bbw-surface);
+  border-right: 1px solid var(--bbw-border);
+  border-bottom: 1px solid var(--bbw-border);
+  transition: background 0.2s;
+  cursor: default;
+}
+.service-card:hover { background: var(--bbw-surface2); }
+.service-card:hover .service-icon {
+  border-color: rgba(41,121,255,0.35);
+  background: rgba(41,121,255,0.1);
+  color: var(--bbw-accent);
+}
+
+.service-icon {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--bbw-border);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bbw-muted);
+  font-size: 16px;
+  margin-bottom: 20px;
+  transition: all 0.2s;
+}
+
+/* ─── Cards ────────────────────────────────────────────────────────────────── */
+.product-card {
+  border: 1px solid var(--bbw-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bbw-surface);
+  transition: border-color 0.2s, transform 0.25s;
+}
+.product-card:hover {
+  border-color: var(--bbw-border-hi);
+  transform: translateY(-5px);
+}
+
+.portfolio-card {
+  border: 1px solid var(--bbw-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bbw-surface);
+  transition: border-color 0.2s;
+}
+.portfolio-card:hover { border-color: var(--bbw-border-hi); }
+
+.work-review-preview {
+  margin: 0 0 20px;
+  padding: 13px 14px;
+  border-left: 2px solid var(--bbw-accent);
+  background: var(--bbw-accent-dim);
+}
+
+.work-review-preview blockquote {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--bbw-fg);
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 14px;
+  font-style: italic;
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.work-review-preview figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin-top: 9px;
+  color: var(--bbw-muted);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.work-review-preview figcaption strong {
+  color: var(--bbw-accent);
+  font-weight: 600;
+}
+
+/* ─── Process ──────────────────────────────────────────────────────────────── */
+.process-row {
+  border-bottom: 1px solid var(--bbw-border);
+}
+.process-row:last-child { border-bottom: none; }
+
+.process-trigger {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  padding: 24px 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.process-trigger:hover .process-num,
+.process-trigger:hover .process-arrow,
+.process-trigger:focus-visible .process-num,
+.process-trigger:focus-visible .process-arrow,
+.process-row.is-open .process-num,
+.process-row.is-open .process-arrow {
+  color: var(--bbw-accent);
+  opacity: 1;
+}
+
+.process-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--bbw-muted);
+  min-width: 32px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.process-summary {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.process-title {
+  margin-bottom: 6px;
+  color: var(--bbw-fg);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.process-description {
+  color: var(--bbw-muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.process-arrow {
+  min-width: 24px;
+  padding-top: 1px;
+  color: var(--bbw-muted);
+  font-size: 18px;
+  line-height: 1;
+  text-align: center;
+  opacity: 0.45;
+  transition: color 0.2s, opacity 0.2s, transform 0.25s;
+}
+
+.process-row.is-open .process-arrow {
+  transform: rotate(180deg);
+}
+
+.process-row:last-child.is-open .process-arrow {
+  transform: rotate(-45deg);
+}
+
+.process-details {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.32s ease, opacity 0.25s ease;
+}
+
+.process-details-inner {
+  min-height: 0;
+  overflow: hidden;
+  margin-left: 64px;
+}
+
+.process-row.is-open .process-details {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.process-row.is-open .process-details-inner {
+  padding-bottom: 28px;
+}
+
+.process-detail-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px 20px;
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+}
+
+.process-detail-list li {
+  position: relative;
+  padding-left: 15px;
+  color: var(--bbw-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.process-detail-list li::before {
+  content: '';
+  position: absolute;
+  top: 0.62em;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--bbw-accent);
+}
+
+.process-output {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 12px 14px;
+  border: 1px solid rgba(41, 121, 255, 0.2);
+  border-radius: 5px;
+  background: var(--bbw-accent-dim);
+  color: var(--bbw-fg);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.process-output span {
+  flex-shrink: 0;
+  color: var(--bbw-accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.process-note {
+  margin-top: 10px;
+  color: var(--bbw-muted);
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.process-expand-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 28px;
+  padding: 9px 13px;
+  border: 1px solid var(--bbw-border-hi);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--bbw-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+}
+
+.process-expand-all:hover,
+.process-expand-all:focus-visible {
+  border-color: rgba(41, 121, 255, 0.45);
+  background: var(--bbw-accent-dim);
+  color: var(--bbw-accent);
+}
+
+@media (max-width: 640px) {
+  .process-trigger { gap: 16px; }
+  .process-details-inner { margin-left: 48px; }
+  .process-detail-list { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
+  .process-intro { position: static !important; }
+  .process-expand-all { display: none; }
+}
+
