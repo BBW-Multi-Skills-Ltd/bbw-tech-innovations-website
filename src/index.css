@@ -591,6 +591,11 @@ button, a, input, textarea { font: inherit; }
   .process-detail-list { grid-template-columns: 1fr; }
 }
 
+@media (max-width: 760px) {
+  .process-intro { position: static !important; }
+  .process-expand-all { display: none; }
+}
+
 /* ─── Footer ───────────────────────────────────────────────────────────────── */
 .footer-link {
   color: var(--bbw-muted);
