@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { PROCESS_STEPS } from '../content/process'
+import type { ProcessStep } from '../content/process'
 import { BORDER, MUTED, SURFACE } from '../styles/theme'
 import SectionHeading, { Eyebrow } from '../components/ui/SectionHeading'
 
-export default function ProcessSection() {
+export default function ProcessSection({ steps = PROCESS_STEPS }: { steps?: ProcessStep[] }) {
   const [openStep, setOpenStep] = useState<number | null>(0)
   const [allOpen, setAllOpen] = useState(false)
   const toggleStep = (index: number) => {
@@ -23,12 +24,12 @@ export default function ProcessSection() {
           </button>
         </div>
         <div>
-          {PROCESS_STEPS.map((step, index) => (
+          {steps.map((step, index) => (
             <div key={step.num} className={`process-row${allOpen || openStep === index ? ' is-open' : ''}`}>
               <button type="button" className="process-trigger" onClick={() => toggleStep(index)} aria-expanded={allOpen || openStep === index} aria-controls={`process-details-${step.num}`}>
                 <span className="process-num">{step.num}</span>
                 <span className="process-summary"><span className="process-title">{step.title}</span><span className="process-description">{step.desc}</span></span>
-                <span className="process-arrow" aria-hidden="true">{index === PROCESS_STEPS.length - 1 ? '↺' : '↓'}</span>
+                <span className="process-arrow" aria-hidden="true">{index === steps.length - 1 ? '↺' : '↓'}</span>
               </button>
               <div id={`process-details-${step.num}`} className="process-details">
                 <div className="process-details-inner">

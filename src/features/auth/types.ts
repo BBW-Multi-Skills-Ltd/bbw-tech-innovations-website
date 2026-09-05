@@ -8,6 +8,7 @@ export interface AdminIdentity {
   role: CmsRole
   fullName: string
   jobTitle: string
+  avatarUrl?: string
 }
 
 export type AdminAuthState =

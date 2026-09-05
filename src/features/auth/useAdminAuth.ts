@@ -4,6 +4,7 @@ import { cmsRoles, type AdminAuthState, type CmsRole } from './types'
 
 const isCmsRole = (role: string): role is CmsRole => cmsRoles.includes(role as CmsRole)
 type CmsIdentityResult = { role: string; full_name: string; job_title: string }
+type ProfileResult = { full_name: string; job_title: string; avatar_url: string | null }
 
 export default function useAdminAuth() {
   const [state, setState] = useState<AdminAuthState>(
@@ -25,13 +26,16 @@ export default function useAdminAuth() {
       setState({ status: 'unauthorized', email: user.email ?? '' })
       return
     }
+    const { data: profileResult } = await supabase.from('profiles').select('full_name, job_title, avatar_url').eq('user_id', user.id).maybeSingle()
+    const profile = profileResult as ProfileResult | null
     setState({
       status: 'authorized',
       identity: {
         user,
         role,
-        fullName: identity?.full_name || user.user_metadata.full_name || user.email || 'Team member',
-        jobTitle: identity?.job_title || user.user_metadata.job_title || '',
+        fullName: profile?.full_name || identity?.full_name || user.user_metadata.full_name || user.email || 'Team member',
+        jobTitle: profile?.job_title || identity?.job_title || user.user_metadata.job_title || '',
+        avatarUrl: profile?.avatar_url || undefined,
       },
     })
   }, [])

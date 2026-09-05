@@ -22,7 +22,7 @@ const ProjectModal = lazy(() => import('../components/ProjectModal'))
 
 export default function HomePage() {
   const { dark, toggleTheme } = useTheme()
-  const { apps, websites, works, businessArms, marqueeItems, musicUrl, socialLinks } = useSiteContent()
+  const { apps, websites, works, businessArms, marqueeItems, musicUrl, socialLinks, processSteps, technologies, companyDetails } = useSiteContent()
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [contactOpen, setContactOpen] = useState(false)
   const openProject = useCallback((project: Project) => setSelectedProject(project), [])
@@ -39,12 +39,12 @@ export default function HomePage() {
         <SolutionsSection />
         <ProductsSection apps={apps} websites={websites} onOpen={openProject} />
         <WorkSection works={works} onOpen={openProject} />
-        <ProcessSection />
-        <TechnologySection />
+        <ProcessSection steps={processSteps} />
+        <TechnologySection technologies={technologies} />
         <AboutSection businessArms={businessArms} />
         <CallToActionSection onStartProject={openContact} />
       </main>
-      <Footer products={[...apps, ...websites]} socialLinks={socialLinks} onStartProject={openContact} />
+      <Footer products={[...apps, ...websites]} socialLinks={socialLinks} companyDetails={companyDetails} onStartProject={openContact} />
       {selectedProject && <Suspense fallback={null}><ProjectModal project={selectedProject} onClose={closeProject} /></Suspense>}
       {contactOpen && <Suspense fallback={null}><ContactForm open={contactOpen} onClose={() => setContactOpen(false)} /></Suspense>}
       <MusicPlayer url={musicUrl} />

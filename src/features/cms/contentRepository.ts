@@ -1,6 +1,8 @@
 import type { BusinessArm } from '../../data/company'
 import type { ClientReview, Project } from '../../data/projects'
 import type { SocialLink } from '../../data/socialLinks'
+import type { CompanyDetails, PrivacyPolicyContent } from '../../data/siteContent'
+import type { ProcessStep } from '../../content/process'
 import { supabase } from '../../lib/supabase'
 
 type ProjectRow = Record<string, unknown> & { id: string; project_reviews?: ReviewRow[] }
@@ -115,6 +117,26 @@ export async function saveMusicUrl(url: string) {
   const { error } = await client().from('site_settings').upsert({ setting_key: 'music_url', value: { url } })
   if (error) throw error
 }
+
+export async function fetchSiteSetting<T>(key: string, fallback: T): Promise<T> {
+  const { data, error } = await client().from('site_settings').select('value').eq('setting_key', key).maybeSingle()
+  if (error) throw error
+  return data?.value ? data.value as T : fallback
+}
+
+export async function saveSiteSetting<T>(key: string, value: T) {
+  const { error } = await client().from('site_settings').upsert({ setting_key: key, value })
+  if (error) throw error
+}
+
+export const fetchProcessSteps = (fallback: ProcessStep[]) => fetchSiteSetting('process_steps', fallback)
+export const saveProcessSteps = (steps: ProcessStep[]) => saveSiteSetting('process_steps', steps)
+export const fetchTechnologies = (fallback: string[]) => fetchSiteSetting('technologies', fallback)
+export const saveTechnologies = (items: string[]) => saveSiteSetting('technologies', items)
+export const fetchPrivacyPolicy = (fallback: PrivacyPolicyContent) => fetchSiteSetting('privacy_policy', fallback)
+export const savePrivacyPolicy = (policy: PrivacyPolicyContent) => saveSiteSetting('privacy_policy', policy)
+export const fetchCompanyDetails = (fallback: CompanyDetails) => fetchSiteSetting('company_details', fallback)
+export const saveCompanyDetails = (details: CompanyDetails) => saveSiteSetting('company_details', details)
 
 export async function fetchSocialLinks(enabledOnly = true) {
   let query = client().from('social_links').select('id,platform,url,is_enabled').order('sort_order')

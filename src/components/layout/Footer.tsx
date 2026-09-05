@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import type { Project } from '../../data/projects'
 import type { SocialLink } from '../../data/socialLinks'
+import type { CompanyDetails } from '../../data/siteContent'
 import { ACCENT, BORDER, FG, MUTED, mono } from '../../styles/theme'
 import BrandLogo from '../ui/BrandLogo'
 import SocialIcon from '../ui/SocialIcon'
@@ -15,7 +16,7 @@ function footerHref(heading: string, label: string) {
   return '#contact'
 }
 
-export default function Footer({ onStartProject, products, socialLinks }: { onStartProject: () => void; products: Project[]; socialLinks: SocialLink[] }) {
+export default function Footer({ onStartProject, products, socialLinks, companyDetails }: { onStartProject: () => void; products: Project[]; socialLinks: SocialLink[]; companyDetails: CompanyDetails }) {
   const columns = [
     { heading: 'Solutions', links: ['Software Development', 'UI/UX Design', 'Mobile Apps', 'SaaS Products', 'Business Systems', 'AI & Automation'] },
     { heading: 'Products', links: Array.from(new Set(products.map(product => product.name))) },
@@ -50,7 +51,7 @@ export default function Footer({ onStartProject, products, socialLinks }: { onSt
         <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: 24, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
           <p style={{ ...mono, color: MUTED, fontSize: 11 }}>© 2026 BBW Tech Innovations. All rights reserved.</p>
           <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
-            <p style={{ ...mono, color: MUTED, fontSize: 11 }}>Lagos, Nigeria</p>
+            <p style={{ ...mono, color: MUTED, fontSize: 11 }}>{companyDetails.location}</p>
             <Link to="/admin" style={{ ...mono, fontSize: 10, color: 'rgba(107,107,104,0.45)', textDecoration: 'none', letterSpacing: '0.1em' }}>Admin</Link>
           </div>
         </div>
