@@ -81,9 +81,12 @@ html.theme-transitioning *::after {
   /* Stack demo above info on smaller screens */
   .modal-body {
     grid-template-columns: 1fr !important;
+    min-height: 0 !important;
   }
 
   .modal-preview {
+    width: 100%;
+    min-width: 0;
     position: static !important;
     top: auto !important;
     align-self: stretch !important;
@@ -92,11 +95,26 @@ html.theme-transitioning *::after {
     border-right: 0 !important;
     border-bottom: 1px solid var(--bbw-border);
   }
+
+  .modal-details {
+    min-width: 0;
+    overflow: visible !important;
+  }
+
+  .project-browser-demo,
+  .project-browser-demo-frame {
+    max-width: 100%;
+    min-width: 0;
+  }
 }
 
 @media (max-width: 480px) {
   .modal-preview {
     padding: 24px 16px !important;
+  }
+
+  .project-browser-demo-viewport {
+    height: clamp(170px, 58vw, 220px) !important;
   }
 }
 
@@ -137,4 +155,3 @@ button, a, input, textarea { font: inherit; }
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.2); border-radius: 2px; }
-

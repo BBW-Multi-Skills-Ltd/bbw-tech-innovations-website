@@ -1,8 +1,5 @@
 # BBW Tech Innovations — Supabase Auth email templates
 
-Paste each matching subject and HTML body into Supabase Dashboard → Authentication → Emails → Templates.
-These templates intentionally use `{{ .Token }}` and contain no authentication link.
-
 ## Reset password
 
 **Subject:** `{{ .Token }} is your BBW Tech password reset code`

@@ -4,7 +4,7 @@ import ModalSection from './ModalSection'
 
 export default function ProjectDetails({ project, onClose }: { project: Project; onClose: () => void }) {
   return (
-    <div style={{ padding: 'clamp(24px, 4vw, 40px)', overflowY: 'auto' }}>
+    <div className="modal-details" style={{ padding: 'clamp(24px, 4vw, 40px)', overflowY: 'auto' }}>
       <header style={{ marginBottom: 40 }}>
         <h2 id="project-modal-title" style={{ ...display, fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 700, lineHeight: 1.08, letterSpacing: '-0.025em', color: FG, marginBottom: 10 }}>{project.name}</h2>
         <p style={{ color: project.accentColor, fontWeight: 600, fontSize: 15 }}>{project.tagline}</p>
