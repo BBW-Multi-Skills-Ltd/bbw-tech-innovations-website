@@ -5,7 +5,6 @@ import type { CompanyDetails } from '../../data/siteContent'
 import { ACCENT, BORDER, FG, MUTED, mono } from '../../styles/theme'
 import BrandLogo from '../ui/BrandLogo'
 import SocialIcon from '../ui/SocialIcon'
-import { openCookiePreferences } from '../../features/privacy/cookieConsent'
 
 function footerHref(heading: string, label: string) {
   if (heading === 'Solutions') return '#solutions'
@@ -53,7 +52,6 @@ export default function Footer({ onStartProject, products, socialLinks, companyD
           <p style={{ ...mono, color: MUTED, fontSize: 11 }}>© 2026 BBW Tech Innovations. All rights reserved.</p>
           <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
             <p style={{ ...mono, color: MUTED, fontSize: 11 }}>{companyDetails.location}</p>
-            <button type="button" className="footer-cookie-settings" onClick={openCookiePreferences}>Cookie settings</button>
             <Link to="/admin" style={{ ...mono, fontSize: 10, color: 'rgba(107,107,104,0.45)', textDecoration: 'none', letterSpacing: '0.1em' }}>Admin</Link>
           </div>
         </div>
