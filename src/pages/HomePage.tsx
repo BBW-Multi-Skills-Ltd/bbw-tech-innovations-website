@@ -26,7 +26,10 @@ export default function HomePage() {
   const { apps, websites, works, businessArms, marqueeItems, musicUrl, socialLinks, processSteps, technologies, companyDetails } = useSiteContent()
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [contactOpen, setContactOpen] = useState(false)
-  const openProject = useCallback((project: Project) => setSelectedProject(project), [])
+  const openProject = useCallback((project: Project) => {
+    if (project.isOwn && project.status === 'coming-soon') return
+    setSelectedProject(project)
+  }, [])
   const closeProject = useCallback(() => setSelectedProject(null), [])
   const openContact = useCallback(() => setContactOpen(true), [])
 

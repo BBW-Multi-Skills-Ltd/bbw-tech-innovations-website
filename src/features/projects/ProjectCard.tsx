@@ -20,6 +20,7 @@ function ExternalLink({ project, label }: { project: Project; label: string }) {
 export default function ProjectCard({ project, variant, onOpen }: { project: Project; variant: CardVariant; onOpen: (project: Project) => void }) {
   const [hovered, setHovered] = useState(false)
   const isPhone = variant === 'app' || project.badge === 'mobile-app'
+  const isComingSoonProduct = project.isOwn && project.status === 'coming-soon'
   const meta = variant === 'app' ? getProjectPlatformLabel(project) : project.category
 
   return (
@@ -46,8 +47,8 @@ export default function ProjectCard({ project, variant, onOpen }: { project: Pro
           </figure>
         )}
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          <button type="button" onClick={() => onOpen(project)} style={{ flex: 1, minWidth: 120, padding: '10px 14px', background: project.accentColor, border: 'none', borderRadius: 5, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>View Details</button>
-          {variant !== 'app' && <ExternalLink project={project} label={variant === 'work' ? 'Visit Site' : 'View Site'} />}
+          <button type="button" disabled={isComingSoonProduct} onClick={() => onOpen(project)} style={{ flex: 1, minWidth: 120, padding: '10px 14px', background: isComingSoonProduct ? `${project.accentColor}55` : project.accentColor, border: 'none', borderRadius: 5, color: '#fff', fontSize: 13, fontWeight: 600, cursor: isComingSoonProduct ? 'not-allowed' : 'pointer' }}>{isComingSoonProduct ? 'Coming Soon' : 'View Details'}</button>
+          {variant !== 'app' && !isComingSoonProduct && <ExternalLink project={project} label={variant === 'work' ? 'Visit Site' : 'View Site'} />}
         </div>
       </div>
     </article>
