@@ -67,6 +67,7 @@
   grid-template-columns: repeat(12, minmax(0, 1fr));
   grid-auto-flow: dense;
   gap: 20px;
+  align-items: start;
 }
 .client-work-grid > .project-card--app { grid-column: span 3; }
 .client-work-grid > .project-card--website { grid-column: span 4; }
@@ -171,4 +172,3 @@
 .music-player:focus-visible .music-player-tooltip { opacity: 1; transform: translateY(-50%) translateX(0); }
 @keyframes music-player-hint { 0%, 100% { transform: translateY(0); opacity: 0.68; } 50% { transform: translateY(5px); opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .music-player.is-playing, .music-player-hint { animation: none; } }
-
