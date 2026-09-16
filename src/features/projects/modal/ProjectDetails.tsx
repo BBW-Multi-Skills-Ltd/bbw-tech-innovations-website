@@ -1,6 +1,7 @@
 import type { Project } from '../../../data/projects'
 import { BORDER, FG, MUTED, SURFACE2, display, mono } from '../../../styles/theme'
 import ModalSection from './ModalSection'
+import { externalUrl } from '../../../utils/urls'
 
 export default function ProjectDetails({ project, onClose }: { project: Project; onClose: () => void }) {
   return (
@@ -44,7 +45,7 @@ export default function ProjectDetails({ project, onClose }: { project: Project;
         <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.65 }}>BBW Tech Innovations can design and build a custom version for your business — or help you launch your own product.</p>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           <a href="#contact" onClick={onClose} style={{ padding: '10px 20px', background: project.accentColor, color: '#fff', borderRadius: 5, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>Start a Project →</a>
-          {project.type === 'website' && project.siteUrl && project.siteUrl !== '#' && <a href={project.siteUrl} target="_blank" rel="noopener noreferrer" style={{ padding: '10px 20px', border: `1px solid ${BORDER}`, color: FG, borderRadius: 5, fontSize: 13, fontWeight: 500, textDecoration: 'none' }}>View Live Site</a>}
+          {project.type === 'website' && project.siteUrl && project.siteUrl !== '#' && <a href={externalUrl(project.siteUrl)} target="_blank" rel="noopener noreferrer" style={{ padding: '10px 20px', border: `1px solid ${BORDER}`, color: FG, borderRadius: 5, fontSize: 13, fontWeight: 500, textDecoration: 'none' }}>View Live Site</a>}
         </div>
       </div>
     </div>

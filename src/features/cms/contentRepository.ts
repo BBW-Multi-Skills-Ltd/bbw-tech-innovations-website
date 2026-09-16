@@ -4,6 +4,7 @@ import type { SocialLink } from '../../data/socialLinks'
 import type { CompanyDetails, PrivacyPolicyContent } from '../../data/siteContent'
 import type { ProcessStep } from '../../content/process'
 import { supabase } from '../../lib/supabase'
+import { externalUrl } from '../../utils/urls'
 
 type ProjectRow = Record<string, unknown> & { id: string }
 type ReviewRow = { project_id: string; quote: string; client_name: string; client_role: string | null; source: ClientReview['source'] | null }
@@ -16,6 +17,10 @@ const client = () => {
 
 const list = <T>(value: unknown): T[] => Array.isArray(value) ? value as T[] : []
 const text = (value: unknown) => typeof value === 'string' ? value : ''
+const websiteUrl = (value?: string) => {
+  const trimmed = value?.trim()
+  return trimmed && trimmed !== '#' ? externalUrl(trimmed) : null
+}
 
 function fromRow(row: ProjectRow, review?: ReviewRow): Project {
   return {
@@ -36,7 +41,7 @@ const toRow = (project: Project, sortOrder: number) => ({
   id: project.id, kind: project.type, name: project.name, tagline: project.tagline, short_description: project.shortDesc,
   about: project.about, category: project.category, status: project.status, platform: project.platform || null,
   android_availability: project.androidAvailability || null, ios_availability: project.iosAvailability || null,
-  site_url: project.siteUrl || null, accent_color: project.accentColor, mock_bg: project.mockBg, card_image_url: project.cardImageUrl || null, screens: project.screens,
+  site_url: websiteUrl(project.siteUrl), accent_color: project.accentColor, mock_bg: project.mockBg, card_image_url: project.cardImageUrl || null, screens: project.screens,
   roles: project.roles, features: project.features, tech: project.tech, is_own: project.isOwn, year: project.year,
   badge: project.badge || null, demo_video_url: project.demoVideoUrl || null, qr_url: project.qrUrl || null, is_published: true, sort_order: sortOrder,
 })

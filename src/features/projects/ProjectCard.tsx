@@ -4,13 +4,14 @@ import { getProjectPlatformLabel } from '../../data/projects'
 import { BORDER, BORDER_HI, FG, MUTED, SURFACE, mono } from '../../styles/theme'
 import StatusBadge from '../../components/ui/StatusBadge'
 import { BrowserPreview, PhonePreview } from './ProjectPreview'
+import { externalUrl } from '../../utils/urls'
 
 type CardVariant = 'app' | 'website' | 'work'
 
 function ExternalLink({ project, label }: { project: Project; label: string }) {
   if (!project.siteUrl || project.siteUrl === '#') return null
   return (
-    <a href={project.siteUrl} target="_blank" rel="noopener noreferrer" style={{ padding: '10px 14px', background: 'transparent', border: `1px solid ${BORDER}`, borderRadius: 5, color: MUTED, fontSize: 13, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
+    <a href={externalUrl(project.siteUrl)} target="_blank" rel="noopener noreferrer" style={{ padding: '10px 14px', background: 'transparent', border: `1px solid ${BORDER}`, borderRadius: 5, color: MUTED, fontSize: 13, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
       {label}<span aria-hidden="true">↗</span>
     </a>
   )

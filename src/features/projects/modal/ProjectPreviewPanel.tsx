@@ -4,6 +4,7 @@ import { BORDER, MUTED, SURFACE, mono } from '../../../styles/theme'
 import BrowserDemo from './BrowserDemo'
 import PhoneDemo from './PhoneDemo'
 import QrCode from './QrCode'
+import { externalUrl } from '../../../utils/urls'
 
 export default function ProjectPreviewPanel({ project }: { project: Project }) {
   const platformLabel = getProjectPlatformLabel(project)
@@ -18,7 +19,7 @@ export default function ProjectPreviewPanel({ project }: { project: Project }) {
         </div>
       ) : (
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {project.siteUrl && project.siteUrl !== '#' && <a href={project.siteUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '11px 20px', background: project.accentColor, borderRadius: 5, color: '#fff', textDecoration: 'none', fontWeight: 600, fontSize: 13 }}>Visit Live Site →</a>}
+          {project.siteUrl && project.siteUrl !== '#' && <a href={externalUrl(project.siteUrl)} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '11px 20px', background: project.accentColor, borderRadius: 5, color: '#fff', textDecoration: 'none', fontWeight: 600, fontSize: 13 }}>Visit Live Site →</a>}
           <p style={{ ...mono, textAlign: 'center', fontSize: 10, letterSpacing: '0.1em', color: MUTED }}>{project.year}</p>
         </div>
       )}
