@@ -5,8 +5,8 @@ import type { CompanyDetails, PrivacyPolicyContent } from '../../data/siteConten
 import type { ProcessStep } from '../../content/process'
 import { supabase } from '../../lib/supabase'
 
-type ProjectRow = Record<string, unknown> & { id: string; project_reviews?: ReviewRow[] }
-type ReviewRow = { quote: string; client_name: string; client_role: string | null; source: ClientReview['source'] | null }
+type ProjectRow = Record<string, unknown> & { id: string }
+type ReviewRow = { project_id: string; quote: string; client_name: string; client_role: string | null; source: ClientReview['source'] | null }
 type ArmRow = { id: string; name: string; role: string; status: BusinessArm['status']; website_url: string | null }
 
 const client = () => {
@@ -17,8 +17,7 @@ const client = () => {
 const list = <T>(value: unknown): T[] => Array.isArray(value) ? value as T[] : []
 const text = (value: unknown) => typeof value === 'string' ? value : ''
 
-function fromRow(row: ProjectRow): Project {
-  const review = row.project_reviews?.[0]
+function fromRow(row: ProjectRow, review?: ReviewRow): Project {
   return {
     id: row.id, type: text(row.kind) as Project['type'], name: text(row.name), tagline: text(row.tagline),
     shortDesc: text(row.short_description), about: text(row.about), category: text(row.category),
@@ -43,26 +42,40 @@ const toRow = (project: Project, sortOrder: number) => ({
 })
 
 export async function fetchProjects(publishedOnly = true) {
-  let query = client().from('projects').select('*, project_reviews(*)').order('sort_order')
+  const db = client()
+  let query = db.from('projects').select('*').order('sort_order')
   if (publishedOnly) query = query.eq('is_published', true)
   const { data, error } = await query
   if (error) throw error
-  return (data as ProjectRow[]).map(fromRow)
+  const projects = data as ProjectRow[]
+  if (!projects.length) return []
+
+  let reviewQuery = db
+    .from('project_reviews')
+    .select('project_id, quote, client_name, client_role, source')
+    .in('project_id', projects.map(project => project.id))
+    .order('sort_order')
+  if (publishedOnly) reviewQuery = reviewQuery.eq('is_published', true)
+  const { data: reviewData, error: reviewError } = await reviewQuery
+  if (reviewError) throw reviewError
+  const reviews = new Map((reviewData as ReviewRow[]).map(review => [review.project_id, review]))
+  return projects.map(project => fromRow(project, reviews.get(project.id)))
 }
 
 export async function saveProject(project: Project, sortOrder = 0) {
   const db = client()
   const { error } = await db.from('projects').upsert(toRow(project, sortOrder))
   if (error) throw error
+  if (project.review?.quote.trim()) {
+    const { error: reviewError } = await db.from('project_reviews').upsert({
+      project_id: project.id, quote: project.review.quote.trim(), client_name: project.review.clientName.trim(),
+      client_role: project.review.clientRole?.trim() || '', source: project.review.source || 'other', is_published: true, sort_order: 0,
+    }, { onConflict: 'project_id' })
+    if (reviewError) throw reviewError
+    return
+  }
   const { error: removeError } = await db.from('project_reviews').delete().eq('project_id', project.id)
   if (removeError) throw removeError
-  if (project.review?.quote.trim()) {
-    const { error: reviewError } = await db.from('project_reviews').insert({
-      project_id: project.id, quote: project.review.quote.trim(), client_name: project.review.clientName.trim(),
-      client_role: project.review.clientRole?.trim() || '', source: project.review.source || 'other', sort_order: 0,
-    })
-    if (reviewError) throw reviewError
-  }
 }
 
 export async function removeProject(id: string) {
