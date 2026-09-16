@@ -19,7 +19,7 @@ const list = <T>(value: unknown): T[] => Array.isArray(value) ? value as T[] : [
 const text = (value: unknown) => typeof value === 'string' ? value : ''
 const websiteUrl = (value?: string) => {
   const trimmed = value?.trim()
-  return trimmed && trimmed !== '#' ? externalUrl(trimmed) : null
+  return trimmed && trimmed !== '#' && !/^https?:\/\/$/i.test(trimmed) ? externalUrl(trimmed) : null
 }
 
 function fromRow(row: ProjectRow, review?: ReviewRow): Project {

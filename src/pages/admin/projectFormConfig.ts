@@ -24,7 +24,7 @@ export function createEmptyProject(type: ProjectType, isWork: boolean): Project 
     platform: type === 'app' ? 'Android & iOS' : undefined,
     androidAvailability: type === 'app' ? 'available' : undefined,
     iosAvailability: type === 'app' ? 'available' : undefined,
-    siteUrl: type === 'website' ? '' : undefined,
+    siteUrl: type === 'website' ? 'https://' : undefined,
     accentColor: '#2979FF', mockBg: '#0A0F1E', cardImageUrl: '', isOwn: !isWork,
     screens: [
       { label: 'Main', colorA: '#2979FF', colorB: '#1E3A8A', colorC: '#1D4ED8' },
