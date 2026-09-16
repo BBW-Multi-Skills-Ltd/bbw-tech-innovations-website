@@ -31,7 +31,7 @@ function fromRow(row: ProjectRow, review?: ReviewRow): Project {
     iosAvailability: text(row.ios_availability) as Project['iosAvailability'], siteUrl: text(row.site_url) || undefined,
     accentColor: text(row.accent_color), mockBg: text(row.mock_bg), cardImageUrl: text(row.card_image_url) || undefined, screens: list<Project['screens'][number]>(row.screens),
     roles: list<Project['roles'][number]>(row.roles), features: list<Project['features'][number]>(row.features),
-    tech: list<string>(row.tech), isOwn: row.is_own === true, year: text(row.year),
+    tech: list<string>(row.tech), isOwn: row.is_own === true, isPublished: row.is_published !== false, year: text(row.year),
     badge: text(row.badge) as Project['badge'], demoVideoUrl: text(row.demo_video_url) || undefined, qrUrl: text(row.qr_url) || undefined,
     review: review ? { quote: review.quote, clientName: review.client_name, clientRole: review.client_role || undefined, source: review.source || 'other' } : undefined,
   }
@@ -43,7 +43,7 @@ const toRow = (project: Project, sortOrder: number) => ({
   android_availability: project.androidAvailability || null, ios_availability: project.iosAvailability || null,
   site_url: websiteUrl(project.siteUrl), accent_color: project.accentColor, mock_bg: project.mockBg, card_image_url: project.cardImageUrl || null, screens: project.screens,
   roles: project.roles, features: project.features, tech: project.tech, is_own: project.isOwn, year: project.year,
-  badge: project.badge || null, demo_video_url: project.demoVideoUrl || null, qr_url: project.qrUrl || null, is_published: true, sort_order: sortOrder,
+  badge: project.badge || null, demo_video_url: project.demoVideoUrl || null, qr_url: project.qrUrl || null, is_published: project.isPublished ?? true, sort_order: sortOrder,
 })
 
 export async function fetchProjects(publishedOnly = true) {
@@ -85,6 +85,11 @@ export async function saveProject(project: Project, sortOrder = 0) {
 
 export async function removeProject(id: string) {
   const { error } = await client().from('projects').delete().eq('id', id)
+  if (error) throw error
+}
+
+export async function setProjectPublished(id: string, isPublished: boolean) {
+  const { error } = await client().from('projects').update({ is_published: isPublished }).eq('id', id)
   if (error) throw error
 }
 

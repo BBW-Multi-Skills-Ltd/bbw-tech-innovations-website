@@ -6,7 +6,7 @@ import type { SocialLink } from '../../data/socialLinks'
 import type { CompanyDetails, PrivacyPolicyContent } from '../../data/siteContent'
 import { defaultCompanyDetails, defaultPrivacyPolicy, defaultProcessSteps, defaultTechnologies } from '../../data/siteContent'
 import type { ProcessStep } from '../../content/process'
-import { fetchBusinessArms, fetchCompanyDetails, fetchMarqueeItems, fetchMusicUrl, fetchPrivacyPolicy, fetchProcessSteps, fetchProjects, fetchSocialLinks, fetchTechnologies, removeProject, replaceMarqueeItems, replaceSocialLinks, saveBusinessArms, saveCompanyDetails, saveMusicUrl, savePrivacyPolicy, saveProcessSteps, saveProject, saveTechnologies } from '../../features/cms/contentRepository'
+import { fetchBusinessArms, fetchCompanyDetails, fetchMarqueeItems, fetchMusicUrl, fetchPrivacyPolicy, fetchProcessSteps, fetchProjects, fetchSocialLinks, fetchTechnologies, removeProject, replaceMarqueeItems, replaceSocialLinks, saveBusinessArms, saveCompanyDetails, saveMusicUrl, savePrivacyPolicy, saveProcessSteps, saveProject, saveTechnologies, setProjectPublished } from '../../features/cms/contentRepository'
 
 export default function useAdminData() {
   const [apps, setApps] = useState(getProductApps)
@@ -51,6 +51,7 @@ export default function useAdminData() {
     await refresh()
   }
   const deleteProject = async (id: string) => { await removeProject(id); await refresh() }
+  const persistProjectVisibility = async (id: string, isPublished: boolean) => { await setProjectPublished(id, isPublished); await refresh() }
   const persistArms = async (arms: BusinessArm[]) => { await saveBusinessArms(arms); await refresh() }
   const persistMarquee = async (items: string[]) => { await replaceMarqueeItems(items); await refresh() }
   const persistMusic = async (url: string) => { await saveMusicUrl(url); await refresh() }
@@ -67,5 +68,5 @@ export default function useAdminData() {
     await refresh()
   }
 
-  return { apps, setApps, websites, setWebsites, works, setWorks, businessArms, setBusinessArms, marqueeItems, setMarqueeItems, musicUrl, socialLinks, setSocialLinks, processSteps, setProcessSteps, technologies, setTechnologies, privacyPolicy, setPrivacyPolicy, companyDetails, setCompanyDetails, needsInitialImport, persistProject, deleteProject, persistArms, persistMarquee, persistMusic, persistSocialLinks, persistProcessSteps, persistTechnologies, persistPrivacyPolicy, persistCompanyDetails, importCurrentContent }
+  return { apps, setApps, websites, setWebsites, works, setWorks, businessArms, setBusinessArms, marqueeItems, setMarqueeItems, musicUrl, socialLinks, setSocialLinks, processSteps, setProcessSteps, technologies, setTechnologies, privacyPolicy, setPrivacyPolicy, companyDetails, setCompanyDetails, needsInitialImport, persistProject, deleteProject, persistProjectVisibility, persistArms, persistMarquee, persistMusic, persistSocialLinks, persistProcessSteps, persistTechnologies, persistPrivacyPolicy, persistCompanyDetails, importCurrentContent }
 }

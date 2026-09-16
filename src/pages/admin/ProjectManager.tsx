@@ -9,10 +9,11 @@ interface ProjectManagerProps {
   type: ProjectType
   isWork: boolean
   onUpsert: (project: Project) => void
+  onToggleVisibility: (project: Project) => void
   onDelete: (id: string) => void
 }
 
-export default function ProjectManager({ items, type, isWork, onUpsert, onDelete }: ProjectManagerProps) {
+export default function ProjectManager({ items, type, isWork, onUpsert, onToggleVisibility, onDelete }: ProjectManagerProps) {
   const [editing, setEditing] = useState<string | null>(null)
   const [addingNew, setAddingNew] = useState(false)
   const save = (project: Project) => { onUpsert(project); setEditing(null); setAddingNew(false) }
@@ -24,7 +25,13 @@ export default function ProjectManager({ items, type, isWork, onUpsert, onDelete
       <div className="admin-project-list">
         {items.map(project => (
           <div key={project.id}>
-            <ProjectRow project={project} editing={editing === project.id} onEdit={() => { setEditing(editing === project.id ? null : project.id); setAddingNew(false) }} onDelete={() => { if (window.confirm(`Delete “${project.name}”?`)) onDelete(project.id) }} />
+            <ProjectRow
+              project={project}
+              editing={editing === project.id}
+              onEdit={() => { setEditing(editing === project.id ? null : project.id); setAddingNew(false) }}
+              onToggleVisibility={() => onToggleVisibility(project)}
+              onDelete={() => { if (window.confirm(`Delete “${project.name}”?`)) onDelete(project.id) }}
+            />
             {editing === project.id && <ProjectForm initial={project} type={type} isWork={isWork} onSave={save} onCancel={() => setEditing(null)} />}
           </div>
         ))}

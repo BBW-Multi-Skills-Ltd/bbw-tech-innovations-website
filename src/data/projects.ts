@@ -68,6 +68,7 @@ export interface Project {
   features: Feature[]
   tech: string[]
   isOwn: boolean
+  isPublished?: boolean
   year: string
   badge?: WorkBadge  // for client works
   demoVideoUrl?: string

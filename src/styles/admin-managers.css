@@ -11,6 +11,7 @@
 }
 
 .admin-project-row.is-editing { border-color: rgba(41, 121, 255, 0.35); }
+.admin-project-row.is-hidden { opacity: 0.68; }
 
 .admin-project-status-dot {
   width: 9px;
@@ -204,4 +205,3 @@ button.is-danger { border-color: rgba(239, 68, 68, 0.3); color: #EF4444; }
 .legal-content section { margin-top: 38px; padding-top: 28px; border-top: 1px solid var(--bbw-border); }
 .legal-content h2 { margin-bottom: 10px; font-size: 19px; color: var(--bbw-fg); }
 .legal-content section p { color: var(--bbw-muted); font-size: 14px; line-height: 1.8; }
-
