@@ -59,6 +59,9 @@
 
 .product-app-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
 .product-website-grid { grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); }
+.product-app-grid > .agency-empty-state,
+.product-website-grid > .agency-empty-state,
+.client-work-grid > .agency-empty-state { grid-column: 1 / -1; }
 
 /* Client work may contain either kind of project. Its CMS badge selects the
    matching presentation: compact phone cards or wider browser cards. */

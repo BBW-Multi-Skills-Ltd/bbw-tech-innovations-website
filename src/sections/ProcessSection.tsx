@@ -3,6 +3,7 @@ import { PROCESS_STEPS } from '../content/process'
 import type { ProcessStep } from '../content/process'
 import { BORDER, MUTED, SURFACE } from '../styles/theme'
 import SectionHeading, { Eyebrow } from '../components/ui/SectionHeading'
+import AgencyEmptyState from '../components/ui/AgencyEmptyState'
 
 export default function ProcessSection({ steps = PROCESS_STEPS }: { steps?: ProcessStep[] }) {
   const [openStep, setOpenStep] = useState<number | null>(0)
@@ -19,12 +20,12 @@ export default function ProcessSection({ steps = PROCESS_STEPS }: { steps?: Proc
           <Eyebrow>How We Work</Eyebrow>
           <SectionHeading maxWidth={400}>From idea to<br />shipped product.</SectionHeading>
           <p style={{ color: MUTED, fontSize: 15, lineHeight: 1.75, marginTop: 20, maxWidth: 360 }}>A clear, repeatable process that keeps projects on track and clients informed at every stage.</p>
-          <button type="button" className="process-expand-all" onClick={() => { setAllOpen(current => !current); setOpenStep(0) }} aria-expanded={allOpen}>
+          {steps.length > 0 && <button type="button" className="process-expand-all" onClick={() => { setAllOpen(current => !current); setOpenStep(0) }} aria-expanded={allOpen}>
             {allOpen ? 'Show one step' : 'Expand to view all'}<span aria-hidden="true">{allOpen ? '−' : '+'}</span>
-          </button>
+          </button>}
         </div>
         <div>
-          {steps.map((step, index) => (
+          {steps.length ? steps.map((step, index) => (
             <div key={step.num} className={`process-row${allOpen || openStep === index ? ' is-open' : ''}`}>
               <button type="button" className="process-trigger" onClick={() => toggleStep(index)} aria-expanded={allOpen || openStep === index} aria-controls={`process-details-${step.num}`}>
                 <span className="process-num">{step.num}</span>
@@ -39,7 +40,7 @@ export default function ProcessSection({ steps = PROCESS_STEPS }: { steps?: Proc
                 </div>
               </div>
             </div>
-          ))}
+          )) : <AgencyEmptyState title="Every strong product begins with discovery." description="Tell us what you are building and we’ll shape a practical path from idea to launch." />}
         </div>
       </div>
     </section>

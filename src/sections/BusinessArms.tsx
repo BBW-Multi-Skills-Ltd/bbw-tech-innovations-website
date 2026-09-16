@@ -1,8 +1,11 @@
 import type { BusinessArm } from '../data/company'
 import { BUSINESS_ARM_STATUS_COLORS, BUSINESS_ARM_STATUS_LABELS } from '../data/company'
 import { externalUrl } from '../utils/urls'
+import AgencyEmptyState from '../components/ui/AgencyEmptyState'
 
 export default function BusinessArms({ arms }: { arms: BusinessArm[] }) {
+  if (!arms.length) return <AgencyEmptyState title="The BBW ecosystem is growing." description="New ventures and business arms will appear here as they launch." actionLabel="Explore BBW Tech" />
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
       {arms.map(arm => {

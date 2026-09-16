@@ -2,6 +2,7 @@ import type { Project } from '../data/projects'
 import { ACCENT, BORDER, FG, MUTED, display, mono } from '../styles/theme'
 import SectionHeading, { Eyebrow } from '../components/ui/SectionHeading'
 import ProjectCard from '../features/projects/ProjectCard'
+import AgencyEmptyState from '../components/ui/AgencyEmptyState'
 
 function ShowcaseHeading({ label, title, description }: { label: string; title: string; description: string }) {
   return (
@@ -27,13 +28,13 @@ export default function ProductsSection({ apps, websites, onOpen }: { apps: Proj
         <div style={{ marginBottom: 80 }}>
           <ShowcaseHeading label="App Showcase" title="Mobile apps we've shipped." description="Built mobile-first, designed for real users, engineered to scale." />
           <div className="product-app-grid">
-            {apps.map(project => <ProjectCard key={project.id} project={project} variant="app" onOpen={onOpen} />)}
+            {apps.length ? apps.map(project => <ProjectCard key={project.id} project={project} variant="app" onOpen={onOpen} />) : <AgencyEmptyState title="The next mobile product starts with an idea." description="We’re preparing the next BBW mobile experience. Have an app idea worth building? Let’s talk." />}
           </div>
         </div>
         <div style={{ borderTop: `1px solid ${BORDER}`, marginBottom: 80 }} />
         <ShowcaseHeading label="Website Showcase" title="Websites and web platforms." description="From simple business sites to real-time platforms - each project solves a real problem." />
         <div className="product-website-grid">
-          {websites.map(project => <ProjectCard key={project.id} project={project} variant="website" onOpen={onOpen} />)}
+          {websites.length ? websites.map(project => <ProjectCard key={project.id} project={project} variant="website" onOpen={onOpen} />) : <AgencyEmptyState title="Your next web platform could be here." description="We turn real business needs into useful websites and web platforms. Let’s build yours." />}
         </div>
       </div>
     </section>

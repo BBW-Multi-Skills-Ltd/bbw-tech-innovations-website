@@ -2,10 +2,9 @@ import type { Project } from '../data/projects'
 import { BORDER, MUTED } from '../styles/theme'
 import SectionHeading, { Eyebrow } from '../components/ui/SectionHeading'
 import ProjectCard from '../features/projects/ProjectCard'
+import AgencyEmptyState from '../components/ui/AgencyEmptyState'
 
 function WorkGroup({ label, title, projects, onOpen }: { label: string; title: string; projects: Project[]; onOpen: (project: Project) => void }) {
-  if (!projects.length) return null
-
   return (
     <div className="client-work-group">
       <div className="client-work-group-heading">
@@ -13,7 +12,7 @@ function WorkGroup({ label, title, projects, onOpen }: { label: string; title: s
         <h3>{title}</h3>
       </div>
       <div className="client-work-grid">
-        {projects.map(project => <ProjectCard key={project.id} project={project} variant="work" onOpen={onOpen} />)}
+        {projects.length ? projects.map(project => <ProjectCard key={project.id} project={project} variant="work" onOpen={onOpen} />) : <AgencyEmptyState title="Your project could be the next story we tell." description="We partner with ambitious businesses to turn complex problems into practical digital products." />}
       </div>
     </div>
   )
