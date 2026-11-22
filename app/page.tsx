@@ -1,4 +1,5 @@
 import HomeShell from '@/components/home/HomeShell'
+import BrandHero from '@/components/hero/BrandHero'
 import HeroSection from '@/components/hero/HeroSection'
 import Footer from '@/components/layout/Footer'
 import AboutSection from '@/components/sections/AboutSection'
@@ -34,6 +35,7 @@ export default async function HomePage() {
     <HomeShell musicUrl={musicUrl}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <main>
+        <BrandHero />
         <HeroSection />
         <ScrollingStrip items={marqueeItems} />
         <ProblemSection />

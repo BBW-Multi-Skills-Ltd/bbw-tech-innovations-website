@@ -11,9 +11,9 @@ export default function HeroSection() {
           <span className="inline-block h-1.5 w-1.5 animate-[dot-pulse_2.2s_ease-in-out_infinite] rounded-full bg-bbw-accent" />
           A BBW Multi-Skills Ltd Company
         </div>
-        <h1 className="mb-7 font-display text-[clamp(44px,8vw,96px)] leading-[1.02] font-bold tracking-[-0.035em] text-bbw-fg">
+        <h2 className="mb-7 font-display text-[clamp(44px,8vw,96px)] leading-[1.02] font-bold tracking-[-0.035em] text-bbw-fg">
           We Build Technology<br />That Moves Businesses<br /><em className="text-bbw-accent">Forward.</em>
-        </h1>
+        </h2>
         <p className="mb-11 max-w-[560px] text-[clamp(16px,2vw,19px)] leading-[1.7] text-bbw-muted">
           BBW Tech Innovations designs and develops websites, applications, SaaS products, and intelligent digital systems for businesses ready to grow.
         </p>

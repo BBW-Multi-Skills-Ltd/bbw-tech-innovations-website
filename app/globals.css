@@ -6,6 +6,7 @@
 @import '../styles/site-components.css' layer(components);
 @import '../styles/site-sections.css' layer(components);
 @import '../styles/site-footer.css' layer(components);
+@import '../styles/hero.css' layer(components);
 @import '../styles/admin-legacy.css' layer(components);
 @import '../styles/admin-shell.css' layer(components);
 @import '../styles/admin-dashboard.css' layer(components);
@@ -14,6 +15,11 @@
 
 /* BBW tokens (defined in styles/foundation.css) as Tailwind colours and fonts:
    bg-bbw-surface, text-bbw-muted, border-bbw-border, font-display, font-mono… */
+/* Shared easing (as the portfolio): `ease-soft`, var(--ease-soft). */
+@theme {
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 @theme inline {
   --color-bbw-bg: var(--bbw-bg);
   --color-bbw-surface: var(--bbw-surface);

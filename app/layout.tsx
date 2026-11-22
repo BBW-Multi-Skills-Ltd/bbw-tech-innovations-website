@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Fraunces, JetBrains_Mono, Outfit } from 'next/font/google'
+import { InlineScript } from '@/components/InlineScript'
 import { SITE_URL } from '@/lib/site-url'
 import './globals.css'
 
@@ -31,7 +32,8 @@ export const metadata: Metadata = {
   },
   description,
   alternates: { canonical: '/' },
-  icons: { icon: { url: '/logos/bbwlogo.png', type: 'image/png' } },
+  // Sharp vector favicon; the PNG for browsers without SVG favicons.
+  icons: { icon: [{ url: '/logos/bbw-icon.svg', type: 'image/svg+xml' }, { url: '/logos/bbwlogo.png', type: 'image/png' }] },
   openGraph: {
     type: 'website',
     url: '/',
@@ -56,6 +58,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en-NG" data-theme="dark" suppressHydrationWarning className={`${fraunces.variable} ${outfit.variable} ${jetbrainsMono.variable}`}>
+      <head>
+        {/* Lets CSS hide not-yet-played intro states only when JS can play them */}
+        <InlineScript html={`document.documentElement.classList.add("js")`} />
+      </head>
       <body>{children}</body>
     </html>
   )

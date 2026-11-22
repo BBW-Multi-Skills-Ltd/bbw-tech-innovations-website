@@ -18,7 +18,7 @@ Keep BBW's brand exactly: colours (`--bbw-*` tokens, accent `#2979FF`), fonts (F
 ## Phases
 
 1. **Move to Next.js, same look.** *Done (Nov 2026)* on branch `nextjs`; see "How it is built" below.
-2. New hero with the 3D BBW logo (item 2 above).
+2. **New hero with the 3D BBW logo.** *Done (Nov 2026)*, see "The hero and 3D logo" below.
 3. Three horizontal intro panels (item 3).
 4. Case study pages at `/work/[slug]` replacing the popup (item 4).
 5. Admin: case study editor with live preview (item 5).
@@ -45,4 +45,14 @@ Keep BBW's brand exactly: colours (`--bbw-*` tokens, accent `#2979FF`), fonts (F
 - Admin (`/admin`, `/admin/account`, `/admin/reset-password`, `/admin/accept-invite`, `/admin/confirm-email`) is still client-side, as before; `app/admin/layout.tsx` sets noindex. `/cms` redirects to `/admin` (`next.config.ts`).
 - Supabase Edge Functions in `supabase/functions/` (enquiries, invites, Cloudinary signatures) are unchanged.
 - Sentry: `instrumentation-client.ts` (browser only, production only, no personal data); crashes show `app/error.tsx` / `app/global-error.tsx`.
+### The hero and 3D logo (Phase 2)
+
+- `components/hero/BrandHero.tsx`, ported from the portfolio's GuideHero: giant "BBW TECH" behind, floor line, the logo standing on it at the right, "BBW Tech *Innovations*" (the page's only h1) + the meta-description sentence, "Start a Project" (contact form) and "Our Work" (#work). The old hero (`HeroSection`, heading now an h2) follows it unchanged. Styles in `styles/hero.css` (`gh-*`, intro only with the `js` class set in `app/layout.tsx`).
+- Walk: `useLogoWalk.ts` (drag, walk, hello bubble, idle 360°; reduced motion: follows the drag only), start-up: `useHeroStart.ts`, sizing: `logo-size.ts` (sizes the logo's **box = the SVG viewBox 1557 × 777**; `placeLogoScript` repeats the same sums before first paint; keep them in sync). Bubble greetings are owner-approved: "Hello!", "Hi there!", "Welcome to BBW Tech!", "Let's build something."
+- Logo: `public/logos/bbw-logo.svg` (official vector; paths `#swoosh` = swoosh + first B, `#b`, `#w`; never redraw). `components/logo3d/shared.tsx` loads that file and extrudes each path separately (swoosh 14 units forward), with a top-to-bottom vertex-colour gradient (cyan → brand blue → navy) on a clear-coated physical material, no tone mapping (keeps the blues saturated) and a wide soft front fill (so it looks the same wherever it walks). `lib/bbw-logo.ts` holds the paths' constants.
+- Phones/tablets (`STILL_LOGO_QUERY` in `components/logo3d/webgl.ts`) get `public/logos/bbw-logo-3d.webp`; three.js loads only on desktop with WebGL; no WebGL → `FlatLogo` (the SVG as a CSS mask over the brand gradient). **After changing the 3D look, re-render the still** at `/dev/logo-still` (development only; instructions in that page).
+- Favicon: `public/logos/bbw-icon.svg` (the SVG with the gradient, square viewBox), PNG fallback. Header logo and Open Graph image still use the PNGs (sharp at their sizes; OG is a designed card, revisited in Phase 6).
+
+### Other
+
 - Still static from the Vite site: `public/robots.txt`, `public/sitemap.xml` (Phase 6 replaces them).
