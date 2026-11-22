@@ -11,8 +11,10 @@ const ARRIVE_DISTANCE = 14 // px: arrived, say hello
 const MAX_YAW = 0.7 // rad, turned toward the direction of travel
 const TURN_TAU = 0.09 // s: ~0.26s to turn
 const MAX_LEAN = (2 * Math.PI) / 180
-const IDLE_SPIN_AFTER = 6.5 // s
-const SPIN_DURATION = 2.6 // s
+const IDLE_SWING_AFTER = 6.5 // s
+const SWING_DURATION = 4.2 // s
+/** Idle swing: about 40° each way, then back to the front. It never shows the back. */
+const SWING_ANGLE = (40 * Math.PI) / 180
 const HELLO_DURATION = 0.75 // s
 const BUBBLE_MS = 2400
 const DUST_EVERY = 0.12 // s
@@ -25,7 +27,7 @@ const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 
 
 type Options = {
   section: RefObject<HTMLElement | null>
-  /** The intro has started (the idle spin counts from then). */
+  /** The intro has started (the idle swing counts from then). */
   introIn: boolean
   /** Runs only while the hero is on screen. */
   onScreen: boolean
@@ -36,7 +38,7 @@ type Options = {
 /**
  * The hero logo's walk: it stands on the floor, follows a drag (click or
  * touch and hold), walks the rest of the way when let go and says hello,
- * spins once when idle. Each frame it writes every DOM layer (still logo,
+ * swings gently once when idle. Each frame it writes every DOM layer (still logo,
  * shadow, dust, bubble, giant letters) and the pose the 3D scene reads.
  */
 export function useLogoWalk({ section, introIn, onScreen, reduced, greetings }: Options) {
@@ -88,7 +90,7 @@ export function useLogoWalk({ section, introIn, onScreen, reduced, greetings }: 
       tilt: 0,
       mode: 'rest' as Mode,
       helloT: 0,
-      spinT: -1,
+      swingT: -1,
       dustT: 0,
       dustNext: 0,
       greeting: 0,
@@ -187,18 +189,18 @@ export function useLogoWalk({ section, introIn, onScreen, reduced, greetings }: 
       }
       s.tilt += (tilt - s.tilt) * ease(dt, 0.05)
 
-      // Idle: one slow full turn, then settle
-      let spin = 0
+      // Idle: one slow swing (one way, the other, back to the front), then settle
+      let swing = 0
       if (!reduced) {
-        if (s.spinT < 0 && s.mode === 'rest' && now - lastInput.current > IDLE_SPIN_AFTER * 1000) {
-          s.spinT = 0
+        if (s.swingT < 0 && s.mode === 'rest' && now - lastInput.current > IDLE_SWING_AFTER * 1000) {
+          s.swingT = 0
         }
-        if (s.spinT >= 0) {
-          s.spinT += dt
-          const t = Math.min(1, s.spinT / SPIN_DURATION)
-          spin = easeInOut(t) * Math.PI * 2
+        if (s.swingT >= 0) {
+          s.swingT += dt
+          const t = Math.min(1, s.swingT / SWING_DURATION)
+          swing = Math.sin(easeInOut(t) * Math.PI * 2) * SWING_ANGLE
           if (t >= 1) {
-            s.spinT = -1
+            s.swingT = -1
             lastInput.current = now
           }
         }
@@ -209,7 +211,7 @@ export function useLogoWalk({ section, introIn, onScreen, reduced, greetings }: 
       p.x = s.x
       p.floor = floor
       p.height = logoH
-      p.yaw = s.yaw + spin
+      p.yaw = s.yaw + swing
       p.lean = s.lean + s.tilt
       p.tilt = 0
       p.hop = hop
