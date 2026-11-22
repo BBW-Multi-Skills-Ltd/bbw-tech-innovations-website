@@ -22,26 +22,42 @@ const SWOOSH_FORWARD = 14
 /** Distance from the centre to the front-most face (the swoosh's). */
 export const LOGO_FRONT = DEPTH / 2 + BEVEL_THICKNESS + SWOOSH_FORWARD
 
-// Glossy brand-blue metal, like bbwlogo.png. The front faces run from bright
-// blue with a cyan tint at the top, through brand blue, to navy that is
-// almost black at the bottom (sRGB). The gradient spans the letters' height,
-// so the swoosh's top arc gets the bright end and its bottom arc the dark end.
-const GRADIENT: [number, string][] = [
-  [0, '#2f9cff'],
-  [0.22, '#1878ff'],
-  [0.5, '#0a52f0'],
-  [0.78, '#05278f'],
-  [1, '#010520'],
+// Deep, saturated royal-blue metal, like bbwlogo.png (sRGB, top → bottom over
+// the letters' height). The letters go to dark navy at their bottoms; the
+// swoosh stays vivid royal blue all the way round (its top arc is the
+// brightest part, above the letters).
+const LETTER_GRADIENT: [number, string][] = [
+  [0, '#2a7dff'],
+  [0.3, '#1258ff'],
+  [0.55, '#0a3ee0'],
+  [0.75, '#061d84'],
+  [0.9, '#030e4a'],
+  [1, '#010524'],
+]
+const SWOOSH_GRADIENT: [number, string][] = [
+  [0, '#2a7dff'],
+  [0.3, '#1258ff'],
+  [0.6, '#0a46f0'],
+  [1, '#0a40e4'],
 ]
 /** The letters' top and bottom in SVG units (the B, B and W share them). */
 const LETTERS_TOP = 239.5
 const LETTERS_BOTTOM = 622.2
+/**
+ * The first B is part of the #swoosh path (the swoosh is its spine), so it is
+ * picked out by area: swoosh vertices inside this box (SVG units) take the
+ * letters' gradient.
+ */
+const FIRST_B = { left: 165, right: 600 }
 /** The sides (extruded walls, the swoosh's inner face) are this much of the front colour: deep navy. */
 const SIDE_SHADE = 0.22
 
-const stops = GRADIENT.map(([t, hex]) => [t, new THREE.Color(hex)] as const)
+type Stops = (readonly [number, THREE.Color])[]
+const toStops = (gradient: [number, string][]): Stops => gradient.map(([t, hex]) => [t, new THREE.Color(hex)] as const)
+const letterStops = toStops(LETTER_GRADIENT)
+const swooshStops = toStops(SWOOSH_GRADIENT)
 
-function gradientAt(t: number, out: THREE.Color) {
+function gradientAt(stops: Stops, t: number, out: THREE.Color) {
   for (let i = 1; i < stops.length; i++) {
     const [t1, c1] = stops[i]
     if (t <= t1) {
@@ -92,7 +108,10 @@ export function useLogoGeometries() {
       const t = THREE.MathUtils.clamp((svgY - LETTERS_TOP) / (LETTERS_BOTTOM - LETTERS_TOP), 0, 1)
       // Bevels (half facing) stay mid-tone so they show the strip highlights.
       const facing = Math.abs(normal.getZ(i)) ** 1.5
-      gradientAt(t, color).multiplyScalar(SIDE_SHADE + (1 - SIDE_SHADE) * facing).toArray(colors, i * 3)
+      const svgX = position.getX(i) + LOGO_VIEW_W / 2
+      const inFirstB = svgX >= FIRST_B.left && svgX <= FIRST_B.right && svgY >= LETTERS_TOP && svgY <= LETTERS_BOTTOM
+      const stops = id === 'swoosh' && !inFirstB ? swooshStops : letterStops
+      gradientAt(stops, t, color).multiplyScalar(SIDE_SHADE + (1 - SIDE_SHADE) * facing).toArray(colors, i * 3)
     }
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
     return { id, geometry }
@@ -107,13 +126,14 @@ export function LogoMeshes() {
     <>
       {parts.map(({ id, geometry }) => (
         <mesh key={id} geometry={geometry}>
-          {/* Metal tinted by the vertex colours, under a clear coat that
-              catches the studio's strip lights as bright edge highlights. */}
+          {/* Full metal: every colour is a reflection tinted by the vertex colours
+              (no diffuse to wash it out), so the edge highlights come out
+              cyan-blue; a light clear coat adds a little white shine. */}
           <meshPhysicalMaterial
             vertexColors
-            metalness={0.85}
+            metalness={1}
             roughness={0.22}
-            clearcoat={1}
+            clearcoat={0.35}
             clearcoatRoughness={0.28}
             envMapIntensity={1}
           />
