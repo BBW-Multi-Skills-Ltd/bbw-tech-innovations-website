@@ -1,0 +1,67 @@
+'use client'
+
+import { useCallback, useEffect, useRef, useState } from 'react'
+import AdminContent from '@/components/admin/AdminContent'
+import AdminHeader from '@/components/admin/AdminHeader'
+import type { AdminTab } from '@/components/admin/adminTabConfig'
+import AdminSidebar from '@/components/admin/AdminSidebar'
+import useAdminData from '@/components/admin/useAdminData'
+import type { AdminIdentity } from '@/components/auth/types'
+import useTheme from '@/lib/hooks/useTheme'
+import MusicPlayer from '@/components/MusicPlayer'
+import { usePathname } from 'next/navigation'
+
+interface Props { identity: AdminIdentity; onSignOut: () => void }
+
+export default function AdminPanel({ identity, onSignOut }: Props) {
+  const pathname = usePathname()
+  const [activeTab, setActiveTab] = useState<AdminTab>(() => pathname === '/admin/account' ? 'account' : 'home')
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 760px)').matches)
+  const [savedMessage, setSavedMessage] = useState('')
+  const [savedMessageIsError, setSavedMessageIsError] = useState(false)
+  const [isImporting, setIsImporting] = useState(false)
+  const toastTimer = useRef<number | null>(null)
+  const data = useAdminData()
+  const { dark, toggleTheme } = useTheme()
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 760px)')
+    const update = () => setSidebarCollapsed(media.matches)
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
+
+  useEffect(() => () => { if (toastTimer.current) window.clearTimeout(toastTimer.current) }, [])
+
+  const showSaved = useCallback((message: string) => {
+    if (toastTimer.current) window.clearTimeout(toastTimer.current)
+    setSavedMessageIsError(/\b(could not|failed|error|invalid|requires|only be added)\b/i.test(message))
+    setSavedMessage(message)
+    toastTimer.current = window.setTimeout(() => setSavedMessage(''), 2500)
+  }, [])
+
+  const importCurrentContent = async () => {
+    setIsImporting(true)
+    try { await data.importCurrentContent(); showSaved('Current website content is now in Supabase.') }
+    catch { showSaved('Could not import content. Please try again.') }
+    finally { setIsImporting(false) }
+  }
+  const selectTab = (tab: AdminTab) => {
+    setActiveTab(tab)
+    if (window.matchMedia('(max-width: 760px)').matches) setSidebarCollapsed(true)
+  }
+
+  return <main className="admin-cms">
+    <AdminHeader identity={identity} onSignOut={onSignOut} sidebarCollapsed={sidebarCollapsed} onToggleSidebar={() => setSidebarCollapsed(value => !value)} dark={dark} onToggleTheme={toggleTheme} onOpenAccount={() => selectTab('account')} />
+    <div className={`admin-cms-shell${sidebarCollapsed ? ' is-collapsed' : ''}`}>
+      {!sidebarCollapsed && <button type="button" className="admin-sidebar-backdrop" aria-label="Close navigation" onClick={() => setSidebarCollapsed(true)} />}
+      <AdminSidebar active={activeTab} collapsed={sidebarCollapsed} role={identity.role} onChange={selectTab} onToggle={() => setSidebarCollapsed(value => !value)} />
+      <div className="admin-cms-body">
+        {data.needsInitialImport && <header className="admin-cms-heading"><p className="eyebrow">Migration required</p><h1>Finish moving content to Supabase.</h1><p>Your previous local content is ready to be imported into the CMS.</p><button type="button" className="btn-primary admin-import-button" onClick={() => void importCurrentContent()} disabled={isImporting}>{isImporting ? 'Importing...' : 'Finish import to Supabase'}</button></header>}
+        <div className="admin-tab-panel"><AdminContent tab={activeTab} data={data} onSaved={showSaved} identity={identity} onNavigate={selectTab} /></div>
+      </div>
+      <span className={`admin-saved-toast${savedMessageIsError ? ' is-error' : ''}`} role="status" aria-live="polite">{savedMessage}</span>
+    </div>
+    <MusicPlayer url={data.musicUrl} />
+  </main>
+}

@@ -1,0 +1,30 @@
+@import 'tailwindcss';
+
+/* The site's own stylesheets. They sit in cascade layers so Tailwind utilities
+   (which replace the old inline styles) win over them, as inline styles did. */
+@import '../styles/foundation.css' layer(base);
+@import '../styles/site-components.css' layer(components);
+@import '../styles/site-sections.css' layer(components);
+@import '../styles/site-footer.css' layer(components);
+@import '../styles/admin-legacy.css' layer(components);
+@import '../styles/admin-shell.css' layer(components);
+@import '../styles/admin-dashboard.css' layer(components);
+@import '../styles/admin-managers.css' layer(components);
+@import '../styles/admin-responsive.css' layer(components);
+
+/* BBW tokens (defined in styles/foundation.css) as Tailwind colours and fonts:
+   bg-bbw-surface, text-bbw-muted, border-bbw-border, font-display, font-mono… */
+@theme inline {
+  --color-bbw-bg: var(--bbw-bg);
+  --color-bbw-surface: var(--bbw-surface);
+  --color-bbw-surface2: var(--bbw-surface2);
+  --color-bbw-fg: var(--bbw-fg);
+  --color-bbw-muted: var(--bbw-muted);
+  --color-bbw-accent: var(--bbw-accent);
+  --color-bbw-accent-dim: var(--bbw-accent-dim);
+  --color-bbw-border: var(--bbw-border);
+  --color-bbw-border-hi: var(--bbw-border-hi);
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-outfit), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+}
