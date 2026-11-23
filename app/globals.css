@@ -3,6 +3,8 @@
 
 /* Compact styles for the phone slides (lib/phone-slides.ts adds .is-sticky) */
 @custom-variant stick (&:where(.is-sticky, .is-sticky *));
+/* Short desktop windows (laptops, zoomed browsers): the intro panels compact to fit */
+@custom-variant short (@media (min-width: 960px) and (max-height: 820px));
 
 /* The site's own stylesheets. They sit in cascade layers so Tailwind utilities
    (which replace the old inline styles) win over them, as inline styles did. */

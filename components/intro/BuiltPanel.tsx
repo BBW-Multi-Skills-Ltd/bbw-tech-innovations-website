@@ -22,7 +22,7 @@ export function BuiltPanel({ projects }: { projects: Project[] }) {
         Real businesses, real problems, <em className="text-bbw-accent">real digital solutions.</em>
       </h2>
 
-      <ul className="mt-10 grid gap-4 stick:mt-5 stick:gap-2.5 min-[768px]:grid-cols-3 min-[960px]:gap-6">
+      <ul className="mt-10 grid gap-4 short:mt-6 stick:mt-5 stick:gap-2.5 min-[768px]:grid-cols-3 min-[960px]:gap-6">
         {projects.map(project => {
           const isPhone = project.type === 'app' || project.badge === 'mobile-app'
           const comingSoon = project.isOwn && project.status === 'coming-soon'
@@ -58,7 +58,7 @@ export function BuiltPanel({ projects }: { projects: Project[] }) {
         })}
       </ul>
 
-      <a href="#work" className="mt-6 inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] text-bbw-accent uppercase no-underline stick:mt-3">
+      <a href="#work" className="mt-6 short:mt-4 inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] text-bbw-accent uppercase no-underline stick:mt-3">
         See all work <ArrowRight size={14} aria-hidden="true" />
       </a>
     </IntroPanel>

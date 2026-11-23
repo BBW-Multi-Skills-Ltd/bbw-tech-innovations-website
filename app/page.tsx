@@ -41,7 +41,7 @@ export default async function HomePage() {
       <main>
         <BrandHero />
         <IntroSlider>
-          <WhoWeArePanel businessArms={businessArms} companyDetails={companyDetails} />
+          <WhoWeArePanel businessArms={businessArms} />
           <BuiltPanel projects={featuredProjects(apps, websites, works)} />
           <WorkTogetherPanel companyDetails={companyDetails} />
         </IntroSlider>

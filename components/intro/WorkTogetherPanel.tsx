@@ -17,11 +17,11 @@ export function WorkTogetherPanel({ companyDetails }: { companyDetails: CompanyD
       <h2 className="mt-4 font-display text-[clamp(34px,5vw,44px)] leading-[1.04] font-bold tracking-[-0.03em] text-bbw-fg stick:mt-3 stick:text-[clamp(26px,4dvh,36px)] min-[960px]:text-[clamp(40px,6.4svh,64px)]">
         Let&apos;s build something <em className="text-bbw-accent">worth building.</em>
       </h2>
-      <p className="mt-5 max-w-[480px] text-[16px] leading-[1.65] text-bbw-muted stick:mt-2 stick:text-[14px]">
+      <p className="mt-5 max-w-[480px] text-[16px] leading-[1.65] text-bbw-muted short:mt-3 stick:mt-2 stick:text-[14px]">
         Tell us about your business. We&apos;ll show you how technology can make it operate, grow, and scale.
       </p>
 
-      <div className="mt-10 grid gap-4 stick:mt-5 stick:gap-2.5 min-[768px]:grid-cols-2 min-[960px]:gap-6">
+      <div className="mt-10 grid gap-4 short:mt-6 stick:mt-5 stick:gap-2.5 min-[768px]:grid-cols-2 min-[960px]:gap-6">
         <VideoEnquiryButton />
 
         <div className="grid gap-4 stick:gap-2.5 min-[960px]:gap-6">

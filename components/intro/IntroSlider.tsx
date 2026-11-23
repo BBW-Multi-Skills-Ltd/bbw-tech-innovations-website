@@ -119,7 +119,7 @@ export function IntroPanel({ children, label }: { children: ReactNode; label: st
       role="group"
       aria-roledescription="panel"
       aria-label={label}
-      className="intro-panel flex items-center py-20 min-[960px]:pt-24 min-[960px]:pb-20 stick:pt-[72px] stick:pb-14"
+      className="intro-panel flex items-center py-20 min-[960px]:pt-24 min-[960px]:pb-20 short:pt-[76px] short:pb-[64px] stick:pt-[72px] stick:pb-14"
     >
       <div className="mx-auto w-full max-w-[1200px] px-[clamp(20px,5vw,80px)] min-[1360px]:px-0">{children}</div>
     </div>
