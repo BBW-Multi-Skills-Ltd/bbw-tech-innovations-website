@@ -1,6 +1,9 @@
 import HomeShell from '@/components/home/HomeShell'
 import BrandHero from '@/components/hero/BrandHero'
-import HeroSection from '@/components/hero/HeroSection'
+import { BuiltPanel } from '@/components/intro/BuiltPanel'
+import { IntroSlider } from '@/components/intro/IntroSlider'
+import { WhoWeArePanel } from '@/components/intro/WhoWeArePanel'
+import { WorkTogetherPanel } from '@/components/intro/WorkTogetherPanel'
 import Footer from '@/components/layout/Footer'
 import AboutSection from '@/components/sections/AboutSection'
 import CallToActionSection from '@/components/sections/CallToActionSection'
@@ -11,6 +14,7 @@ import SolutionsSection from '@/components/sections/SolutionsSection'
 import TechnologySection from '@/components/sections/TechnologySection'
 import WorkSection from '@/components/sections/WorkSection'
 import ScrollingStrip from '@/components/ui/ScrollingStrip'
+import { featuredProjects } from '@/lib/featured-projects'
 import { getSiteContent } from '@/lib/site-content'
 import { SITE_URL } from '@/lib/site-url'
 
@@ -36,7 +40,11 @@ export default async function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <main>
         <BrandHero />
-        <HeroSection />
+        <IntroSlider>
+          <WhoWeArePanel businessArms={businessArms} companyDetails={companyDetails} />
+          <BuiltPanel projects={featuredProjects(apps, websites, works)} />
+          <WorkTogetherPanel companyDetails={companyDetails} />
+        </IntroSlider>
         <ScrollingStrip items={marqueeItems} />
         <ProblemSection />
         <SolutionsSection />

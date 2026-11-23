@@ -18,6 +18,9 @@ export default function Header() {
   const { activeSection, scrollToSection } = useSectionNavigation(SECTION_IDS)
 
   const navigateToSection = (event: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    // SmoothScroll (components/SmoothScroll.tsx) already handles in-page links
+    // when motion is allowed; only scroll here when it didn't.
+    if (event.defaultPrevented) return
     event.preventDefault()
     scrollToSection(id)
   }
@@ -47,7 +50,7 @@ export default function Header() {
         </div>
         <div className="flex items-center gap-3">
           <ThemeToggle dark={dark} onToggle={toggleTheme} />
-          <button type="button" onClick={openContact} className="btn-primary nav-cta px-5! py-[9px]! text-[13px]!">Start a Project →</button>
+          <button type="button" onClick={() => openContact()} className="btn-primary nav-cta px-5! py-[9px]! text-[13px]!">Start a Project →</button>
           <button type="button" className="mobile-menu-btn flex cursor-pointer items-center border-none bg-transparent p-1 text-bbw-fg" aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={mobileOpen} aria-controls="mobile-navigation" onClick={() => setMobileOpen(open => !open)}>
             <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
               {mobileOpen ? <><line x1="4" y1="4" x2="18" y2="18" /><line x1="18" y1="4" x2="4" y2="18" /></> : <><line x1="3" y1="7" x2="19" y2="7" /><line x1="3" y1="11" x2="19" y2="11" /><line x1="3" y1="15" x2="19" y2="15" /></>}

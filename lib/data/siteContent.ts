@@ -4,7 +4,12 @@ import { TECHNOLOGIES } from '@/lib/content/site'
 
 export interface LegalSection { heading: string; body: string }
 export interface PrivacyPolicyContent { introduction: string; lastUpdated: string; sections: LegalSection[] }
-export interface CompanyDetails { email: string; location: string }
+export interface CompanyDetails {
+  email: string
+  location: string
+  /** Optional WhatsApp number in international format (e.g. +234…); shown only when set. */
+  whatsapp?: string
+}
 
 export const defaultProcessSteps: ProcessStep[] = PROCESS_STEPS
 export const defaultTechnologies = TECHNOLOGIES

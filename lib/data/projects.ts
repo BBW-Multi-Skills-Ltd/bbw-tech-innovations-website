@@ -69,6 +69,8 @@ export interface Project {
   tech: string[]
   isOwn: boolean
   isPublished?: boolean
+  /** Shown in the homepage intro's "What we've built" panel (up to 3, in list order). */
+  isFeatured?: boolean
   year: string
   badge?: WorkBadge  // for client works
   demoVideoUrl?: string

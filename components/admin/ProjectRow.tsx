@@ -17,7 +17,7 @@ export default function ProjectRow({ project, editing, onEdit, onToggleVisibilit
       <span className="admin-project-status-dot" style={{ background: STATUS_COLORS[project.status] }} />
       <div>
         <h3>{project.name || 'Unnamed'}</h3>
-        <p><span style={{ color: STATUS_COLORS[project.status] }}>{STATUS_LABELS[project.status]}</span>{!isPublished && <span>Hidden from marketplace</span>}{project.badge && <span>{project.badge}</span>}<span>{project.category}</span>{project.review?.quote && <span>Review added</span>}</p>
+        <p><span style={{ color: STATUS_COLORS[project.status] }}>{STATUS_LABELS[project.status]}</span>{!isPublished && <span>Hidden from marketplace</span>}{project.isFeatured && <span>Featured</span>}{project.badge && <span>{project.badge}</span>}<span>{project.category}</span>{project.review?.quote && <span>Review added</span>}</p>
       </div>
       <div className="admin-project-row-actions">
         <button type="button" onClick={onEdit}>{editing ? 'Close' : 'Edit'}</button>

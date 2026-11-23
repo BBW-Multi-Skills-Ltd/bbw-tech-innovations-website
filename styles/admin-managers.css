@@ -205,3 +205,7 @@ button.is-danger { border-color: rgba(239, 68, 68, 0.3); color: #EF4444; }
 .legal-content section { margin-top: 38px; padding-top: 28px; border-top: 1px solid var(--bbw-border); }
 .legal-content h2 { margin-bottom: 10px; font-size: 19px; color: var(--bbw-fg); }
 .legal-content section p { color: var(--bbw-muted); font-size: 14px; line-height: 1.8; }
+
+/* "Featured on homepage" checkbox in the project form */
+.admin-featured-toggle { display: flex; align-items: center; gap: 10px; min-height: 39px; color: var(--bbw-fg); font-size: 13px; }
+.admin-project-field .admin-featured-toggle input { width: 18px; height: 18px; padding: 0; accent-color: var(--bbw-accent); }

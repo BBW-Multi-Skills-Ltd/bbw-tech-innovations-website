@@ -1,4 +1,8 @@
 @import 'tailwindcss';
+@import 'lenis/dist/lenis.css';
+
+/* Compact styles for the phone slides (lib/phone-slides.ts adds .is-sticky) */
+@custom-variant stick (&:where(.is-sticky, .is-sticky *));
 
 /* The site's own stylesheets. They sit in cascade layers so Tailwind utilities
    (which replace the old inline styles) win over them, as inline styles did. */
@@ -7,6 +11,7 @@
 @import '../styles/site-sections.css' layer(components);
 @import '../styles/site-footer.css' layer(components);
 @import '../styles/hero.css' layer(components);
+@import '../styles/intro.css' layer(components);
 @import '../styles/admin-legacy.css' layer(components);
 @import '../styles/admin-shell.css' layer(components);
 @import '../styles/admin-dashboard.css' layer(components);

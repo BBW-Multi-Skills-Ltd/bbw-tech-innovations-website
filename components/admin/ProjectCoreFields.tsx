@@ -39,6 +39,7 @@ export default function ProjectCoreFields({ project, type, isWork, isNew, techIn
       <ProjectField label="Year"><input value={project.year} onChange={event => update('year', event.target.value)} /></ProjectField>
       <ProjectField label="Card Preview Image"><input inputMode="url" value={project.cardImageUrl ?? ''} onChange={event => update('cardImageUrl', event.target.value)} /><CloudinaryMediaUpload assetType="image" value={project.cardImageUrl ?? ''} onChange={url => update('cardImageUrl', url)} /></ProjectField>
       <ProjectField label="Demo Video URL"><input inputMode="url" value={project.demoVideoUrl ?? ''} onChange={event => update('demoVideoUrl', event.target.value)} /><CloudinaryMediaUpload assetType="video" value={project.demoVideoUrl ?? ''} onChange={url => update('demoVideoUrl', url)} /></ProjectField>
+      <ProjectField label="Featured on homepage"><div className="admin-featured-toggle"><input type="checkbox" checked={project.isFeatured ?? false} onChange={event => update('isFeatured', event.target.checked)} /> Show in “What we’ve built” on the homepage</div><small>Up to 3 featured projects show there, in list order (own products first, then client work).</small></ProjectField>
       <ProjectField label="Tech Stack — Comma Separated"><input value={techInput} onChange={event => onTechChange(event.target.value)} /></ProjectField>
     </div>
   )

@@ -19,7 +19,7 @@ Keep BBW's brand exactly: colours (`--bbw-*` tokens, accent `#2979FF`), fonts (F
 
 1. **Move to Next.js, same look.** *Done (Nov 2026)* on branch `nextjs`; see "How it is built" below.
 2. **New hero with the 3D BBW logo.** *Done (Nov 2026)*, see "The hero and 3D logo" below.
-3. Three horizontal intro panels (item 3).
+3. **Three intro panels.** *Built (Nov 2026)*; waiting on the `is_featured` migration, see "The intro slides" below.
 4. Case study pages at `/work/[slug]` replacing the popup (item 4).
 5. Admin: case study editor with live preview (item 5).
 6. Polish and launch (item 6).
@@ -52,6 +52,16 @@ Keep BBW's brand exactly: colours (`--bbw-*` tokens, accent `#2979FF`), fonts (F
 - Logo: `public/logos/bbw-logo.svg` (official vector; paths `#swoosh` = swoosh + first B, `#b`, `#w`; never redraw). `components/logo3d/shared.tsx` loads that file and extrudes each path separately (swoosh 14 units forward; bevel cut inward with `bevelOffset` so the silhouette stays the SVG's). Look (tuned against bbwlogo.png with the owner, Nov 2026): deep, saturated royal blue. Vertex colours by height over the letters' band: the letters (and the first B, picked out of the swoosh path by area, `FIRST_B`) go to dark navy at their bottoms; the swoosh stays vivid royal blue all round (brightest on its top arc). Sides darkened to deep navy by how far each face turns from the front. Full metal (no diffuse, so nothing washes the blue out to pastel) with a light satin clear coat; a blue front fill, direct white/cyan edge lights for cyan-blue bevel highlights, no tone mapping. `lib/bbw-logo.ts` holds the logo's constants.
 - Phones/tablets (`STILL_LOGO_QUERY` in `components/logo3d/webgl.ts`) get `public/logos/bbw-logo-3d.webp`; three.js loads only on desktop with WebGL; no WebGL → `FlatLogo` (the SVG as a CSS mask over the brand gradient). **After changing the 3D look, re-render the still** at `/dev/logo-still` (development only; instructions in that page).
 - Favicon: `public/logos/bbw-icon.svg` (the SVG with the gradient, square viewBox), PNG fallback. Header logo and Open Graph image still use the PNGs (sharp at their sizes; OG is a designed card, revisited in Phase 6).
+
+### The intro slides (Phase 3)
+
+- `components/intro/IntroSlider.tsx` (+ `IntroPanel`), ported from the portfolio's Hero: desktop ≥960px pins with GSAP and scroll moves the panels sideways (progress bar, "01 / 03"); phones/tablets use the CSS sticky version (`lib/phone-slides.ts`, snaps to the nearest slide; compact `stick:` styles, tablets ≥768px keep images); reduced motion stacks. Styles: `styles/intro.css`.
+- **Cascade-layer trap:** our stylesheets sit in a layer *below* Tailwind utilities (unlike the portfolio's unlayered CSS). Never put utility classes for the same properties (position, height, display) on elements that `intro.css`/`hero.css` style, or the utility silently wins (this broke the sticky hold until fixed).
+- Panels: `WhoWeArePanel` (former hero headline + paragraph, company card with the business-arms tree and location), `BuiltPanel` (`lib/featured-projects.ts`: up to 3 `is_featured` projects in list order, own first; falls back to the first 3 until any are featured; cards open the project popup), `WorkTogetherPanel` (video enquiry tile opens the contact form in video mode, Start a Project, WhatsApp only when set in Company details). Panel 2 heading and fallback approved by the owner.
+- Background: `components/hero/AnimatedHeroGrid.tsx` sits in the held part of the slider; pauses off screen (IntersectionObserver), one still pattern with reduced motion, redraws on theme change (`data-running` shows its state).
+- Smooth scroll: `components/SmoothScroll.tsx` + `ScrollSync.tsx` (portfolio's; Lenis on mouse/trackpad only, handles in-page links; sections have `scroll-margin-top: 80px`). No CSS `scroll-behavior: smooth` (it fights the pin and snap).
+- Company details gained an optional `whatsapp` (same `site_settings` JSON, no migration).
+- **Pending migration** `supabase/migrations/20261123090000_add_project_is_featured.sql` (adds `projects.is_featured`). Until it's applied, **saving a project from this branch's admin fails** (the save writes `is_featured`). `npm run backup:db` currently fails with a 403 from the Supabase CLI (account lacks privileges): fix the CLI login first.
 
 ### Other
 

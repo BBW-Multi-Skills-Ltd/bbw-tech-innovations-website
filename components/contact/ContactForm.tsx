@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import ContactFields from '@/components/contact/ContactFields'
 import ContactHeader from '@/components/contact/ContactHeader'
 import ContactSuccess from '@/components/contact/ContactSuccess'
@@ -10,18 +10,26 @@ import useVideoRecorder from '@/components/contact/useVideoRecorder'
 import VideoRecorder from '@/components/contact/VideoRecorder'
 import { ACCENT, MUTED, mono } from '@/lib/theme'
 
-interface ContactFormProps { open: boolean; onClose: () => void }
+interface ContactFormProps { open: boolean; onClose: () => void; initialMode?: InquiryMode }
 
 const emptyDetails: ContactDetails = { name: '', phone: '', email: '' }
 
-export default function ContactForm({ open, onClose }: ContactFormProps) {
+export default function ContactForm({ open, onClose, initialMode = 'idle' }: ContactFormProps) {
   const [details, setDetails] = useState<ContactDetails>(emptyDetails)
-  const [mode, setMode] = useState<InquiryMode>('idle')
+  const [mode, setMode] = useState<InquiryMode>(initialMode)
   const [message, setMessage] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const video = useVideoRecorder()
+  // Opened from the video enquiry tile: start the camera once the recorder is on screen.
+  const startsWithVideo = useRef(initialMode === 'video')
+  useEffect(() => {
+    if (!startsWithVideo.current) return
+    startsWithVideo.current = false
+    // No cleanup: the ref makes it run once, even when effects run twice in development.
+    window.setTimeout(video.prepareCamera)
+  }, [video.prepareCamera])
 
   const handleClose = useCallback(() => {
     video.reset()
