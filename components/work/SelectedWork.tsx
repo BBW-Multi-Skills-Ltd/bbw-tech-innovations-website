@@ -2,6 +2,7 @@ import { Reveal } from '@/components/Reveal'
 import AgencyEmptyState from '@/components/ui/AgencyEmptyState'
 import SectionHeading, { Eyebrow } from '@/components/ui/SectionHeading'
 import type { Project } from '@/lib/data/projects'
+import { hasApp, hasWebsite, projectTypeOf } from '@/lib/project-types'
 import { WorkCard } from './WorkCard'
 import { WorkTabs } from './WorkTabs'
 
@@ -18,11 +19,17 @@ function CardGrid({ projects }: { projects: Project[] }) {
 }
 
 /**
- * The work section (like the portfolio's Selected work): tabs for our own
- * products and client work, cards linking to each project's case study.
- * Replaces the old Products and Work sections; #products still lands here.
+ * The work section (like the portfolio's Selected work): All · Mobile apps ·
+ * Websites. Mobile apps = mobile, PWA and both combined types; Websites =
+ * website and both combined types, so a combined project appears in both.
+ * Each card says whether it's our product or client work. #products lands here.
  */
-export function SelectedWork({ products, works }: { products: Project[]; works: Project[] }) {
+export function SelectedWork({ projects }: { projects: Project[] }) {
+  const mobile = projects.filter(project => hasApp(projectTypeOf(project)))
+  const websites = projects.filter(project => hasWebsite(projectTypeOf(project)))
+  const tab = (list: Project[], empty: { title: string; description: string }) =>
+    list.length ? <CardGrid projects={list} /> : <AgencyEmptyState {...empty} />
+
   return (
     <section id="work" aria-labelledby="work-title" className="border-t border-bbw-border px-[clamp(20px,5vw,80px)] py-[clamp(80px,10vw,140px)]">
       {/* The old Products section's anchor (/#products, footer and nav links). In the
@@ -36,36 +43,21 @@ export function SelectedWork({ products, works }: { products: Project[]; works: 
               <SectionHeading className="max-w-[560px]">
                 <span id="work-title">Projects we&apos;ve built.</span>
               </SectionHeading>
+              <p className="mt-5 max-w-[520px] text-[15px] leading-[1.7] text-bbw-muted">Real businesses, real problems, real digital solutions — delivered by BBW Tech.</p>
             </div>
           }
           tabs={[
             {
-              label: 'Our products',
-              content: (
-                <>
-                  <p className="mb-8 max-w-[640px] text-[15px] leading-[1.7] text-bbw-muted">
-                    Alongside client work, we create and grow our own <span className="text-bbw-fg">mobile apps</span> and <span className="text-bbw-fg">web platforms</span> to solve real business challenges.
-                  </p>
-                  {products.length ? (
-                    <CardGrid projects={products} />
-                  ) : (
-                    <AgencyEmptyState title="The next mobile product starts with an idea." description="We’re preparing the next BBW mobile experience. Have an app idea worth building? Let’s talk." />
-                  )}
-                </>
-              ),
+              label: 'All',
+              content: tab(projects, { title: 'Your project could be the next story we tell.', description: 'We partner with ambitious businesses to turn complex problems into practical digital products.' }),
             },
             {
-              label: 'Client work',
-              content: (
-                <>
-                  <p className="mb-8 max-w-[640px] text-[15px] leading-[1.7] text-bbw-muted">Real businesses, real problems, real digital solutions — delivered by BBW Tech.</p>
-                  {works.length ? (
-                    <CardGrid projects={works} />
-                  ) : (
-                    <AgencyEmptyState title="Your project could be the next story we tell." description="We partner with ambitious businesses to turn complex problems into practical digital products." />
-                  )}
-                </>
-              ),
+              label: 'Mobile apps',
+              content: tab(mobile, { title: 'The next mobile product starts with an idea.', description: 'We’re preparing the next BBW mobile experience. Have an app idea worth building? Let’s talk.' }),
+            },
+            {
+              label: 'Websites',
+              content: tab(websites, { title: 'Your next web platform could be here.', description: 'We turn real business needs into useful websites and web platforms. Let’s build yours.' }),
             },
           ]}
         />

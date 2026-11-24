@@ -1,4 +1,5 @@
 import type { Project } from '@/lib/data/projects'
+import { projectTypeOf, typeLabel } from '@/lib/project-types'
 
 /** How many projects the intro's "What we've built" panel shows. */
 export const FEATURED_MAX = 3
@@ -15,6 +16,5 @@ export function featuredProjects(apps: Project[], websites: Project[], works: Pr
   return (featured.length ? featured : all).slice(0, FEATURED_MAX)
 }
 
-/** "Mobile App" or "Website", as the project cards show it. */
-export const projectTypeLabel = (project: Project) =>
-  project.type === 'app' || project.badge === 'mobile-app' ? 'Mobile App' : 'Website'
+/** The project's type as the cards show it: "Website", "Mobile app", "PWA", "Website + mobile app"… */
+export const projectTypeLabel = (project: Project) => typeLabel(projectTypeOf(project))

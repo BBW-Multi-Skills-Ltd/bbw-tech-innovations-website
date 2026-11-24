@@ -1,3 +1,6 @@
+import type { ProjectType as KindOfProject, WebRole } from '@/lib/project-types'
+
+/** The old two-way kind, still stored (the live site on main reads it). See projectType for the real type. */
 export type ProjectType = 'app' | 'website'
 export type ProjectStatus = 'in-dev' | 'coming-soon' | 'testing' | 'beta' | 'live' | 'completed'
 export type WorkBadge = 'website' | 'mobile-app'
@@ -71,6 +74,10 @@ export interface Project {
   isPublished?: boolean
   /** Shown in the homepage intro's "What we've built" panel (up to 3, in list order). */
   isFeatured?: boolean
+  /** Website, mobile app, PWA or a combination (lib/project-types.ts). Missing on old rows: use projectTypeOf(). */
+  projectType?: KindOfProject
+  /** Combined types only: is the website the product too, or its marketing site? */
+  webRole?: WebRole | null
   year: string
   badge?: WorkBadge  // for client works
   demoVideoUrl?: string

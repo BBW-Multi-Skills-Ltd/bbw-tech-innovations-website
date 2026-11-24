@@ -71,6 +71,14 @@ Keep BBW's brand exactly: colours (`--bbw-*` tokens, accent `#2979FF`), fonts (F
 - Homepage: `components/work/` (SelectedWork + WorkTabs + WorkCard) replaces the Products and Work sections ("Our products" / "Client work"; heading "Projects we've built." approved by the owner); `#products` is an anchor at its top. The project popup and its components are gone.
 - In development the dev server can serve a stale server render after edits (hydration warnings on the nav links); a fresh build/restart clears it. Unknown slugs return a real 404 only in production builds.
 
+### Project types and the demo section (after Phase 4)
+
+- `lib/project-types.ts` (ported): website, mobile, pwa, web_mobile, web_pwa, plus web_role for the combined types; `devicesFor`, `hasWebsite`, `hasApp`, `isPwa`. Columns `projects.project_type` / `web_role` (migration 20261124120000; filled from `kind`/`badge`). **`kind` and `badge` stay: the live site (main) reads them.** `projectTypeOf()` falls back to them for rows without a type; every save writes both, kept in step by `legacyFields()` (kind 'app' for anything with an app or PWA; client work's badge 'website' unless it's app-only).
+- Admin project form: "Project type" dropdown (decides the app fields and the website URL field), "Website role" for the combined types; the old "Project Badge" select is gone (derived).
+- Work tabs: All · Mobile apps (mobile, pwa, combined) · Websites (website, combined); each card says "Our product" or "Client work"; frames follow `devicesFor` (combined = laptop with the phone in front).
+- Case studies: the demo is its own "See it in action" section (a `video` block with `frame: 'auto'`): played inside the phone (apps, PWAs) or laptop (websites, combined), card image as poster, never autoplays. The cover no longer shows it.
+- `liveSiteUrl()` collapses a doubled scheme ("https://https://…"); Pearl The Braider's stored URL has one and should be fixed in the admin.
+
 ### Other
 
 - Still static from the Vite site: `public/robots.txt`, `public/sitemap.xml` (Phase 6 replaces them).

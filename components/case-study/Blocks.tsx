@@ -1,7 +1,9 @@
 import { ArrowUpRight } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { LaptopFrame } from '@/components/LaptopFrame'
+import { PhoneFrame } from '@/components/PhoneFrame'
 import { Reveal } from '@/components/Reveal'
-import type { Devices } from '@/lib/case-studies/devices'
+import type { Devices } from '@/lib/project-types'
 import { isPlaceholder, realValue, shownText } from '@/lib/case-studies/text'
 import type { Block, BlockData } from '@/lib/case-studies/types'
 import { DemoVideo } from './DemoVideo'
@@ -22,6 +24,9 @@ const frameSize: Record<FrameKind, string> = {
   desktop: 'w-full max-w-[560px]',
   none: 'max-h-[min(440px,56svh)] w-auto max-w-full min-[961px]:max-h-full',
 }
+
+/** One row of facts on wide screens (up to five across), so no cell is left empty. */
+const WIDE_FACT_COLUMNS = ['', 'min-[1100px]:grid-cols-1', 'min-[1100px]:grid-cols-2', 'min-[1100px]:grid-cols-3', 'min-[1100px]:grid-cols-4', 'min-[1100px]:grid-cols-5']
 
 const PHONE_ONLY: Devices = { hero: 'phone', journeys: 'phone' }
 
@@ -60,7 +65,7 @@ export function CaseStudyBlock({ block, section, devices = PHONE_ONLY, lazyDiagr
     case 'flow':
       return <FlowBlock data={block.data} section={section} device={devices.journeys} />
     case 'video':
-      return <VideoBlock data={block.data} section={section} />
+      return <VideoBlock data={block.data} section={section} devices={devices} />
     case 'stack_table':
       return <StackTable data={block.data} section={section} />
     case 'diagram':
@@ -76,6 +81,32 @@ export function CaseStudyBlock({ block, section, devices = PHONE_ONLY, lazyDiagr
 }
 
 // Cover ------------------------------------------------------------------------
+
+/** A screenshot filling a frame's screen, or the fallback (the drawn preview). */
+function Shot({ src, alt, fallback }: { src: string | null; alt: string; fallback?: ReactNode }) {
+  if (!src) return <>{fallback}</>
+  // eslint-disable-next-line @next/next/no-img-element -- admin-uploaded (Cloudinary or any URL)
+  return <img src={src} alt={alt} fetchPriority="high" className="absolute inset-0 size-full object-cover object-top" />
+}
+
+/**
+ * Website + app projects (from the portfolio): the laptop with the phone
+ * standing in front of its bottom-right corner, so both screens stay readable.
+ */
+function LaptopAndPhone({ name, desktop, phone, fallback }: { name: string; desktop: string | null; phone: string | null; fallback?: (kind: 'phone' | 'desktop') => ReactNode }) {
+  return (
+    <div className="relative w-full max-w-[560px] pr-[9%] pb-[7%]">
+      <LaptopFrame className="w-full">
+        <Shot src={desktop} alt={`${name} on desktop`} fallback={fallback?.('desktop')} />
+      </LaptopFrame>
+      <div className="absolute right-0 bottom-0 w-[23%]">
+        <PhoneFrame className="w-full">
+          <Shot src={phone} alt={`${name} on a phone`} fallback={fallback?.('phone')} />
+        </PhoneFrame>
+      </div>
+    </div>
+  )
+}
 
 export function Cover({
   name,
@@ -96,7 +127,9 @@ export function Cover({
   const choice = data.mockupFrame ?? 'auto'
   const frame: FrameKind = choice === 'auto' ? (devices.hero === 'desktop' ? 'desktop' : 'phone') : choice
   const shownFrame: FrameKind = media || frame !== 'none' ? frame : 'phone'
-  const demo = realValue(data.demoUrl ?? '')
+  // Website + app projects: the laptop and the phone together (unless a frame is chosen).
+  const both = choice === 'auto' && devices.hero === 'both'
+  const desktopMedia = realValue(data.desktopMediaUrl ?? '')
   const qr = realValue(data.qrUrl ?? '')
   const facts = data.facts.filter(fact => shownText(fact.value))
   return (
@@ -132,6 +165,19 @@ export function Cover({
         </div>
 
         {/* Not faded in: it's the first thing people see (the page's largest paint). */}
+        {both ? (
+          <div className="relative flex justify-center min-[961px]:self-stretch">
+            <div className="flex w-full items-center justify-center min-[961px]:absolute min-[961px]:inset-x-0 min-[961px]:-top-6 min-[961px]:-bottom-10">
+              {/* The card image goes on the laptop (or the desktop screenshot, when there is one); the phone gets the phone shot or the drawn preview. */}
+              <LaptopAndPhone
+                name={name}
+                desktop={desktopMedia ?? media}
+                phone={desktopMedia ? media : null}
+                fallback={fallbackScreen}
+              />
+            </div>
+          </div>
+        ) : (
         <div className="relative flex justify-center min-[961px]:self-stretch">
           <div className={`flex w-full justify-center min-[961px]:absolute min-[961px]:inset-x-0 min-[961px]:-top-6 min-[961px]:-bottom-10 ${shownFrame === 'desktop' ? 'items-center' : ''}`}>
             <DeviceFrame
@@ -143,13 +189,15 @@ export function Cover({
             />
           </div>
         </div>
+        )}
       </div>
 
       {facts.length ? (
         <Reveal index={2}>
-          <dl className={`mt-14 grid gap-px overflow-hidden rounded-[10px] border border-bbw-border bg-bbw-border min-[640px]:grid-cols-2 ${facts.length > 3 ? 'min-[1100px]:grid-cols-4' : 'min-[1100px]:grid-cols-3'}`}>
-            {facts.map(fact => (
-              <div key={fact.label} className="bg-bbw-surface p-6">
+          <dl className={`mt-14 grid gap-px overflow-hidden rounded-[10px] border border-bbw-border bg-bbw-border min-[640px]:grid-cols-2 ${WIDE_FACT_COLUMNS[Math.min(facts.length, 5)]}`}>
+            {facts.map((fact, i) => (
+              // Two columns with an odd count: the last fact spans the row (no empty cell).
+              <div key={fact.label} className={`bg-bbw-surface p-6 ${facts.length % 2 && i === facts.length - 1 ? 'min-[640px]:max-[1099px]:col-span-2' : ''}`}>
                 <dt className={label}>{fact.label}</dt>
                 <dd className="mt-2 text-[15px] leading-relaxed text-bbw-fg">
                   <Inline text={fact.value} />
@@ -157,15 +205,6 @@ export function Cover({
               </div>
             ))}
           </dl>
-        </Reveal>
-      ) : null}
-
-      {demo ? (
-        <Reveal index={3} className="mt-6">
-          <div className="overflow-hidden rounded-[10px] border border-bbw-border">
-            <DemoVideo url={demo} poster={realValue(data.demoPosterUrl ?? '')} title={`${name} demo`} />
-          </div>
-          {data.demoCaption ? <p className="mt-4 max-w-[70ch] text-[15px] leading-relaxed text-bbw-muted">{data.demoCaption}</p> : null}
         </Reveal>
       ) : null}
     </header>
@@ -328,16 +367,28 @@ function FlowBlock({ data, section, device }: { data: BlockData['flow']; section
   )
 }
 
-function VideoBlock({ data, section }: { data: BlockData['video']; section: SectionRole }) {
+/**
+ * The demo ("See it in action"), played inside the project's device: a phone
+ * for apps and PWAs, a laptop for websites and combined projects. It never
+ * autoplays; the poster is the card image.
+ */
+function VideoBlock({ data, section, devices }: { data: BlockData['video']; section: SectionRole; devices: Devices }) {
   const video = realValue(data.videoUrl)
   if (!video) return null
+  const choice = data.frame ?? 'auto'
+  const frame = choice === 'auto' ? (devices.hero === 'phone' ? 'phone' : 'desktop') : choice
+  const player = <DemoVideo url={video} poster={realValue(data.posterUrl)} title={shownText(data.heading) ?? 'Demo'} fill={frame !== 'none'} />
   return (
     <Reveal>
       <Heading text={data.heading} section={section} />
-      <div className="overflow-hidden rounded-[10px] border border-bbw-border bg-bbw-surface2">
-        <DemoVideo url={video} poster={realValue(data.posterUrl)} title={shownText(data.heading) ?? 'Demo'} />
-      </div>
-      {data.caption ? <p className="mt-4 max-w-[65ch] text-[15px] leading-relaxed text-bbw-muted">{data.caption}</p> : null}
+      {frame === 'phone' ? (
+        <PhoneFrame className="mx-auto h-[min(620px,78svh)]">{player}</PhoneFrame>
+      ) : frame === 'desktop' ? (
+        <LaptopFrame className="mx-auto w-full max-w-[880px]">{player}</LaptopFrame>
+      ) : (
+        <div className="overflow-hidden rounded-[10px] border border-bbw-border bg-bbw-surface2">{player}</div>
+      )}
+      {data.caption ? <p className="mx-auto mt-6 max-w-[65ch] text-center text-[15px] leading-relaxed text-bbw-muted">{data.caption}</p> : null}
     </Reveal>
   )
 }

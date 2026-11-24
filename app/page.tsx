@@ -47,7 +47,7 @@ export default async function HomePage() {
         <ScrollingStrip items={marqueeItems} />
         <ProblemSection />
         <SolutionsSection />
-        <SelectedWork products={[...apps, ...websites]} works={works} />
+        <SelectedWork projects={[...apps, ...websites, ...works]} />
         <ProcessSection steps={processSteps} />
         <TechnologySection technologies={technologies} />
         <AboutSection businessArms={businessArms} />

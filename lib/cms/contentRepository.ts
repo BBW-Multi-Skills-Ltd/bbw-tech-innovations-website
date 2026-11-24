@@ -6,6 +6,7 @@ import type { ProcessStep } from '@/lib/content/process'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase/browser'
 import { externalUrl } from '@/lib/urls'
+import { isCombined, isProjectType, legacyFields, projectTypeOf } from '@/lib/project-types'
 
 type ProjectRow = Record<string, unknown> & { id: string }
 type ReviewRow = { project_id: string; quote: string; client_name: string; client_role: string | null; source: ClientReview['source'] | null }
@@ -33,20 +34,27 @@ function fromRow(row: ProjectRow, review?: ReviewRow): Project {
     iosAvailability: text(row.ios_availability) as Project['iosAvailability'], siteUrl: text(row.site_url) || undefined,
     accentColor: text(row.accent_color), mockBg: text(row.mock_bg), cardImageUrl: text(row.card_image_url) || undefined, screens: list<Project['screens'][number]>(row.screens),
     roles: list<Project['roles'][number]>(row.roles), features: list<Project['features'][number]>(row.features),
-    tech: list<string>(row.tech), isOwn: row.is_own === true, isPublished: row.is_published !== false, isFeatured: row.is_featured === true, year: text(row.year),
+    tech: list<string>(row.tech), isOwn: row.is_own === true, isPublished: row.is_published !== false, isFeatured: row.is_featured === true, projectType: isProjectType(row.project_type) ? row.project_type : undefined,
+    webRole: row.web_role === 'product' || row.web_role === 'marketing' ? row.web_role : null, year: text(row.year),
     badge: text(row.badge) as Project['badge'], demoVideoUrl: text(row.demo_video_url) || undefined, qrUrl: text(row.qr_url) || undefined,
     review: review ? { quote: review.quote, clientName: review.client_name, clientRole: review.client_role || undefined, source: review.source || 'other' } : undefined,
   }
 }
 
-const toRow = (project: Project, sortOrder: number) => ({
-  id: project.id, kind: project.type, name: project.name, tagline: project.tagline, short_description: project.shortDesc,
+// Writes the project type and, from it, the old kind/badge the live site (main) still reads.
+const toRow = (project: Project, sortOrder: number) => {
+  const projectType = projectTypeOf(project)
+  const legacy = legacyFields(projectType)
+  return {
+  id: project.id, kind: legacy.kind, project_type: projectType, web_role: isCombined(projectType) ? (project.webRole ?? 'marketing') : null, name: project.name, tagline: project.tagline, short_description: project.shortDesc,
   about: project.about, category: project.category, status: project.status, platform: project.platform || null,
   android_availability: project.androidAvailability || null, ios_availability: project.iosAvailability || null,
   site_url: websiteUrl(project.siteUrl), accent_color: project.accentColor, mock_bg: project.mockBg, card_image_url: project.cardImageUrl || null, screens: project.screens,
   roles: project.roles, features: project.features, tech: project.tech, is_own: project.isOwn, year: project.year,
-  badge: project.badge || null, demo_video_url: project.demoVideoUrl || null, qr_url: project.qrUrl || null, is_published: project.isPublished ?? true, is_featured: project.isFeatured ?? false, sort_order: sortOrder,
-})
+  // Client work: the badge picks its card on the live site. Own projects keep theirs (unused).
+  badge: project.isOwn ? (project.badge || null) : legacy.badge, demo_video_url: project.demoVideoUrl || null, qr_url: project.qrUrl || null, is_published: project.isPublished ?? true, is_featured: project.isFeatured ?? false, sort_order: sortOrder,
+  }
+}
 
 export async function fetchProjects(publishedOnly = true, db: SupabaseClient = client()) {
   let query = db.from('projects').select('*').order('sort_order')

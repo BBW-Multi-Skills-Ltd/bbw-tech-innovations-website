@@ -4,6 +4,7 @@ import { formatPlatformAvailability } from '@/lib/data/projects'
 import ProjectCoreFields from '@/components/admin/ProjectCoreFields'
 import ProjectReviewFields from '@/components/admin/ProjectReviewFields'
 import { platformAvailability } from '@/components/admin/projectFormConfig'
+import { hasApp, projectTypeOf } from '@/lib/project-types'
 
 interface ProjectFormProps {
   initial: Project
@@ -14,7 +15,7 @@ interface ProjectFormProps {
 }
 
 export default function ProjectForm({ initial, type, isWork, onSave, onCancel }: ProjectFormProps) {
-  const [project, setProject] = useState<Project>(() => ({ ...initial, ...(type === 'app' ? { androidAvailability: platformAvailability(initial, 'android'), iosAvailability: platformAvailability(initial, 'ios') } : {}) }))
+  const [project, setProject] = useState<Project>(() => ({ ...initial, ...(hasApp(projectTypeOf(initial)) ? { androidAvailability: platformAvailability(initial, 'android'), iosAvailability: platformAvailability(initial, 'ios') } : {}) }))
   const [techInput, setTechInput] = useState(initial.tech.join(', '))
   const update = <Key extends keyof Project>(field: Key, value: Project[Key]) => setProject(current => ({ ...current, [field]: value }))
 
@@ -24,7 +25,9 @@ export default function ProjectForm({ initial, type, isWork, onSave, onCancel }:
     const android = project.androidAvailability ?? 'not-supported'
     const ios = project.iosAvailability ?? 'not-supported'
     const platform = formatPlatformAvailability(android, ios) || (project.platform && !/android|ios/i.test(project.platform) ? project.platform : '')
-    onSave({ ...project, name: project.name.trim(), tech: techInput.split(',').map(item => item.trim()).filter(Boolean), review, ...(type === 'app' ? { androidAvailability: android, iosAvailability: ios, platform } : {}) })
+    // The project type (not the admin section) decides whether the app fields apply.
+    const projectType = projectTypeOf(project)
+    onSave({ ...project, projectType, name: project.name.trim(), tech: techInput.split(',').map(item => item.trim()).filter(Boolean), review, ...(hasApp(projectType) ? { androidAvailability: android, iosAvailability: ios, platform } : {}) })
   }
 
   return (

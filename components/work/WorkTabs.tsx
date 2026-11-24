@@ -6,7 +6,7 @@ import { refreshSoon } from '@/lib/phone-slides'
 type Tab = { label: string; content: ReactNode }
 
 /**
- * Segmented "Our products / Client work" toggle (from the portfolio). Both
+ * Segmented "All / Mobile apps / Websites" toggle (from the portfolio). Both
  * lists are rendered on the server and passed in; this only switches which
  * one is shown. The tabs are equal width, so the blue highlight slides across
  * by its own width; the newly shown list fades in (.tab-in).

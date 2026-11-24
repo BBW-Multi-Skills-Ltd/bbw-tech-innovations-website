@@ -1,13 +1,14 @@
 import type { Project } from '@/lib/data/projects'
 import { getProjectPlatformLabel, STATUS_LABELS } from '@/lib/data/projects'
+import { hasApp, projectTypeOf, typeLabel } from '@/lib/project-types'
 import { externalUrl } from '@/lib/urls'
-import { isPhoneProject } from './devices'
 import { shownText } from './text'
 import type { Block, BlockData, Fact } from './types'
 
 /** The project's live site, if it has a real one. */
 export function liveSiteUrl(project: Project): string | null {
-  const url = project.siteUrl?.trim()
+  // A doubled scheme ("https://https://…", as one stored URL has) collapses to one.
+  const url = project.siteUrl?.trim().replace(/^(https?:\/\/)+(https?:\/\/)/i, '$2')
   return url && url !== '#' && !/^https?:\/\/$/i.test(url) ? externalUrl(url) : null
 }
 
@@ -15,10 +16,10 @@ export function liveSiteUrl(project: Project): string | null {
  * A case study built from the project's existing fields, for projects with no
  * stored blocks yet. Everything the old project popup showed has a place;
  * nothing is added, and empty fields are left out:
- *   cover    ← name, tagline, category, status, year, platform/store availability,
- *              live site, QR code, demo video, card image
- *   Overview ← about          Features ← features (numbered)
- *   Team     ← roles          Tech stack ← tech
+ *   cover    ← name, tagline, our product / client work, status, year, type,
+ *              platform/store availability (apps), category, live site, QR code, card image
+ *   Overview ← about          See it in action ← demo video (card image as poster)
+ *   Features ← features       Team ← roles      Tech stack ← tech
  *   Client review ← review
  */
 export function blocksFromProject(project: Project): Block[] {
@@ -26,10 +27,13 @@ export function blocksFromProject(project: Project): Block[] {
   const add = <K extends Block['type']>(type: K, sectionLabel: string | null, data: BlockData[K]) =>
     blocks.push({ id: `derived-${type}-${blocks.length}`, type, sectionLabel, data } as Block)
 
+  const projectType = projectTypeOf(project)
   const facts: Fact[] = [
     { label: 'Status', value: STATUS_LABELS[project.status] ?? '' },
     { label: 'Year', value: project.year },
-    { label: isPhoneProject(project) ? 'Platform' : 'Type', value: isPhoneProject(project) ? getProjectPlatformLabel(project) : 'Website' },
+    { label: 'Type', value: typeLabel(projectType) },
+    // Store availability, as the popup showed it (apps and PWAs only).
+    { label: 'Platform', value: hasApp(projectType) ? getProjectPlatformLabel(project) : '' },
     { label: 'Category', value: project.category },
   ].filter(fact => shownText(fact.value?.trim()))
   const live = liveSiteUrl(project)
@@ -41,11 +45,15 @@ export function blocksFromProject(project: Project): Block[] {
     facts,
     links: live ? [{ label: 'Visit live site', url: live }] : [],
     mediaUrl: project.cardImageUrl ?? '',
-    demoUrl: project.demoVideoUrl ?? '',
     qrUrl: project.qrUrl ?? '',
   })
 
   if (shownText(project.about)) add('text', 'Overview', { heading: 'Overview', body: project.about })
+
+  // The demo, in its own section, played inside the project's device frame.
+  if (shownText(project.demoVideoUrl)) {
+    add('video', 'See it in action', { heading: 'See it in action', videoUrl: project.demoVideoUrl ?? '', posterUrl: project.cardImageUrl ?? '', caption: '', frame: 'auto' })
+  }
 
   const features = project.features.filter(feature => shownText(feature.name) || shownText(feature.desc))
   if (features.length) {

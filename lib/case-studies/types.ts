@@ -24,7 +24,7 @@ export type BlockData = {
     mediaUrl: string
     /** Projects with both: the laptop screenshot shown with the phone. */
     desktopMediaUrl?: string
-    /** auto = from the project type (lib/case-studies/devices.ts). */
+    /** auto = from the project type (lib/project-types.ts devicesFor). */
     mockupFrame?: 'auto' | 'phone' | 'desktop' | 'none'
     /** Under the facts: the demo (MP4/WebM upload or a YouTube link). */
     demoUrl?: string
@@ -48,7 +48,8 @@ export type BlockData = {
     note: string
     steps: FlowStep[]
   }
-  video: { heading: string; videoUrl: string; posterUrl: string; caption: string }
+  /** frame (BBW): play the video inside the project's device (auto), a phone, a laptop, or plain. */
+  video: { heading: string; videoUrl: string; posterUrl: string; caption: string; frame?: 'auto' | 'phone' | 'desktop' | 'none' }
   stack_table: { heading: string; rows: StackRow[] }
   diagram: {
     heading: string

@@ -2,7 +2,7 @@ import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { BackLink } from '@/components/BackLink'
 import { DrawnScreen } from '@/components/projects/DrawnScreen'
-import { devicesFor } from '@/lib/case-studies/devices'
+import { projectDevices } from '@/lib/project-types'
 import type { Block } from '@/lib/case-studies/types'
 import type { Project } from '@/lib/data/projects'
 import { CaseStudyBlock, Cover, sectionId } from './Blocks'
@@ -30,7 +30,7 @@ export const sectionClass = (i: number) =>
 
 export function CaseStudyArticle({ project, blocks, next }: { project: Project; blocks: Block[]; next: { slug: string; name: string } | null }) {
   const sections = toSections(blocks)
-  const devices = devicesFor(project)
+  const devices = projectDevices(project)
   const pills = sections.filter(section => section.id).map(section => ({ id: section.id!, label: section.label! }))
   const cover = blocks.find(block => block.type === 'cover')
 
