@@ -14,6 +14,7 @@
 @import '../styles/site-footer.css' layer(components);
 @import '../styles/hero.css' layer(components);
 @import '../styles/intro.css' layer(components);
+@import '../styles/case-study.css' layer(components);
 @import '../styles/admin-legacy.css' layer(components);
 @import '../styles/admin-shell.css' layer(components);
 @import '../styles/admin-dashboard.css' layer(components);
@@ -40,4 +41,16 @@
   --font-display: var(--font-fraunces), Georgia, serif;
   --font-sans: var(--font-outfit), system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), monospace;
+}
+
+/* Page width, as the rest of the site: 1200px, BBW's side padding. */
+@utility container-site {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 80px);
+
+  @media (width >= 1360px) {
+    padding-inline: 0;
+  }
 }

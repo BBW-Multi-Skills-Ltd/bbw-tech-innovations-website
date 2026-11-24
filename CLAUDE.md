@@ -20,7 +20,7 @@ Keep BBW's brand exactly: colours (`--bbw-*` tokens, accent `#2979FF`), fonts (F
 1. **Move to Next.js, same look.** *Done (Nov 2026)* on branch `nextjs`; see "How it is built" below.
 2. **New hero with the 3D BBW logo.** *Done (Nov 2026)*, see "The hero and 3D logo" below.
 3. **Three intro panels.** *Built (Nov 2026)*; waiting on the `is_featured` migration, see "The intro slides" below.
-4. Case study pages at `/work/[slug]` replacing the popup (item 4).
+4. **Case study pages.** *Done (Nov 2026)*, see "Case studies" below.
 5. Admin: case study editor with live preview (item 5).
 6. Polish and launch (item 6).
 
@@ -62,6 +62,14 @@ Keep BBW's brand exactly: colours (`--bbw-*` tokens, accent `#2979FF`), fonts (F
 - Smooth scroll: `components/SmoothScroll.tsx` + `ScrollSync.tsx` (portfolio's; Lenis on mouse/trackpad only, handles in-page links; sections have `scroll-margin-top: 80px`). No CSS `scroll-behavior: smooth` (it fights the pin and snap).
 - Company details gained an optional `whatsapp` (same `site_settings` JSON, no migration).
 - **Pending migration** `supabase/migrations/20261123090000_add_project_is_featured.sql` (adds `projects.is_featured`). Until it's applied, **saving a project from this branch's admin fails** (the save writes `is_featured`). `npm run backup:db` currently fails with a 403 from the Supabase CLI (account lacks privileges): fix the CLI login first.
+
+### Case studies (Phase 4)
+
+- `/work/[slug]` (`app/work/[slug]/page.tsx`): the slug is the project's `id` (set from the name when created; the admin can't change it later). Coming-soon own products and unpublished projects 404 (`hasCaseStudy` in `lib/case-studies/data.ts`). Per-page title, description and canonical; no footer (ends with "Next project"), as in the portfolio.
+- Ported from the portfolio and restyled: `components/case-study/` (CaseStudyArticle, Blocks, FlowJourney, SectionPills, DiagramFigure + LazyDiagram, JourneyDeviceToggle, DeviceFrame, DemoVideo, RichText), `components/PhoneFrame.tsx`, `LaptopFrame.tsx`, `Reveal.tsx`, `lib/case-studies/types.ts`, `lib/screens.ts`, `/diagrams/[id]`. BBW additions: a `review` block, numbered lists, chip groups, a QR code on the cover, and the drawn preview (`components/projects/DrawnScreen.tsx`) inside the frame until real screenshots exist.
+- Content: `case_study_blocks` table (migration 20261124090000; RLS: public reads published blocks of published projects, CMS editors write; `public_data` computed column). **No blocks are stored yet:** every page is built from the project's fields by `lib/case-studies/from-project.ts` (cover ← name/tagline/status/year/platform/category/live site/QR/demo/card image; Overview ← about; Features ← features; Team ← roles; Tech stack ← tech; Client review ← review). Stored blocks, when a project has any, replace that.
+- Homepage: `components/work/` (SelectedWork + WorkTabs + WorkCard) replaces the Products and Work sections ("Our products" / "Client work"; heading "Projects we've built." approved by the owner); `#products` is an anchor at its top. The project popup and its components are gone.
+- In development the dev server can serve a stale server render after edits (hydration warnings on the nav links); a fresh build/restart clears it. Unknown slugs return a real 404 only in production builds.
 
 ### Other
 

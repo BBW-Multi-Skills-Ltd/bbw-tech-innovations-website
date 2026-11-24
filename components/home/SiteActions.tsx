@@ -2,14 +2,12 @@
 
 import { createContext, useContext, type CSSProperties, type ReactNode } from 'react'
 import type { InquiryMode } from '@/components/contact/types'
-import type { Project } from '@/lib/data/projects'
 
 interface SiteActions {
   dark: boolean
   toggleTheme: () => void
   /** Opens the contact form; 'video' opens it straight on the video recorder. */
   openContact: (mode?: Exclude<InquiryMode, 'idle'>) => void
-  openProject: (project: Project) => void
 }
 
 export const SiteActionsContext = createContext<SiteActions | null>(null)

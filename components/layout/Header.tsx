@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { NAV_LINKS } from '@/lib/content/site'
 import { BORDER } from '@/lib/theme'
 import BrandLogo from '@/components/ui/BrandLogo'
@@ -17,7 +18,11 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const { activeSection, scrollToSection } = useSectionNavigation(SECTION_IDS)
 
+  // Section links point to the homepage (/#work), so they work from case study pages too.
+  const onHome = usePathname() === '/'
   const navigateToSection = (event: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    // Elsewhere, the link simply goes to the homepage section.
+    if (!onHome) return
     // SmoothScroll (components/SmoothScroll.tsx) already handles in-page links
     // when motion is allowed; only scroll here when it didn't.
     if (event.defaultPrevented) return
@@ -45,7 +50,7 @@ export default function Header() {
         <div className="desktop-nav items-center gap-9">
           {NAV_LINKS.map(label => {
             const id = label.toLowerCase()
-            return <a key={label} href={`#${id}`} className={`nav-link${activeSection === id ? ' is-active' : ''}`} aria-current={activeSection === id ? 'location' : undefined} onClick={event => navigateToSection(event, id)}>{label}</a>
+            return <a key={label} href={`/#${id}`} className={`nav-link${activeSection === id ? ' is-active' : ''}`} aria-current={activeSection === id ? 'location' : undefined} onClick={event => navigateToSection(event, id)}>{label}</a>
           })}
         </div>
         <div className="flex items-center gap-3">
@@ -62,9 +67,9 @@ export default function Header() {
         <div id="mobile-navigation" aria-label="Mobile navigation" className="fixed top-16 bottom-0 left-0 z-199 flex w-[min(72vw,280px)] flex-col border-r border-bbw-border px-5 py-8 shadow-[18px_0_38px_rgba(0,0,0,0.22)] backdrop-blur-[24px]" style={{ backgroundColor: dark ? 'rgba(9,9,11,0.97)' : 'rgba(247,246,243,0.97)' }}>
           {NAV_LINKS.map(label => {
             const id = label.toLowerCase()
-            return <a key={label} href={`#${id}`} aria-current={activeSection === id ? 'location' : undefined} onClick={event => { navigateToSection(event, id); setMobileOpen(false) }} className={`border-b border-bbw-border py-4 font-display text-[22px] font-medium no-underline ${activeSection === id ? 'text-bbw-accent' : 'text-bbw-fg'}`}>{label}</a>
+            return <a key={label} href={`/#${id}`} aria-current={activeSection === id ? 'location' : undefined} onClick={event => { navigateToSection(event, id); setMobileOpen(false) }} className={`border-b border-bbw-border py-4 font-display text-[22px] font-medium no-underline ${activeSection === id ? 'text-bbw-accent' : 'text-bbw-fg'}`}>{label}</a>
           })}
-          <a href="#contact" onClick={() => setMobileOpen(false)} className="border-b border-bbw-border py-4 font-display text-[22px] font-medium text-bbw-fg no-underline">Contact</a>
+          <Link href="/#contact" onClick={() => setMobileOpen(false)} className="border-b border-bbw-border py-4 font-display text-[22px] font-medium text-bbw-fg no-underline">Contact</Link>
           <button type="button" className="btn-primary mt-8 justify-center" onClick={() => { setMobileOpen(false); openContact() }}>Start a Project →</button>
           <Link href="/admin" onClick={() => setMobileOpen(false)} className="mt-auto self-start pt-7 font-mono text-[9px] tracking-[0.12em] text-bbw-muted uppercase no-underline opacity-70">Admin access only</Link>
         </div>

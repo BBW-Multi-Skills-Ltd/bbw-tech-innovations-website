@@ -3,6 +3,7 @@ import type { Project } from '@/lib/data/projects'
 import type { SocialLink } from '@/lib/data/socialLinks'
 import type { CompanyDetails } from '@/lib/data/siteContent'
 import BrandLogo from '@/components/ui/BrandLogo'
+import { hasCaseStudy } from '@/lib/case-studies/data'
 import SocialIcon from '@/components/ui/SocialIcon'
 import { StartProjectButton } from '@/components/home/SiteActions'
 
@@ -22,6 +23,12 @@ export default function Footer({ products, socialLinks, companyDetails }: { prod
     { heading: 'Products', links: Array.from(new Set(products.map(product => product.name))) },
     { heading: 'Company', links: ['About', 'Our Work', 'Process', 'Contact', 'Privacy Policy'] },
   ]
+  // Each product name links to its case study (the first project with that name);
+  // coming-soon products have no page, so they go to the work section.
+  const productHref = (name: string) => {
+    const project = products.find(p => p.name === name && hasCaseStudy(p))
+    return project ? `/work/${project.id}` : '#products'
+  }
 
   return (
     <footer className="border-t border-bbw-border px-[clamp(20px,5vw,80px)] py-[clamp(48px,6vw,80px)]">
@@ -43,7 +50,7 @@ export default function Footer({ products, socialLinks, companyDetails }: { prod
             <div key={heading}>
               <p className="mb-[18px] font-mono text-[10px] tracking-[0.15em] text-bbw-muted uppercase">{heading}</p>
               <div className="flex flex-col gap-2.5">
-                {links.map(label => label === 'Privacy Policy' ? <Link key={label} href="/privacy" className="footer-link">{label}</Link> : <a key={label} href={footerHref(heading, label)} className="footer-link">{label}</a>)}
+                {links.map(label => label === 'Privacy Policy' ? <Link key={label} href="/privacy" className="footer-link">{label}</Link> : heading === 'Products' && productHref(label).startsWith('/') ? <Link key={label} href={productHref(label)} className="footer-link">{label}</Link> : <a key={label} href={footerHref(heading, label)} className="footer-link">{label}</a>)}
               </div>
             </div>
           ))}

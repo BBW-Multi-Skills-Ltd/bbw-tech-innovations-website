@@ -4,12 +4,12 @@ import StatusBadge from '@/components/ui/StatusBadge'
 import type { Project } from '@/lib/data/projects'
 import { projectTypeLabel } from '@/lib/featured-projects'
 import { IntroPanel } from './IntroSlider'
-import { OpenProjectButton } from './OpenProjectButton'
+import Link from 'next/link'
+import { hasCaseStudy } from '@/lib/case-studies/data'
 
 /**
  * Panel 2: What we've built. Up to three featured projects (own products and
- * client work), each opening its project popup (case study pages come later),
- * plus "See all work".
+ * client work), each linking to its case study page, plus "See all work".
  */
 export function BuiltPanel({ projects }: { projects: Project[] }) {
   const count = projects.length
@@ -25,7 +25,7 @@ export function BuiltPanel({ projects }: { projects: Project[] }) {
       <ul className="mt-10 grid gap-4 short:mt-6 stick:mt-5 stick:gap-2.5 min-[768px]:grid-cols-3 min-[960px]:gap-6">
         {projects.map(project => {
           const isPhone = project.type === 'app' || project.badge === 'mobile-app'
-          const comingSoon = project.isOwn && project.status === 'coming-soon'
+          const hasPage = hasCaseStudy(project)
           return (
             <li key={project.id}>
               <article className="group relative flex h-full flex-col overflow-hidden rounded-[10px] border border-bbw-border bg-bbw-surface transition-[border-color,transform] duration-200 hover:-translate-y-1 hover:border-bbw-border-hi">
@@ -48,7 +48,14 @@ export function BuiltPanel({ projects }: { projects: Project[] }) {
                     <StatusBadge status={project.status} />
                   </div>
                   <h3 className="mt-3 text-[18px] font-semibold tracking-[-0.02em] text-bbw-fg stick:mt-1.5 stick:text-[16px]">
-                    <OpenProjectButton project={project} disabled={comingSoon} />
+                    {hasPage ? (
+                      // The link's hit area covers the whole card.
+                      <Link href={`/work/${project.id}`} className="text-inherit no-underline transition-colors duration-200 group-hover:text-bbw-accent after:absolute after:inset-0 after:content-['']">
+                        {project.name}
+                      </Link>
+                    ) : (
+                      project.name
+                    )}
                   </h3>
                   <p className="intro-line mt-1.5 line-clamp-2 text-[13px] leading-[1.6] text-bbw-muted stick:mt-1 stick:line-clamp-1">{project.tagline}</p>
                 </div>

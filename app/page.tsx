@@ -9,11 +9,10 @@ import AboutSection from '@/components/sections/AboutSection'
 import CallToActionSection from '@/components/sections/CallToActionSection'
 import ProblemSection from '@/components/sections/ProblemSection'
 import ProcessSection from '@/components/sections/ProcessSection'
-import ProductsSection from '@/components/sections/ProductsSection'
 import SolutionsSection from '@/components/sections/SolutionsSection'
 import TechnologySection from '@/components/sections/TechnologySection'
-import WorkSection from '@/components/sections/WorkSection'
 import ScrollingStrip from '@/components/ui/ScrollingStrip'
+import { SelectedWork } from '@/components/work/SelectedWork'
 import { featuredProjects } from '@/lib/featured-projects'
 import { getSiteContent } from '@/lib/site-content'
 import { SITE_URL } from '@/lib/site-url'
@@ -48,8 +47,7 @@ export default async function HomePage() {
         <ScrollingStrip items={marqueeItems} />
         <ProblemSection />
         <SolutionsSection />
-        <ProductsSection apps={apps} websites={websites} />
-        <WorkSection works={works} />
+        <SelectedWork products={[...apps, ...websites]} works={works} />
         <ProcessSection steps={processSteps} />
         <TechnologySection technologies={technologies} />
         <AboutSection businessArms={businessArms} />
