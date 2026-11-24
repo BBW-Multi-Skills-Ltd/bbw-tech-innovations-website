@@ -50,7 +50,7 @@ export default async function HomePage() {
         <SelectedWork projects={[...apps, ...websites, ...works]} />
         <ProcessSection steps={processSteps} />
         <TechnologySection technologies={technologies} />
-        <AboutSection businessArms={businessArms} />
+        <AboutSection />
         <CallToActionSection />
       </main>
       <Footer products={[...apps, ...websites]} socialLinks={socialLinks} companyDetails={companyDetails} />

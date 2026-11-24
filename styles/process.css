@@ -1,0 +1,83 @@
+/* How we work as a timeline (components/sections/ProcessSection.tsx). A
+   vertical track runs down the left of the steps; with motion allowed, a blue
+   fill follows the scroll and each step's dot lights up when it's reached.
+   The step rows keep their existing styles (styles/site-sections.css). */
+.process-timeline {
+  position: relative;
+  padding-left: 36px;
+}
+
+.process-line,
+.process-line-fill {
+  position: absolute;
+  top: 34px;
+  bottom: 34px;
+  left: 8px;
+  width: 2px;
+  border-radius: 2px;
+}
+
+.process-line {
+  background: var(--bbw-border-hi);
+}
+
+.process-line-fill {
+  background: var(--bbw-accent);
+  transform-origin: top;
+  will-change: transform;
+}
+
+/* Reduced motion (not scroll-driven): the track stays, without a fill. */
+.process-timeline:not(.is-scroll-driven) .process-line-fill {
+  display: none;
+}
+
+/* The dot on the line for each step */
+.process-row {
+  position: relative;
+}
+
+.process-row::before {
+  content: '';
+  position: absolute;
+  top: 29px;
+  left: -33px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--bbw-border-hi);
+  border-radius: 50%;
+  background: var(--bbw-surface);
+  transition: background-color 0.35s var(--ease-soft), border-color 0.35s var(--ease-soft), box-shadow 0.35s var(--ease-soft);
+}
+
+.process-row.is-reached::before {
+  border-color: var(--bbw-accent);
+  background: var(--bbw-accent);
+  box-shadow: 0 0 0 5px var(--bbw-accent-dim);
+}
+
+/* A reached step's number and arrow light up, like an open one */
+.process-row.is-reached .process-num {
+  color: var(--bbw-accent);
+}
+
+@media (max-width: 640px) {
+  .process-timeline {
+    padding-left: 28px;
+  }
+
+  .process-line,
+  .process-line-fill {
+    left: 5px;
+  }
+
+  .process-row::before {
+    left: -28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .process-row::before {
+    transition: none;
+  }
+}

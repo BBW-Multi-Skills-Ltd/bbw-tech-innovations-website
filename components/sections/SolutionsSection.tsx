@@ -1,3 +1,4 @@
+import { Reveal } from '@/components/Reveal'
 import { SERVICES } from '@/lib/content/site'
 import SectionHeading, { Eyebrow } from '@/components/ui/SectionHeading'
 
@@ -10,11 +11,16 @@ export default function SolutionsSection() {
           <SectionHeading className="max-w-[580px]">Technology that solves<br />real business problems.</SectionHeading>
         </div>
         <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-px overflow-hidden rounded-lg border border-bbw-border bg-bbw-border">
-          {SERVICES.map(service => (
+          {/* Each box's content appears one after another in a quick wave as the grid
+              scrolls into view. The boxes themselves stay put: the grid's 1px lines are
+              its background showing between them, which a fading box would expose. */}
+          {SERVICES.map((service, i) => (
             <article key={service.title} className="service-card">
-              <div className="service-icon"><span className="text-[15px]">{service.icon}</span></div>
-              <h3 className="mb-2.5 text-base font-semibold text-bbw-fg">{service.title}</h3>
-              <p className="text-sm leading-[1.7] text-bbw-muted">{service.desc}</p>
+              <Reveal index={i}>
+                <div className="service-icon"><span className="text-[15px]">{service.icon}</span></div>
+                <h3 className="mb-2.5 text-base font-semibold text-bbw-fg">{service.title}</h3>
+                <p className="text-sm leading-[1.7] text-bbw-muted">{service.desc}</p>
+              </Reveal>
             </article>
           ))}
         </div>

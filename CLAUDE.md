@@ -86,6 +86,14 @@ Keep BBW's brand exactly: colours (`--bbw-*` tokens, accent `#2979FF`), fonts (F
 - Where blocks come from (`lib/case-studies/data.ts`): the database → bundled in code (`lib/case-studies/bundled/`, Prezpa) → built from the project's fields (`from-project.ts`, same order; no "The result", as there's no field for it).
 - **Prezpa** (`bundled/prezpa.ts`): rewritten from the portfolio's case study in "we" voice, wording approved by the owner; every fact kept, nothing added; the work presented as a team's roles (the owner's choice for the agency). Status "Live" (update the admin's status to match). No real screenshots exist yet (the portfolio's storage only had two images from another app, "Enzito"), so the journey steps show numbered empty phones until screenshots (1080 × 2280) are added; the cover uses the card image. Type stays "Mobile app" until desktop screenshots exist (then "Website + mobile app", web role "product").
 
+### Homepage sections polish (Phase 5)
+
+- What We Build: the grid is unchanged; each box's content appears in a quick wave (`Reveal`, 0.06s stagger). The boxes themselves don't fade: the grid's 1px lines are its background showing between them.
+- Technologies: words, no logos, grouped by what they do for a client (`lib/content/tech-groups.ts`, groups approved by the owner). The admin keeps one flat list; unknown words go to a last "More tools" group, "And more" stays at the end. Groups reveal one after another.
+- How We Work: a scroll-driven timeline (`components/sections/ProcessSection.tsx`, `styles/process.css`): a line fills as you scroll; each step lights up and opens when it passes 62% of the screen and stays open (so nothing above collapses); clicks still toggle; "Expand to view all" kept. Reduced motion: not scroll-driven, one step open at a time by click. Step 02's note is now "So your budget goes into something people actually want." (default in `lib/content/process.ts`; the admin can override it).
+- About: the business arms list is gone (it's in the intro's company card); the text stays in view (sticky) beside the four pillars. `BusinessArms.tsx` removed.
+- Testing note: on desktop with a mouse, Lenis smooths scrolling and overrides big programmatic `scrollTo` jumps in headless tests; test with touch emulation (no Lenis) or small steps.
+
 ### Other
 
 - Still static from the Vite site: `public/robots.txt`, `public/sitemap.xml` (Phase 6 replaces them).
