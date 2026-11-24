@@ -2,14 +2,15 @@ import { cacheLife, cacheTag } from 'next/cache'
 import type { Project } from '@/lib/data/projects'
 import { CONTENT_TAG, getSiteContent } from '@/lib/site-content'
 import { publicSupabase } from '@/lib/supabase/public'
+import { bundledBlocks } from './bundled'
 import { blocksFromProject } from './from-project'
 import type { Block } from './types'
 
 export type CaseStudy = {
   project: Project
   blocks: Block[]
-  /** True when the blocks were built from the project's fields (no stored blocks yet). */
-  derived: boolean
+  /** Where the blocks came from: the database, a case study written in code, or the project's fields. */
+  source: 'stored' | 'bundled' | 'fields'
   next: { slug: string; name: string } | null
 }
 
@@ -60,12 +61,14 @@ export async function getCaseStudy(slug: string): Promise<CaseStudy | null> {
   if (stored.reached) cacheLife('hours')
   else cacheLife('minutes')
 
-  const derived = stored.blocks.length === 0
+  // The database first; then a case study written in code (Prezpa); then the project's own fields.
+  const bundled = stored.blocks.length ? null : bundledBlocks(project)
+  const source = stored.blocks.length ? 'stored' : bundled ? 'bundled' : 'fields'
   const nextProject = projects.length > 1 ? projects[(at + 1) % projects.length] : null
   return {
     project,
-    blocks: derived ? blocksFromProject(project) : stored.blocks,
-    derived,
+    blocks: source === 'stored' ? stored.blocks : (bundled ?? blocksFromProject(project)),
+    source,
     next: nextProject ? { slug: nextProject.id, name: nextProject.name } : null,
   }
 }

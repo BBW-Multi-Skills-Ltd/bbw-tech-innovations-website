@@ -1,6 +1,7 @@
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { BackLink } from '@/components/BackLink'
+import { StartProjectButton } from '@/components/home/SiteActions'
 import { DrawnScreen } from '@/components/projects/DrawnScreen'
 import { projectDevices } from '@/lib/project-types'
 import type { Block } from '@/lib/case-studies/types'
@@ -60,9 +61,28 @@ export function CaseStudyArticle({ project, blocks, next }: { project: Project; 
             ))}
           </section>
         ))}
+        <StartProject />
         <MoreWork next={next} />
       </div>
     </article>
+  )
+}
+
+/** The call to action at the end of every case study (the site's existing wording). */
+function StartProject() {
+  return (
+    <aside aria-labelledby="cs-cta-title" className="mt-28 rounded-[10px] border border-bbw-border bg-bbw-surface px-8 py-14 text-center min-[640px]:px-12 min-[961px]:py-20">
+      <p className="font-mono text-[11px] tracking-[0.16em] text-bbw-accent uppercase">Ready to build?</p>
+      <h2 id="cs-cta-title" className="mt-4 font-display text-[clamp(34px,5vw,64px)] leading-[1.04] font-bold tracking-[-0.035em] text-bbw-fg">
+        Let&apos;s build something <em className="text-bbw-accent">worth building.</em>
+      </h2>
+      <p className="mx-auto mt-5 max-w-[480px] text-[16px] leading-[1.65] text-bbw-muted">
+        Tell us about your business. We&apos;ll show you how technology can make it operate, grow, and scale.
+      </p>
+      <div className="mt-9 flex justify-center">
+        <StartProjectButton />
+      </div>
+    </aside>
   )
 }
 
@@ -70,7 +90,7 @@ function MoreWork({ next }: { next: { slug: string; name: string } | null }) {
   const tileClass = 'group flex flex-wrap items-end justify-between gap-6 rounded-[10px] border border-bbw-border bg-bbw-surface p-8 no-underline transition-[border-color,transform] duration-200 hover:-translate-y-1 hover:border-bbw-border-hi min-[640px]:p-10'
   const arrow = 'size-8 text-bbw-accent transition-transform duration-300 ease-soft group-hover:translate-x-1'
   return (
-    <nav aria-label="More work" className="mt-28 border-t border-bbw-border pt-16">
+    <nav aria-label="More work" className="mt-10">
       {next ? (
         <Link href={`/work/${next.slug}`} className={tileClass}>
           <span>

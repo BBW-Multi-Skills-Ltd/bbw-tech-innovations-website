@@ -41,6 +41,11 @@ const bodyText = 'text-[17px] leading-relaxed text-bbw-fg/80'
  */
 type SectionRole = boolean | 'intro'
 
+/** BBW: a [placeholder] shown on purpose (business results we don't have yet), clearly marked as unfinished. */
+function VisiblePlaceholder({ text }: { text: string }) {
+  return <span className="inline-block rounded-md border border-dashed border-bbw-border-hi px-2.5 py-1 font-mono text-[12px] tracking-[0.04em] text-bbw-muted">{text}</span>
+}
+
 function Heading({ text, section }: { text: string; section: SectionRole }) {
   const shown = shownText(text)
   if (!shown) return null
@@ -70,7 +75,7 @@ export function CaseStudyBlock({ block, section, devices = PHONE_ONLY, lazyDiagr
       return <StackTable data={block.data} section={section} />
     case 'diagram':
       // Stored diagrams fetch their drawing from /diagrams/[id]; others carry it inline.
-      return <DiagramBlock data={block.data} section={section} src={lazyDiagrams && !block.id.startsWith('derived-') ? `/diagrams/${block.id}` : undefined} />
+      return <DiagramBlock data={block.data} section={section} src={lazyDiagrams && !block.id.startsWith('derived-') && !block.id.startsWith('bundled-') ? `/diagrams/${block.id}` : undefined} />
     case 'problem':
       return <ProblemCard data={block.data} section={section} />
     case 'gallery':
@@ -246,7 +251,8 @@ function TextBlock({ data, section }: { data: BlockData['text']; section: Sectio
 }
 
 function ListBlock({ data, section }: { data: BlockData['list']; section: SectionRole }) {
-  const items = data.items.filter(item => shownText(item.title || item.text) !== null)
+  // showPlaceholders (The result): [placeholder] items stay, shown as unfinished; otherwise they're hidden.
+  const items = data.items.filter(item => (data.showPlaceholders ? (item.title || item.text).trim() !== '' : shownText(item.title || item.text) !== null))
   if (!items.length) return null
   const titled = items.some(item => item.title)
   return (
@@ -287,7 +293,14 @@ function ListBlock({ data, section }: { data: BlockData['list']; section: Sectio
         </Reveal>
       ) : (
         <Reveal>
-          <RichText text={items.map(item => `- ${item.text}`).join('\n')} className={`max-w-[65ch] ${bodyText}`} />
+          <ul className={`flex max-w-[65ch] flex-col gap-3 ${bodyText}`}>
+            {items.map((item, i) => (
+              <li key={i} className="flex gap-3">
+                <span aria-hidden className="mt-[0.7em] size-1.5 shrink-0 rounded-full bg-bbw-accent" />
+                {isPlaceholder(item.text) ? <VisiblePlaceholder text={item.text} /> : <span><Inline text={item.text} /></span>}
+              </li>
+            ))}
+          </ul>
         </Reveal>
       )}
     </div>
@@ -363,6 +376,21 @@ function FlowBlock({ data, section, device }: { data: BlockData['flow']; section
       </Reveal>
       <FlowJourney title={data.title} steps={data.steps} device={device} />
       {data.note ? <p className="mt-10 max-w-[65ch] text-[15px] leading-relaxed text-bbw-muted">{data.note}</p> : null}
+      {data.business?.trim() ? (
+        // BBW: what the feature meant for the business: a real result, or a visible [placeholder].
+        <Reveal className={`${data.note ? 'mt-6' : 'mt-10'} flex max-w-[65ch] flex-col gap-2 rounded-[10px] border-l-2 border-bbw-accent bg-bbw-accent-dim px-6 py-5`}>
+          <p className="font-mono text-[11px] tracking-[0.14em] text-bbw-accent uppercase">What this meant for the business</p>
+          {isPlaceholder(data.business) ? (
+            <div>
+              <VisiblePlaceholder text={data.business} />
+            </div>
+          ) : (
+            <p className="text-[16px] leading-relaxed text-bbw-fg">
+              <Inline text={data.business} />
+            </p>
+          )}
+        </Reveal>
+      ) : null}
     </div>
   )
 }

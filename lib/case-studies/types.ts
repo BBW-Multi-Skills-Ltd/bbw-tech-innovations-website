@@ -36,7 +36,14 @@ export type BlockData = {
   tldr: { heading: string; problem: string; built: string; result: string }
   text: { heading: string; body: string }
   /** numbered (BBW): items show 01, 02… instead of bullets. */
-  list: { heading: string; intro: string; items: ListItem[]; numbered?: boolean }
+  list: {
+    heading: string
+    intro: string
+    items: ListItem[]
+    numbered?: boolean
+    /** BBW: show [placeholder] items visibly (The result: numbers we don't have yet), instead of hiding them. */
+    showPlaceholders?: boolean
+  }
   /** style (BBW): "chips" shows every group as a tile of chips, whatever the items. */
   groups: { heading: string; intro: string; groups: Group[]; style?: 'auto' | 'chips' }
   /** A feature and its user journey: screens with text beside them, step by step. */
@@ -47,6 +54,8 @@ export type BlockData = {
     intro?: string
     note: string
     steps: FlowStep[]
+    /** BBW: "What this meant for the business": a real result, or a visible [placeholder] until there is one. */
+    business?: string
   }
   /** frame (BBW): play the video inside the project's device (auto), a phone, a laptop, or plain. */
   video: { heading: string; videoUrl: string; posterUrl: string; caption: string; frame?: 'auto' | 'phone' | 'desktop' | 'none' }

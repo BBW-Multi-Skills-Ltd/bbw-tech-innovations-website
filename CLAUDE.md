@@ -79,6 +79,13 @@ Keep BBW's brand exactly: colours (`--bbw-*` tokens, accent `#2979FF`), fonts (F
 - Case studies: the demo is its own "See it in action" section (a `video` block with `frame: 'auto'`): played inside the phone (apps, PWAs) or laptop (websites, combined), card image as poster, never autoplays. The cover no longer shows it.
 - `liveSiteUrl()` collapses a doubled scheme ("https://https://…"); Pearl The Braider's stored URL has one and should be fixed in the admin.
 
+### The agency case study layout (Nov 2026)
+
+- Case studies are for winning clients. Order: cover → **The brief** (the client's/market's problem, in business words) → **What we built** (features as zigzag journeys: an outcome headline about what the end customer can do, the steps screen by screen, and "What this meant for the business": a real result or a visible [placeholder]) → **See it in action** → **The result** (real outcomes only, visible [placeholders] for missing numbers) → **The team**, then **Built with** (short, plain) → **Client review** → "Let's build something worth building." call to action → "Next project". **No system design or database diagrams on BBW case studies.**
+- Visible placeholders only in two places: a flow's `business` line and a list with `showPlaceholders` (The result). Everywhere else empty/[placeholder] content is hidden.
+- Where blocks come from (`lib/case-studies/data.ts`): the database → bundled in code (`lib/case-studies/bundled/`, Prezpa) → built from the project's fields (`from-project.ts`, same order; no "The result", as there's no field for it).
+- **Prezpa** (`bundled/prezpa.ts`): rewritten from the portfolio's case study in "we" voice, wording approved by the owner; every fact kept, nothing added; the work presented as a team's roles (the owner's choice for the agency). Status "Live" (update the admin's status to match). No real screenshots exist yet (the portfolio's storage only had two images from another app, "Enzito"), so the journey steps show numbered empty phones until screenshots (1080 × 2280) are added; the cover uses the card image. Type stays "Mobile app" until desktop screenshots exist (then "Website + mobile app", web role "product").
+
 ### Other
 
 - Still static from the Vite site: `public/robots.txt`, `public/sitemap.xml` (Phase 6 replaces them).

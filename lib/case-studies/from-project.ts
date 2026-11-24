@@ -14,13 +14,16 @@ export function liveSiteUrl(project: Project): string | null {
 
 /**
  * A case study built from the project's existing fields, for projects with no
- * stored blocks yet. Everything the old project popup showed has a place;
- * nothing is added, and empty fields are left out:
- *   cover    ← name, tagline, our product / client work, status, year, type,
- *              platform/store availability (apps), category, live site, QR code, card image
- *   Overview ← about          See it in action ← demo video (card image as poster)
- *   Features ← features       Team ← roles      Tech stack ← tech
- *   Client review ← review
+ * stored or bundled blocks, in the agency layout's order. Everything the old
+ * project popup showed has a place; nothing is added, and empty sections are
+ * left out (there's no field for results, so "The result" never shows here):
+ *   cover          ← name, tagline, our product / client work, status, year, type,
+ *                    platform/store availability (apps), category, live site, QR code, card image
+ *   The brief      ← about
+ *   What we built  ← features (numbered)
+ *   See it in action ← demo video (card image as poster)
+ *   The team       ← roles        Built with ← tech
+ *   Client review  ← review
  */
 export function blocksFromProject(project: Project): Block[] {
   const blocks: Block[] = []
@@ -48,27 +51,27 @@ export function blocksFromProject(project: Project): Block[] {
     qrUrl: project.qrUrl ?? '',
   })
 
-  if (shownText(project.about)) add('text', 'Overview', { heading: 'Overview', body: project.about })
-
-  // The demo, in its own section, played inside the project's device frame.
-  if (shownText(project.demoVideoUrl)) {
-    add('video', 'See it in action', { heading: 'See it in action', videoUrl: project.demoVideoUrl ?? '', posterUrl: project.cardImageUrl ?? '', caption: '', frame: 'auto' })
-  }
+  if (shownText(project.about)) add('text', 'The brief', { heading: 'The brief', body: project.about })
 
   const features = project.features.filter(feature => shownText(feature.name) || shownText(feature.desc))
   if (features.length) {
-    add('list', 'Features', {
-      heading: 'Features',
+    add('list', 'What we built', {
+      heading: 'What we built',
       intro: '',
       numbered: true,
       items: features.map(feature => ({ title: feature.name, text: feature.desc })),
     })
   }
 
+  // The demo, in its own section, played inside the project's device frame.
+  if (shownText(project.demoVideoUrl)) {
+    add('video', 'See it in action', { heading: 'See it in action', videoUrl: project.demoVideoUrl ?? '', posterUrl: project.cardImageUrl ?? '', caption: '', frame: 'auto' })
+  }
+
   const roles = project.roles.filter(role => shownText(role.title))
   if (roles.length) {
     add('groups', 'Team', {
-      heading: 'Roles & team',
+      heading: 'The team',
       intro: '',
       style: 'chips',
       groups: roles.map(role => ({ title: role.title, items: role.desc.split(',').map(item => item.trim()).filter(Boolean) })),
@@ -76,7 +79,7 @@ export function blocksFromProject(project: Project): Block[] {
   }
 
   const tech = project.tech.map(item => item.trim()).filter(Boolean)
-  if (tech.length) add('groups', 'Tech stack', { heading: 'Tech stack', intro: '', style: 'chips', groups: [{ title: '', items: tech }] })
+  if (tech.length) add('groups', 'Built with', { heading: 'Built with', intro: '', style: 'chips', groups: [{ title: '', items: tech }] })
 
   if (project.review && shownText(project.review.quote)) {
     add('review', 'Review', {
