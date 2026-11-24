@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Fraunces, JetBrains_Mono, Outfit } from 'next/font/google'
 import { InlineScript } from '@/components/InlineScript'
 import { SITE_URL } from '@/lib/site-url'
+import { themeScript } from '@/lib/theme-preference'
 import './globals.css'
 
 const fraunces = Fraunces({
@@ -52,7 +53,10 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#09090b',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f7f6f3' },
+    { media: '(prefers-color-scheme: dark)', color: '#09090b' },
+  ],
 }
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
@@ -61,6 +65,8 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       <head>
         {/* Lets CSS hide not-yet-played intro states only when JS can play them */}
         <InlineScript html={`document.documentElement.classList.add("js")`} />
+        {/* Saved theme, else the system setting, else dark: set before first paint */}
+        <InlineScript html={themeScript} />
       </head>
       <body>{children}</body>
     </html>

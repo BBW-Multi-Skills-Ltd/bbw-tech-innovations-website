@@ -1,9 +1,9 @@
 import { supabase } from '@/lib/supabase/browser'
 import type { ContactDetails } from '@/components/contact/types'
 
+// Video enquiries were removed from the site (Nov 2026); past ones stay viewable in the admin.
 interface EnquiryInput extends ContactDetails {
-  message?: string
-  videoBlob?: Blob | null
+  message: string
 }
 
 function client() {
@@ -26,17 +26,6 @@ async function invoke(functionName: string, body: Record<string, unknown>) {
 const contactBody = ({ name, email, phone }: ContactDetails) => ({ name: name.trim(), email: email.trim(), phone: phone.trim(), website: '' })
 
 export async function submitMessageEnquiry(input: EnquiryInput) {
-  await invoke('submit-enquiry', { ...contactBody(input), kind: 'message', message: input.message?.trim() ?? '' })
+  await invoke('submit-enquiry', { ...contactBody(input), kind: 'message', message: input.message.trim() })
 }
 
-export async function submitVideoEnquiry(input: EnquiryInput) {
-  if (!input.videoBlob) throw new Error('Please record a video before sending.')
-  const prepared = await invoke('submit-enquiry', { ...contactBody(input), kind: 'video', videoSize: input.videoBlob.size })
-  const id = typeof prepared.id === 'string' ? prepared.id : ''
-  const path = typeof prepared.path === 'string' ? prepared.path : ''
-  const token = typeof prepared.token === 'string' ? prepared.token : ''
-  if (!id || !path || !token) throw new Error('We could not prepare your private video upload.')
-  const { error } = await client().storage.from('enquiry-videos').uploadToSignedUrl(path, token, input.videoBlob, { contentType: input.videoBlob.type || 'video/webm' })
-  if (error) throw new Error('Your video could not be uploaded. Please try again.')
-  await invoke('finalize-video-enquiry', { id })
-}

@@ -10,6 +10,7 @@ import type { Project } from '@/lib/data/projects'
 import { getProjectPlatformLabel } from '@/lib/data/projects'
 import { projectTypeLabel } from '@/lib/featured-projects'
 import { hasApp, projectDevices, projectTypeOf } from '@/lib/project-types'
+import { LogoCover } from '@/components/projects/LogoCover'
 
 /** The card image on a screen, or the project's drawn preview. */
 function Screen({ project, kind, image }: { project: Project; kind: 'phone' | 'desktop'; image: string | null }) {
@@ -54,8 +55,8 @@ function Devices({ project }: { project: Project }) {
 }
 
 /**
- * A project in the work section: its device(s), then the details. "View
- * Details" opens its case study page; coming-soon products have none (as
+ * A project in the work section: its logo on the accent colour (when it has
+ * one) or its device(s), then the details. "View case study" opens its page; coming-soon products have none (as
  * they had no popup).
  */
 export function WorkCard({ project }: { project: Project }) {
@@ -65,9 +66,15 @@ export function WorkCard({ project }: { project: Project }) {
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-[10px] border border-bbw-border bg-bbw-surface transition-[border-color,transform] duration-200 hover:-translate-y-1 hover:border-bbw-border-hi">
-      <div className="flex min-h-[260px] items-center justify-center border-b border-bbw-border bg-bbw-surface2 px-6 pt-7 pb-6">
-        <Devices project={project} />
-      </div>
+      {project.logoUrl ? (
+        <div className="relative min-h-[260px] border-b border-bbw-border">
+          <LogoCover logoUrl={project.logoUrl} accentColor={project.accentColor} name={project.name} />
+        </div>
+      ) : (
+        <div className="flex min-h-[260px] items-center justify-center border-b border-bbw-border bg-bbw-surface2 px-6 pt-7 pb-6">
+          <Devices project={project} />
+        </div>
+      )}
 
       <div className="flex flex-1 flex-col p-6">
         <div className="flex items-center justify-between gap-3">
@@ -96,7 +103,7 @@ export function WorkCard({ project }: { project: Project }) {
         <div className="mt-6 flex flex-wrap gap-2">
           {hasPage ? (
             <Link href={`/work/${project.id}`} className="btn-primary min-w-[130px] flex-1 justify-center gap-2 px-4 py-2.5 text-[13px]">
-              View Details
+              View case study
               <ArrowRight size={15} aria-hidden="true" />
               <span className="sr-only">: {project.name}</span>
             </Link>

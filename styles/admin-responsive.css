@@ -63,7 +63,6 @@
   .admin-account-card { padding: 18px; }
   .admin-auth-link { margin-top: 8px; }
   .admin-saved-toast { right: 16px; bottom: calc(88px + env(safe-area-inset-bottom)); max-width: calc(100vw - 32px); }
-  .music-player-control { right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); }
   .cookie-banner { right: 0; bottom: 0; left: 0; grid-template-columns: 1fr; gap: 16px; width: 100%; min-height: 0; padding: 24px 16px calc(24px + env(safe-area-inset-bottom)); }
   .cookie-banner h2, .cookie-modal h2 { font-size: 24px; }
   .cookie-banner-actions { justify-content: stretch; }

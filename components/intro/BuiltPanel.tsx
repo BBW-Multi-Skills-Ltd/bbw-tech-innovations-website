@@ -6,6 +6,7 @@ import { projectTypeLabel } from '@/lib/featured-projects'
 import { IntroPanel } from './IntroSlider'
 import Link from 'next/link'
 import { hasCaseStudy } from '@/lib/case-studies/data'
+import { LogoCover } from '@/components/projects/LogoCover'
 
 /**
  * Panel 2: What we've built. Up to three featured projects (own products and
@@ -29,9 +30,11 @@ export function BuiltPanel({ projects }: { projects: Project[] }) {
           return (
             <li key={project.id}>
               <article className="group relative flex h-full flex-col overflow-hidden rounded-[10px] border border-bbw-border bg-bbw-surface transition-[border-color,transform] duration-200 hover:-translate-y-1 hover:border-bbw-border-hi">
-                {/* Card image (or the project’s drawn preview); hidden on phone-sized slides to fit */}
+                {/* Logo on the accent colour, else the card image (or the project’s drawn preview); hidden on phone-sized slides to fit */}
                 <div className="relative h-[clamp(120px,19svh,180px)] overflow-hidden stick:max-[767px]:hidden">
-                  {project.cardImageUrl ? (
+                  {project.logoUrl ? (
+                    <LogoCover logoUrl={project.logoUrl} accentColor={project.accentColor} name={project.name} />
+                  ) : project.cardImageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element -- admin-uploaded image (Cloudinary or any URL)
                     <img src={project.cardImageUrl} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                   ) : (
@@ -58,6 +61,11 @@ export function BuiltPanel({ projects }: { projects: Project[] }) {
                     )}
                   </h3>
                   <p className="intro-line mt-1.5 line-clamp-2 text-[13px] leading-[1.6] text-bbw-muted stick:mt-1 stick:line-clamp-1">{project.tagline}</p>
+                  {hasPage ? (
+                    <span aria-hidden="true" className="mt-auto inline-flex items-center gap-1.5 pt-4 font-mono text-[11px] tracking-[0.12em] text-bbw-accent uppercase stick:pt-2">
+                      View case study <ArrowRight size={13} className="transition-transform duration-200 group-hover:translate-x-1" />
+                    </span>
+                  ) : null}
                 </div>
               </article>
             </li>

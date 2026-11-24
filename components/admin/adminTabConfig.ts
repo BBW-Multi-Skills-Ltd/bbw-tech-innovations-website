@@ -1,4 +1,4 @@
-export type AdminTab = 'home' | 'apps' | 'websites' | 'works' | 'marquee' | 'process' | 'technology' | 'business-arms' | 'privacy' | 'enquiries' | 'team' | 'account' | 'social' | 'company' | 'music'
+export type AdminTab = 'home' | 'apps' | 'websites' | 'works' | 'marquee' | 'process' | 'technology' | 'business-arms' | 'privacy' | 'enquiries' | 'team' | 'account' | 'social' | 'company'
 
 export interface AdminNavItem {
   id: AdminTab
@@ -20,7 +20,6 @@ export const ADMIN_NAVIGATION: { label?: string; items: AdminNavItem[] }[] = [
     { id: 'technology', label: 'Technologies' },
     { id: 'business-arms', label: 'Business arms' },
     { id: 'privacy', label: 'Privacy policy' },
-    { id: 'music', label: 'Music' },
   ] },
   { items: [{ id: 'enquiries', label: 'Enquiries', enquiriesOnly: true }] },
   { label: 'Organisation', items: [{ id: 'team', label: 'Team', ownerOnly: true }] },

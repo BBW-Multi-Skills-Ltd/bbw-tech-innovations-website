@@ -3,7 +3,6 @@ import type { AdminTab } from '@/components/admin/adminTabConfig'
 import BusinessArmsManager from '@/components/admin/BusinessArmsManager'
 import EnquiriesManager from '@/components/admin/EnquiriesManager'
 import MarqueeManager from '@/components/admin/MarqueeManager'
-import MusicManager from '@/components/admin/MusicManager'
 import ProjectManager from '@/components/admin/ProjectManager'
 import SocialLinksManager from '@/components/admin/SocialLinksManager'
 import TeamManager from '@/components/admin/TeamManager'
@@ -33,6 +32,5 @@ export default function AdminContent({ tab, data, onSaved, identity, onNavigate 
   if (tab === 'process') return <ProcessManager steps={data.processSteps} setSteps={data.setProcessSteps} onSave={data.persistProcessSteps} onSaved={onSaved} />
   if (tab === 'technology') return <TechnologyManager items={data.technologies} setItems={data.setTechnologies} onSave={data.persistTechnologies} onSaved={onSaved} />
   if (tab === 'privacy') return <PrivacyPolicyManager value={data.privacyPolicy} setValue={data.setPrivacyPolicy} onSave={data.persistPrivacyPolicy} onSaved={onSaved} />
-  if (tab === 'company') return <CompanyDetailsManager value={data.companyDetails} setValue={data.setCompanyDetails} onSave={data.persistCompanyDetails} onSaved={onSaved} />
-  return <MusicManager value={data.musicUrl} onSave={data.persistMusic} onSaved={onSaved} />
+  return <CompanyDetailsManager value={data.companyDetails} setValue={data.setCompanyDetails} onSave={data.persistCompanyDetails} onSaved={onSaved} />
 }

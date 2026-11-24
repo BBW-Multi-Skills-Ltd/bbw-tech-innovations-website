@@ -97,7 +97,7 @@ export function IntroSlider({ children }: { children: ReactNode }) {
           {children}
         </div>
 
-        <div aria-hidden className="intro-progress pointer-events-none absolute inset-x-0 bottom-6 z-2 mx-auto w-full max-w-[1200px] items-center justify-between px-[clamp(20px,5vw,80px)] min-[1360px]:px-0 stick:bottom-4 stick:pr-[84px]">
+        <div aria-hidden className="intro-progress pointer-events-none absolute inset-x-0 bottom-6 z-2 mx-auto w-full max-w-[1200px] items-center justify-between px-[clamp(20px,5vw,80px)] min-[1360px]:px-0 stick:bottom-4">
           <span className="relative h-0.5 w-48 overflow-hidden rounded-full bg-bbw-border-hi">
             {/* Inline transform, not Tailwind's scale-x-0 (that uses the CSS `scale`
                 property, which would multiply with the transform set on scroll). */}

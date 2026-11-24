@@ -8,7 +8,6 @@ import AdminSidebar from '@/components/admin/AdminSidebar'
 import useAdminData from '@/components/admin/useAdminData'
 import type { AdminIdentity } from '@/components/auth/types'
 import useTheme from '@/lib/hooks/useTheme'
-import MusicPlayer from '@/components/MusicPlayer'
 import { usePathname } from 'next/navigation'
 
 interface Props { identity: AdminIdentity; onSignOut: () => void }
@@ -62,6 +61,5 @@ export default function AdminPanel({ identity, onSignOut }: Props) {
       </div>
       <span className={`admin-saved-toast${savedMessageIsError ? ' is-error' : ''}`} role="status" aria-live="polite">{savedMessage}</span>
     </div>
-    <MusicPlayer url={data.musicUrl} />
   </main>
 }

@@ -5,7 +5,6 @@ import { CaseStudyArticle } from '@/components/case-study/CaseStudyArticle'
 import HomeShell from '@/components/home/HomeShell'
 import { getCaseStudy, getCaseStudySlugs } from '@/lib/case-studies/data'
 import { shownText } from '@/lib/case-studies/text'
-import { getSiteContent } from '@/lib/site-content'
 
 // Unknown slugs wait for the full render, so notFound() sends a real 404.
 export const ensureStatic = 'navigation'
@@ -29,10 +28,9 @@ export async function generateMetadata({ params }: PageProps<'/work/[slug]'>): P
   }
 }
 
-export default async function CaseStudyPage({ params }: PageProps<'/work/[slug]'>) {
-  const { musicUrl } = await getSiteContent()
+export default function CaseStudyPage({ params }: PageProps<'/work/[slug]'>) {
   return (
-    <HomeShell musicUrl={musicUrl}>
+    <HomeShell>
       <main>
         {/* The slug is read inside Suspense, so a click shows the page frame at once. */}
         <Suspense fallback={<CaseStudySkeleton />}>

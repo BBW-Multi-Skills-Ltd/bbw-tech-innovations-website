@@ -32,7 +32,7 @@ function fromRow(row: ProjectRow, review?: ReviewRow): Project {
     status: text(row.status) as Project['status'], platform: text(row.platform) || undefined,
     androidAvailability: text(row.android_availability) as Project['androidAvailability'],
     iosAvailability: text(row.ios_availability) as Project['iosAvailability'], siteUrl: text(row.site_url) || undefined,
-    accentColor: text(row.accent_color), mockBg: text(row.mock_bg), cardImageUrl: text(row.card_image_url) || undefined, screens: list<Project['screens'][number]>(row.screens),
+    accentColor: text(row.accent_color), mockBg: text(row.mock_bg), cardImageUrl: text(row.card_image_url) || undefined, logoUrl: text(row.logo_url) || undefined, screens: list<Project['screens'][number]>(row.screens),
     roles: list<Project['roles'][number]>(row.roles), features: list<Project['features'][number]>(row.features),
     tech: list<string>(row.tech), isOwn: row.is_own === true, isPublished: row.is_published !== false, isFeatured: row.is_featured === true, projectType: isProjectType(row.project_type) ? row.project_type : undefined,
     webRole: row.web_role === 'product' || row.web_role === 'marketing' ? row.web_role : null, year: text(row.year),
@@ -49,7 +49,7 @@ const toRow = (project: Project, sortOrder: number) => {
   id: project.id, kind: legacy.kind, project_type: projectType, web_role: isCombined(projectType) ? (project.webRole ?? 'marketing') : null, name: project.name, tagline: project.tagline, short_description: project.shortDesc,
   about: project.about, category: project.category, status: project.status, platform: project.platform || null,
   android_availability: project.androidAvailability || null, ios_availability: project.iosAvailability || null,
-  site_url: websiteUrl(project.siteUrl), accent_color: project.accentColor, mock_bg: project.mockBg, card_image_url: project.cardImageUrl || null, screens: project.screens,
+  site_url: websiteUrl(project.siteUrl), accent_color: project.accentColor, mock_bg: project.mockBg, card_image_url: project.cardImageUrl || null, logo_url: project.logoUrl || null, screens: project.screens,
   roles: project.roles, features: project.features, tech: project.tech, is_own: project.isOwn, year: project.year,
   // Client work: the badge picks its card on the live site. Own projects keep theirs (unused).
   badge: project.isOwn ? (project.badge || null) : legacy.badge, demo_video_url: project.demoVideoUrl || null, qr_url: project.qrUrl || null, is_published: project.isPublished ?? true, is_featured: project.isFeatured ?? false, sort_order: sortOrder,
@@ -137,17 +137,6 @@ export async function replaceMarqueeItems(items: string[]) {
     const { error: insertError } = await db.from('marquee_items').insert(items.map((label, sort_order) => ({ label, sort_order })))
     if (insertError) throw insertError
   }
-}
-
-export async function fetchMusicUrl(db: SupabaseClient = client()) {
-  const { data, error } = await db.from('site_settings').select('value').eq('setting_key', 'music_url').maybeSingle()
-  if (error) throw error
-  return typeof (data?.value as { url?: unknown } | undefined)?.url === 'string' ? (data?.value as { url: string }).url : ''
-}
-
-export async function saveMusicUrl(url: string) {
-  const { error } = await client().from('site_settings').upsert({ setting_key: 'music_url', value: { url } })
-  if (error) throw error
 }
 
 export async function fetchSiteSetting<T>(key: string, fallback: T, db: SupabaseClient = client()): Promise<T> {

@@ -4,7 +4,8 @@ import { supabase } from '@/lib/supabase/browser'
 type AssetType = 'image' | 'video' | 'audio'
 interface Signature { cloudName: string; apiKey: string; timestamp: number; folder: string; signature: string; assetType: AssetType; resourceType: 'image' | 'video' }
 
-export default function CloudinaryMediaUpload({ assetType, value, onChange }: { assetType: AssetType; value: string; onChange: (url: string) => void }) {
+/** `accept` narrows the file picker (e.g. logos: PNG, SVG or WebP); defaults to any file of the asset type. */
+export default function CloudinaryMediaUpload({ assetType, value, onChange, accept }: { assetType: AssetType; value: string; onChange: (url: string) => void; accept?: string }) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState('')
@@ -36,5 +37,5 @@ export default function CloudinaryMediaUpload({ assetType, value, onChange }: { 
     finally { setIsUploading(false); if (inputRef.current) inputRef.current.value = '' }
   }
 
-  return <div className="admin-demo-video-upload"><input ref={inputRef} type="file" accept={`${assetType}/*`} hidden onChange={event => { const file = event.target.files?.[0]; if (file) void upload(file) }} /><button type="button" className="admin-secondary-button" disabled={isUploading} onClick={() => inputRef.current?.click()}>{isUploading ? 'Uploading…' : label}</button>{value && <a href={value} target="_blank" rel="noreferrer">Preview {assetType}</a>}{error && <span role="alert">{error}</span>}</div>
+  return <div className="admin-demo-video-upload"><input ref={inputRef} type="file" accept={accept ?? `${assetType}/*`} hidden onChange={event => { const file = event.target.files?.[0]; if (file) void upload(file) }} /><button type="button" className="admin-secondary-button" disabled={isUploading} onClick={() => inputRef.current?.click()}>{isUploading ? 'Uploading…' : label}</button>{value && <a href={value} target="_blank" rel="noreferrer">Preview {assetType}</a>}{error && <span role="alert">{error}</span>}</div>
 }

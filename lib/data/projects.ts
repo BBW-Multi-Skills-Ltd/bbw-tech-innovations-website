@@ -82,6 +82,8 @@ export interface Project {
   badge?: WorkBadge  // for client works
   demoVideoUrl?: string
   cardImageUrl?: string
+  /** Transparent PNG or SVG: when set, card covers show it centred on the accent colour instead of the card image. */
+  logoUrl?: string
   qrUrl?: string
   review?: ClientReview
 }

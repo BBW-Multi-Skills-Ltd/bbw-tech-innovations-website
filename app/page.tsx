@@ -32,10 +32,10 @@ const structuredData = {
 }
 
 export default async function HomePage() {
-  const { apps, websites, works, businessArms, marqueeItems, musicUrl, socialLinks, processSteps, technologies, companyDetails } = await getSiteContent()
+  const { apps, websites, works, businessArms, marqueeItems, socialLinks, processSteps, technologies, companyDetails } = await getSiteContent()
 
   return (
-    <HomeShell musicUrl={musicUrl}>
+    <HomeShell>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <main>
         <BrandHero />

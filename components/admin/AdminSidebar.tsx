@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, Building2, ChevronLeft, ChevronRight, CircleHelp, ClipboardList, Gauge, Layers3, ListTree, Mail, Music2, PanelsTopLeft, Settings2, ShieldCheck, Smartphone, Users, Waypoints } from 'lucide-react'
+import { BriefcaseBusiness, Building2, ChevronLeft, ChevronRight, CircleHelp, ClipboardList, Gauge, Layers3, ListTree, Mail, PanelsTopLeft, Settings2, ShieldCheck, Smartphone, Users, Waypoints } from 'lucide-react'
 import { ADMIN_NAVIGATION, type AdminNavItem, type AdminTab } from '@/components/admin/adminTabConfig'
 import type { CmsRole } from '@/components/auth/types'
 
@@ -6,7 +6,7 @@ const icons: Record<AdminTab, typeof Gauge> = {
   home: Gauge, apps: Smartphone, websites: PanelsTopLeft, works: BriefcaseBusiness,
   marquee: Waypoints, process: ListTree, technology: Layers3, 'business-arms': Building2,
   privacy: ShieldCheck, enquiries: Mail, team: Users, account: Settings2, social: CircleHelp,
-  company: ClipboardList, music: Music2,
+  company: ClipboardList,
 }
 
 function canSee(item: AdminNavItem, role: CmsRole) {

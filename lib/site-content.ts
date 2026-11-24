@@ -1,5 +1,5 @@
 import { cacheLife, cacheTag } from 'next/cache'
-import { fetchBusinessArms, fetchCompanyDetails, fetchMarqueeItems, fetchMusicUrl, fetchPrivacyPolicy, fetchProcessSteps, fetchProjects, fetchSocialLinks, fetchTechnologies } from '@/lib/cms/contentRepository'
+import { fetchBusinessArms, fetchCompanyDetails, fetchMarqueeItems, fetchPrivacyPolicy, fetchProcessSteps, fetchProjects, fetchSocialLinks, fetchTechnologies } from '@/lib/cms/contentRepository'
 import { defaultBusinessArms } from '@/lib/data/company'
 import { clientWorks, productApps, productWebsites } from '@/lib/data/projects'
 import { defaultCompanyDetails, defaultPrivacyPolicy, defaultProcessSteps, defaultTechnologies } from '@/lib/data/siteContent'
@@ -18,7 +18,6 @@ function bundledContent() {
     works: clientWorks,
     businessArms: defaultBusinessArms,
     marqueeItems: DEFAULT_MARQUEE_ITEMS,
-    musicUrl: '',
     socialLinks: defaultSocialLinks,
     processSteps: defaultProcessSteps,
     technologies: defaultTechnologies,
@@ -43,8 +42,8 @@ export async function getSiteContent(): Promise<SiteContent> {
   const db = publicSupabase()
   if (!db) return content
   try {
-    const [projects, arms, marquee, music, social, process, technologies, privacy, company] = await Promise.all([
-      fetchProjects(true, db), fetchBusinessArms(db), fetchMarqueeItems(db), fetchMusicUrl(db), fetchSocialLinks(true, db),
+    const [projects, arms, marquee, social, process, technologies, privacy, company] = await Promise.all([
+      fetchProjects(true, db), fetchBusinessArms(db), fetchMarqueeItems(db), fetchSocialLinks(true, db),
       fetchProcessSteps(defaultProcessSteps, db), fetchTechnologies(defaultTechnologies, db),
       fetchPrivacyPolicy(defaultPrivacyPolicy, db), fetchCompanyDetails(defaultCompanyDetails, db),
     ])
@@ -55,7 +54,6 @@ export async function getSiteContent(): Promise<SiteContent> {
     }
     if (arms.length) content.businessArms = arms
     if (marquee.length) content.marqueeItems = marquee
-    content.musicUrl = music
     if (social.length) content.socialLinks = social
     content.processSteps = process
     content.technologies = technologies

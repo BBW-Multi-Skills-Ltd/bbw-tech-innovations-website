@@ -9,8 +9,6 @@ const KEYS = {
   productApps:    'bbw_product_apps',
   productWebsites:'bbw_product_websites',
   clientWorks:    'bbw_client_works',
-  musicUrl:       'bbw_music_url',
-  musicEnabled:   'bbw_music_enabled',
   businessArms:   'bbw_business_arms',
   marqueeItems:   'bbw_marquee_items',
   socialLinks:    'bbw_social_links',
@@ -49,17 +47,6 @@ export function getClientWorks(): Project[] {
   } catch { return clientWorks }
 }
 
-export function getMusicUrl(): string {
-  try { return localStorage.getItem(KEYS.musicUrl) ?? '' } catch { return '' }
-}
-
-export function getMusicEnabled(): boolean {
-  try {
-    const v = localStorage.getItem(KEYS.musicEnabled)
-    return v === null ? true : v === 'true'
-  } catch { return true }
-}
-
 export function getBusinessArms(): BusinessArm[] {
   try {
     const stored = localStorage.getItem(KEYS.businessArms)
@@ -94,16 +81,6 @@ export function saveProductWebsites(data: Project[]) {
 
 export function saveClientWorks(data: Project[]) {
   localStorage.setItem(KEYS.clientWorks, JSON.stringify(data))
-  broadcast()
-}
-
-export function saveMusicUrl(url: string) {
-  localStorage.setItem(KEYS.musicUrl, url)
-  broadcast()
-}
-
-export function saveMusicEnabled(enabled: boolean) {
-  localStorage.setItem(KEYS.musicEnabled, String(enabled))
   broadcast()
 }
 
