@@ -35,10 +35,10 @@ export default function EnquiriesManager({ onSaved }: { onSaved: (message: strin
 
   return (
     <section>
-      <div className="admin-section-heading"><p className="eyebrow">Inbox</p><h2>Website enquiries</h2><span>Messages and video pitches submitted through the website. Videos remain private and their viewing link expires after 10 minutes.</span></div>
+      <div className="admin-section-heading"><p className="eyebrow">Inbox</p><h2>Website enquiries</h2><span>Messages and video pitches submitted through the website. Videos remain private and their viewing link expires after 10 minutes.</span><p className="admin-enquiry-note">New enquiries go to BBWFlow. This list keeps past enquiries, and any saved here because BBWFlow couldn&apos;t be reached.</p></div>
       {loading ? <p className="admin-empty-state">Loading enquiries…</p> : items.length === 0 ? <p className="admin-empty-state">No enquiries yet.</p> : <div className="admin-enquiry-list">{items.map(item => <article className="admin-enquiry-card" key={item.id}>
-        <div className="admin-enquiry-meta"><strong>{item.name}</strong><span>{new Date(item.created_at).toLocaleString()}</span><span>{item.email} · {item.phone}</span></div>
-        <p>{item.kind === 'message' ? item.message : 'Video enquiry submitted.'}</p>
+        <div className="admin-enquiry-meta"><strong>{item.name}</strong><span>{new Date(item.created_at).toLocaleString()}</span><span>{[item.email, item.phone].filter(Boolean).join(' · ')}</span></div>
+        <p className="whitespace-pre-line">{item.kind === 'message' ? item.message : 'Video enquiry submitted.'}</p>
         <div className="admin-enquiry-actions">{item.video_path && <button className="btn-secondary" type="button" onClick={() => void viewVideo(item.video_path!)}>View private video</button>}<label>Status<select value={item.status} onChange={event => void updateStatus(item.id, event.target.value as Enquiry['status'])}>{statuses.map(status => <option key={status} value={status}>{status}</option>)}</select></label></div>
       </article>)}</div>}
     </section>

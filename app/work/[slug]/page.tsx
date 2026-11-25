@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import { CaseStudyArticle } from '@/components/case-study/CaseStudyArticle'
 import HomeShell from '@/components/home/HomeShell'
+import { getIntakeOptions } from '@/lib/bbwflow/intake'
 import { getCaseStudy, getCaseStudySlugs } from '@/lib/case-studies/data'
 import { shownText } from '@/lib/case-studies/text'
 
@@ -28,9 +29,10 @@ export async function generateMetadata({ params }: PageProps<'/work/[slug]'>): P
   }
 }
 
-export default function CaseStudyPage({ params }: PageProps<'/work/[slug]'>) {
+export default async function CaseStudyPage({ params }: PageProps<'/work/[slug]'>) {
+  const intakeOptions = await getIntakeOptions()
   return (
-    <HomeShell>
+    <HomeShell intakeOptions={intakeOptions}>
       <main>
         {/* The slug is read inside Suspense, so a click shows the page frame at once. */}
         <Suspense fallback={<CaseStudySkeleton />}>

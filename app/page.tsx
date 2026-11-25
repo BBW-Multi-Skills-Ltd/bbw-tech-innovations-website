@@ -13,6 +13,7 @@ import SolutionsSection from '@/components/sections/SolutionsSection'
 import TechnologySection from '@/components/sections/TechnologySection'
 import ScrollingStrip from '@/components/ui/ScrollingStrip'
 import { SelectedWork } from '@/components/work/SelectedWork'
+import { getIntakeOptions } from '@/lib/bbwflow/intake'
 import { featuredProjects } from '@/lib/featured-projects'
 import { getSiteContent } from '@/lib/site-content'
 import { SITE_URL } from '@/lib/site-url'
@@ -32,10 +33,10 @@ const structuredData = {
 }
 
 export default async function HomePage() {
-  const { apps, websites, works, businessArms, marqueeItems, socialLinks, processSteps, technologies, companyDetails } = await getSiteContent()
+  const [{ apps, websites, works, businessArms, marqueeItems, socialLinks, processSteps, technologies, companyDetails }, intakeOptions] = await Promise.all([getSiteContent(), getIntakeOptions()])
 
   return (
-    <HomeShell>
+    <HomeShell intakeOptions={intakeOptions}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <main>
         <BrandHero />

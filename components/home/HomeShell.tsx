@@ -5,13 +5,14 @@ import Header from '@/components/layout/Header'
 import { ScrollSync } from '@/components/ScrollSync'
 import { SmoothScroll } from '@/components/SmoothScroll'
 import CookieConsent from '@/components/privacy/CookieConsentBanner'
+import type { IntakeOptions } from '@/lib/bbwflow/options'
 import useTheme from '@/lib/hooks/useTheme'
 import { SiteActionsContext } from './SiteActions'
 
 const ContactForm = lazy(() => import('@/components/contact/ContactForm'))
 
 /** The site's interactive frame (homepage and case studies): nav, theme, contact form, cookies. */
-export default function HomeShell({ children }: { children: ReactNode }) {
+export default function HomeShell({ intakeOptions, children }: { intakeOptions: IntakeOptions; children: ReactNode }) {
   const { dark, toggleTheme } = useTheme()
   const [contactOpen, setContactOpen] = useState(false)
   const openContact = useCallback(() => setContactOpen(true), [])
@@ -24,7 +25,7 @@ export default function HomeShell({ children }: { children: ReactNode }) {
       <div className="bg-bbw-bg text-bbw-fg font-sans">
         <Header />
         {children}
-        {contactOpen && <Suspense fallback={null}><ContactForm open={contactOpen} onClose={() => setContactOpen(false)} /></Suspense>}
+        {contactOpen && <Suspense fallback={null}><ContactForm open={contactOpen} options={intakeOptions} onClose={() => setContactOpen(false)} /></Suspense>}
         <CookieConsent />
       </div>
       </SmoothScroll>

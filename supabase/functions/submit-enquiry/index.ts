@@ -5,7 +5,9 @@ Deno.serve(async request => {
   if (request.method !== 'POST') return reply({ error: 'Method not allowed' }, 405)
   const body = await request.json().catch(() => null)
   const name = clean(body?.name, 100), email = clean(body?.email, 254), phone = clean(body?.phone, 40), message = clean(body?.message, 5000)
-  if (body?.website || !name || !email.includes('@') || !phone) return reply({ error: 'Invalid enquiry.' }, 400)
+  // An email address, a phone (WhatsApp) number, or both; a given email must look like one.
+  const hasEmail = email.includes('@')
+  if (body?.website || !name || (email && !hasEmail) || (!hasEmail && !phone)) return reply({ error: 'Invalid enquiry.' }, 400)
   const db = adminClient()
   if (body?.kind === 'message') {
     if (!message) return reply({ error: 'Message is required.' }, 400)

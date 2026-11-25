@@ -21,7 +21,7 @@ export const ADMIN_NAVIGATION: { label?: string; items: AdminNavItem[] }[] = [
     { id: 'business-arms', label: 'Business arms' },
     { id: 'privacy', label: 'Privacy policy' },
   ] },
-  { items: [{ id: 'enquiries', label: 'Enquiries', enquiriesOnly: true }] },
+  { items: [{ id: 'enquiries', label: 'Enquiries (archive & fallback)', enquiriesOnly: true }] },
   { label: 'Organisation', items: [{ id: 'team', label: 'Team', ownerOnly: true }] },
   { label: 'Settings', items: [
     { id: 'account', label: 'Account' },

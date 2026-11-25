@@ -28,7 +28,7 @@ export async function notifyEnquiry(input: { name: string; phone: string; email:
   const configured = await adminClient().from('site_settings').select('value').eq('setting_key', 'company_details').maybeSingle()
   const companyEmail = configured.data?.value && typeof configured.data.value === 'object' && typeof (configured.data.value as { email?: unknown }).email === 'string' ? (configured.data.value as { email: string }).email.trim() : ''
   const recipient = companyEmail || Deno.env.get('ENQUIRY_RECIPIENT') || 'bbwmultiskillsltd@gmail.com'
-  const response = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ from: 'BBW Tech Website <enquiries@bbwtechinnovation.com>', to: [recipient], reply_to: input.email, subject, html }) })
+  const response = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ from: 'BBW Tech Website <enquiries@bbwtechinnovation.com>', to: [recipient], ...(input.email ? { reply_to: input.email } : {}), subject, html }) })
   if (!response.ok) throw new Error('Email notification failed.')
 }
 
