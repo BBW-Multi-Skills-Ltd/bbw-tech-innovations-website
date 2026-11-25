@@ -3,6 +3,7 @@ import type { Project, ProjectType } from '@/lib/data/projects'
 import { createEmptyProject } from '@/components/admin/projectFormConfig'
 import ProjectForm from '@/components/admin/ProjectForm'
 import ProjectRow from '@/components/admin/ProjectRow'
+import { CaseStudyStudio } from '@/components/admin/case-study/CaseStudyStudio'
 
 interface ProjectManagerProps {
   items: Project[]
@@ -16,7 +17,12 @@ interface ProjectManagerProps {
 export default function ProjectManager({ items, type, isWork, onUpsert, onToggleVisibility, onDelete }: ProjectManagerProps) {
   const [editing, setEditing] = useState<string | null>(null)
   const [addingNew, setAddingNew] = useState(false)
+  const [studio, setStudio] = useState<string | null>(null)
   const save = (project: Project) => { onUpsert(project); setEditing(null); setAddingNew(false) }
+  const studioProject = studio ? items.find(project => project.id === studio) : undefined
+
+  // A project's case study editor, in place of the list.
+  if (studioProject) return <CaseStudyStudio project={studioProject} onClose={() => setStudio(null)} />
 
   return (
     <div>
@@ -31,6 +37,7 @@ export default function ProjectManager({ items, type, isWork, onUpsert, onToggle
               onEdit={() => { setEditing(editing === project.id ? null : project.id); setAddingNew(false) }}
               onToggleVisibility={() => onToggleVisibility(project)}
               onDelete={() => { if (window.confirm(`Delete “${project.name}”?`)) onDelete(project.id) }}
+              onCaseStudy={() => { setStudio(project.id); setEditing(null); setAddingNew(false); window.scrollTo(0, 0) }}
             />
             {editing === project.id && <ProjectForm initial={project} type={type} isWork={isWork} onSave={save} onCancel={() => setEditing(null)} />}
           </div>

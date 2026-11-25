@@ -21,7 +21,7 @@ Keep BBW's brand exactly: colours (`--bbw-*` tokens, accent `#2979FF`), fonts (F
 2. **New hero with the 3D BBW logo.** *Done (Nov 2026)*, see "The hero and 3D logo" below.
 3. **Three intro panels.** *Built (Nov 2026)*; waiting on the `is_featured` migration, see "The intro slides" below.
 4. **Case study pages.** *Done (Nov 2026)*, see "Case studies" below.
-5. Admin: case study editor with live preview (item 5).
+5. Admin: case study editor with live preview (item 5). *Built (Nov 2026)*, see "Case study editor" below.
 6. Polish and launch (item 6).
 
 ## Rules
@@ -101,6 +101,24 @@ Keep BBW's brand exactly: colours (`--bbw-*` tokens, accent `#2979FF`), fonts (F
 - **Video enquiries removed from the public site** (the panel 3 tile, the form's mode choice, the recorder). Panel 3: WhatsApp (when set in Company details) is the highlighted tile beside "Type a Message"; without it, "Type a Message" is the highlight. Past video enquiries stay viewable in Admin → Enquiries; the storage bucket and edge functions are untouched.
 - **Music player removed** from the site and admin (the "Music" tab). The `music_url` row in `site_settings` stays (the live site on main reads it); nothing here reads it.
 - **Theme:** `lib/theme-preference.ts` + `lib/hooks/useTheme.ts`. A head script sets `data-theme` before first paint: saved choice (`localStorage` `bbw-theme`), else the system setting, else dark. The toggle saves the choice only when preference cookies are allowed (turning them off forgets it); without a saved choice the site follows system changes live. `themeColor` per scheme.
+
+### Start a project → BBWFlow (Nov 2026)
+
+- The contact form is now the short "Start a project" form (`components/contact/ContactForm.tsx` + `StartProjectFields.tsx`): name, business name (optional), email and/or WhatsApp (at least one), project type and budget, "Tell us about your project", plus the hidden `website` spam trap. Wording approved by the owner.
+- BBWFlow (our operations app, `C:devBBWFlow.App`, read only; contract in its `server/routes/website-intake.ts` and `scripts/verify-website-intake.ts`). `lib/bbwflow/intake.ts` (server only; env `BBWFLOW_API_URL`, `BBWFLOW_INTAKE_KEY`, never NEXT_PUBLIC_, never logged): `getIntakeOptions()` (`'use cache'`, `cacheLife('hours')`, bundled copy in `lib/bbwflow/options.ts` when unreachable) and `submitIntake()` (8 s limit). Pages pass the options to `HomeShell` → the form.
+- Server action `app/actions/start-project.ts`: spam trap → per-visitor limit (`lib/rate-limit.ts`: in memory, 5 submissions per hashed IP per 10 min; retries of the same submission don't count; soft on Vercel) → BBWFlow. One Idempotency-Key (UUID) per submission, kept in the form while the answers are unchanged, so a retry returns the same lead. 400 → field errors on our fields (BBWFlow `phone` = our WhatsApp; both contact fields flagged when neither is given); project type/budget refused, 401/503/409/429, timeout or not configured → logged, then the **fallback**: Supabase `enquiries` via the `submit-enquiry` edge function (all fields in the message; email sent as before). The visitor sees an error only if both fail. Success shows "Continue to the full brief" with the `briefUrl` exactly as returned.
+- `submit-enquiry` accepts email **or** phone since Nov 2026 (deployed); reply-to only with an email.
+- Admin: "Enquiries (archive & fallback)" with a note that new enquiries go to BBWFlow.
+- Locally BBWFlow runs on http://localhost:8787 (may move to 8788+).
+
+### Case study editor (Phase 6, Nov 2026)
+
+- Admin → a project → **Case study** opens `components/admin/case-study/CaseStudyStudio.tsx` (ported from the portfolio) in place of the list: **Page** (the public page's own Cover + sections + `CaseStudyBlock`; click a block to edit it in the side panel, the page updates as you type; ↑/↓, Show/Hide, Delete, "+ Add block" on each block), **Phone** (the saved live page in an iframe at 390px), **List** (`BlockList.tsx`, drag to reorder with @dnd-kit: mouse, touch, keyboard).
+- Agency block types only (`lib/case-studies/editor-fields.ts`): cover, text, list, flow, video, groups, review; "+ Add block" offers the agency layout's blocks (The brief, a feature journey, See it in action, The result, The team, Built with, Client review). Screenshot fields follow `devicesFor` and are labelled with the exact size (phone 1080 × 2280, laptop 1440 × 900); uploads go through `CloudinaryMediaUpload`.
+- Writes (`lib/cms/caseStudyRepository.ts`) use the signed-in browser client, so Row Level Security decides (owners and editors), then `refreshPublicContent` refreshes the public pages. No migration was needed (table from 20261124090000).
+- "Start from what the page shows now": when a project has no stored blocks, stores exactly what the page shows (the bundled case study, or the blocks built from the project's fields), so the live page doesn't change until an edit is saved.
+- Prompts for an AI agent (`lib/case-studies/agent-prompts.ts`, `AgentPrompts.tsx`): "Draft the case study" (agency layout, "we" voice, outcome headlines, business lines as [placeholders] unless real, no diagrams) and "Screenshots" (exact sizes and file names for the project's devices).
+- `hasCaseStudy` lives in `lib/case-studies/data-rules.ts` (shared by the site and the admin).
 
 ### Other
 

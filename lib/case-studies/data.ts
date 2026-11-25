@@ -14,8 +14,9 @@ export type CaseStudy = {
   next: { slug: string; name: string } | null
 }
 
-/** Own products that are "coming soon" have no page (as they had no popup). */
-export const hasCaseStudy = (project: Project) => !(project.isOwn && project.status === 'coming-soon')
+import { hasCaseStudy } from './data-rules'
+
+export { hasCaseStudy }
 
 /** Every published project with a page, in list order: own products, then client work. */
 async function caseStudyProjects() {

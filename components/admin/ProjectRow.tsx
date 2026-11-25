@@ -7,9 +7,10 @@ interface ProjectRowProps {
   onEdit: () => void
   onToggleVisibility: () => void
   onDelete: () => void
+  onCaseStudy: () => void
 }
 
-export default function ProjectRow({ project, editing, onEdit, onToggleVisibility, onDelete }: ProjectRowProps) {
+export default function ProjectRow({ project, editing, onEdit, onToggleVisibility, onDelete, onCaseStudy }: ProjectRowProps) {
   const isPublished = project.isPublished !== false
 
   return (
@@ -21,6 +22,7 @@ export default function ProjectRow({ project, editing, onEdit, onToggleVisibilit
       </div>
       <div className="admin-project-row-actions">
         <button type="button" onClick={onEdit}>{editing ? 'Close' : 'Edit'}</button>
+        <button type="button" onClick={onCaseStudy}>Case study</button>
         <button type="button" onClick={onToggleVisibility}>{isPublished ? 'Hide' : 'Show'}</button>
         <button type="button" className="is-danger" onClick={onDelete}>Delete</button>
       </div>
